@@ -1,4 +1,23 @@
-# Payload Website Template
+# Sorazon – sito vetrina
+
+Next.js + Payload CMS + PostgreSQL (Docker).
+
+## Avvio su un computer nuovo
+
+Requisiti: Git, Node 22 (vedi `.nvmrc`), Docker Desktop, make.
+Su Windows usa WSL2: gli script sono per macOS/Linux.
+
+```bash
+git clone <indirizzo-del-repository> sorazon
+cd sorazon
+make setup     # .env, dipendenze, database
+make dev       # sito su http://localhost:3000, pannello su /admin
+```
+
+`make help` mostra tutti i comandi. Il database locale è usa e getta:
+fai `make backup` prima di operazioni rischiose.
+
+## Payload Website Template
 
 This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/3.x/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
 

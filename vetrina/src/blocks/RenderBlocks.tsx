@@ -8,7 +8,7 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { CentriListBlock } from '@/blocks/CentriList/Component'
-
+import { SchedaProdottoBlock } from '@/blocks/SchedaProdotto/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -17,6 +17,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   centriList: CentriListBlock,
+  schedaProdotto: SchedaProdottoBlock,
 }
 
 export const RenderBlocks: React.FC<{

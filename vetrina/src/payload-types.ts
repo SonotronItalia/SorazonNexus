@@ -205,7 +205,9 @@ export interface Page {
     effetto_pulsazione?: boolean | null;
     effetto_scarica?: boolean | null;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | CentriListBlock)[];
+  layout: (
+    CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | CentriListBlock | SchedaProdottoBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -792,6 +794,49 @@ export interface CentriListBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SchedaProdottoBlock".
+ */
+export interface SchedaProdottoBlock {
+  titolo: string;
+  descrizione?: string | null;
+  immagine: number | Media;
+  posizioneImmagine?: ('sinistra' | 'destra') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro') | null;
+  colonneComponenti?: ('2' | '3') | null;
+  /**
+   * Ad esempio: Dati tecnici, Dimensioni, Omologazione
+   */
+  gruppi?:
+    | {
+        titolo: string;
+        voci?:
+          | {
+              testo: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  componenti?:
+    | {
+        nome: string;
+        foto?: (number | null) | Media;
+        composto_da?:
+          | {
+              testo: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'schedaProdotto';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "centri".
  */
 export interface Centri {
@@ -1130,6 +1175,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         centriList?: T | CentriListBlockSelect<T>;
+        schedaProdotto?: T | SchedaProdottoBlockSelect<T>;
       };
   meta?:
     | T
@@ -1238,6 +1284,45 @@ export interface CentriListBlockSelect<T extends boolean = true> {
   introduzione?: T;
   mostraIndice?: T;
   colonne?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SchedaProdottoBlock_select".
+ */
+export interface SchedaProdottoBlockSelect<T extends boolean = true> {
+  titolo?: T;
+  descrizione?: T;
+  immagine?: T;
+  posizioneImmagine?: T;
+  sfondo?: T;
+  colonneComponenti?: T;
+  gruppi?:
+    | T
+    | {
+        titolo?: T;
+        voci?:
+          | T
+          | {
+              testo?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  componenti?:
+    | T
+    | {
+        nome?: T;
+        foto?: T;
+        composto_da?:
+          | T
+          | {
+              testo?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }
