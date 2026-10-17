@@ -1,0 +1,1 @@
+export const CENTRI_TAG = 'centri'

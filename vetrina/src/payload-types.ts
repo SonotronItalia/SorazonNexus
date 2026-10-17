@@ -205,7 +205,7 @@ export interface Page {
     effetto_pulsazione?: boolean | null;
     effetto_scarica?: boolean | null;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | CentriListBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -779,6 +779,19 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CentriListBlock".
+ */
+export interface CentriListBlock {
+  titolo?: string | null;
+  introduzione?: string | null;
+  mostraIndice?: boolean | null;
+  colonne?: ('2' | '3') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'centriList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "centri".
  */
 export interface Centri {
@@ -1116,6 +1129,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        centriList?: T | CentriListBlockSelect<T>;
       };
   meta?:
     | T
@@ -1212,6 +1226,18 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CentriListBlock_select".
+ */
+export interface CentriListBlockSelect<T extends boolean = true> {
+  titolo?: T;
+  introduzione?: T;
+  mostraIndice?: T;
+  colonne?: T;
   id?: T;
   blockName?: T;
 }

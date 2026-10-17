@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCentri, revalidateCentriDopoCancellazione } from './Centri/hooks/revalidateCentri'
+
+// ...dentro la config:
+
 
 export const Centri: CollectionConfig = {
   slug: 'centri',
@@ -48,4 +52,8 @@ export const Centri: CollectionConfig = {
       }
     },
   ],
+  hooks: {
+    afterChange: [revalidateCentri],
+    afterDelete: [revalidateCentriDopoCancellazione],
+},
 }
