@@ -1,0 +1,11 @@
+Per avviare il progetto servono:
+
+  git
+  Node 22 (minimo 20.9)
+  pnpm
+  Docker Desktop
+  make        (su macOS: xcode-select --install)
+
+Poi:  bash scripts/setup.sh
+Lo script controlla ognuno di questi strumenti e installa quelli che mancano (solo su macOS, con Homebrew).
+Su Linux o Windows (WSL2) ti dice cosa manca e va installato a mano.
