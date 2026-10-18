@@ -1,0 +1,121 @@
+# CI: controlli a ogni push e pull request. Il CD (pubblicazione sul server) arriverà
+# quando il server sarà approvato: vedi CLAUDE.md, sezione 9.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un solo giro per branch: un nuovo push annulla quello in corso (risparmia minuti)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Typecheck, lint e build di backend e frontend, senza database né backend acceso
+  qualita:
+    name: ${{ matrix.app }} (typecheck, lint, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [backend, frontend]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      # Solo per far partire la build del backend: a runtime li dà il compose
+      PAYLOAD_SECRET: solo-per-la-ci
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      # Versione di pnpm presa da "packageManager" in package.json
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: ${{ matrix.app }}/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: ${{ matrix.app }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc --noEmit
+      # Il lint mostra i problemi ma per ora non blocca: nel frontend restano errori
+      # delle nuove regole react-hooks (in buona parte dal template) da correggere a parte.
+      - run: pnpm lint
+        continue-on-error: true
+      - run: pnpm build
+
+  # Le migrazioni si applicano su un database vuoto e coprono tutta la configurazione
+  migrazioni:
+    name: migrazioni (PostGIS vuoto)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      db:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U ci -d ci"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PAYLOAD_SECRET: solo-per-la-ci
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: backend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          cache-dependency-path: backend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Applica tutte le migrazioni
+        run: pnpm payload migrate
+      - name: Nessuna migrazione dimenticata
+        run: |
+          pnpm payload migrate:create controllo-ci --skip-empty
+          if [ -n "$(git status --porcelain src/migrations)" ]; then
+            echo "::error::La configurazione di Payload è cambiata senza migrazione: esegui 'make migrate-create NAME=...' e committala"
+            git status --porcelain src/migrations
+            exit 1
+          fi
+
+  # Le immagini Docker si costruiscono (senza pubblicarle). Solo su main: costa minuti
+  docker:
+    name: immagini Docker
+    if: github.ref == 'refs/heads/main'
+    needs: [qualita, migrazioni]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Costruisci backend, migrate e frontend
+        run: docker compose build
+        env:
+          # Il compose legge queste variabili; per la sola build bastano valori fittizi
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+          PAYLOAD_SECRET: ci
+          REVALIDATE_SECRET: ci
+          PREVIEW_SECRET: ci
+          FRONTEND_PUBLIC_URL: http://localhost:3000
+          BACKEND_PUBLIC_URL: http://localhost:3001
+          FRONTEND_HOST: localhost
+          BACKEND_HOST: localhost

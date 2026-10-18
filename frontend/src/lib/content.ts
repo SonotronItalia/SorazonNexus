@@ -1,7 +1,7 @@
 // Funzioni di lettura dei contenuti. Sostituiscono le chiamate alla Local API di Payload.
 import type { Config, Footer, Header, Page, Post, Redirect, Search } from '@/payload-types'
 
-import { api } from './api'
+import { api, apiDraft } from './api'
 
 export type List<T> = {
   docs: T[]
@@ -30,7 +30,9 @@ export const getFooter = () => api<Footer>('/globals/footer?depth=1', { tags: ['
 
 // --- Pagine ---
 
-export async function getPageBySlug(slug: string): Promise<Page | null> {
+// draft = true solo in modalità anteprima (draftMode di Next): legge l'ultima bozza
+export async function getPageBySlug(slug: string, draft = false): Promise<Page | null> {
+  if (draft) return apiDraft<Page>(`/pages/anteprima/${encodeURIComponent(slug)}`)
   const q = qs({ 'where[slug][equals]': slug, limit: 1, depth: 2 })
   const { docs } = await api<List<Page>>(`/pages?${q}`, { tags: ['pages', `page_${slug}`] })
   return docs[0] ?? null
@@ -58,7 +60,8 @@ export async function getPosts(page = 1, limit = 12): Promise<List<Post>> {
   return api<List<Post>>(`/posts?${q}`, { tags: ['posts'] })
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
+export async function getPostBySlug(slug: string, draft = false): Promise<Post | null> {
+  if (draft) return apiDraft<Post>(`/posts/anteprima/${encodeURIComponent(slug)}`)
   const q = qs({ 'where[slug][equals]': slug, limit: 1, depth: 2 })
   const { docs } = await api<List<Post>>(`/posts?${q}`, { tags: ['posts', `post_${slug}`] })
   return docs[0] ?? null

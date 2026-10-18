@@ -5,10 +5,12 @@ declare global {
       PAYLOAD_INTERNAL_URL?: string
       // Indirizzo pubblico del sito, letto a runtime
       SITE_URL?: string
-      // Segreto condiviso con il backend per /api/revalidate
+      // Segreto interno condiviso con il backend: /api/revalidate e lettura delle bozze
       REVALIDATE_SECRET?: string
-      // Chiave dell'utente di servizio (bozze, fase 6)
-      PAYLOAD_API_KEY?: string
+      // Segreto nell'URL di anteprima delle bozze (/next/preview)
+      PREVIEW_SECRET?: string
+      // Indirizzo pubblico del pannello: il live preview accetta messaggi solo da qui
+      BACKEND_PUBLIC_URL?: string
     }
   }
 }

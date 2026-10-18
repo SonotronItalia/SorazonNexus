@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
     // ImageMedia usa quality={100}; da Next 16 il valore predefinito ammesso è solo 75
     qualities: [75, 100],
   },
+  async redirects() {
+    // La home è la pagina con slug "home": un solo indirizzo, niente contenuto duplicato
+    return [{ source: '/home', destination: '/', permanent: true }]
+  },
   async rewrites() {
     return [
       // Le immagini passano dal dominio del sito: il browser non conosce mai l'indirizzo del backend

@@ -61,6 +61,12 @@ services:
       FRONTEND_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
       FRONTEND_INTERNAL_URL: http://frontend:3000
       REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-info@sorazon.it}
     volumes:
       - media:/data/media
     depends_on:
@@ -87,9 +93,10 @@ services:
         PAYLOAD_INTERNAL_URL: http://backend:3000
     environment:
       PAYLOAD_INTERNAL_URL: http://backend:3000
-      PAYLOAD_API_KEY: ${PAYLOAD_API_KEY:-}
       REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
       SITE_URL: ${FRONTEND_PUBLIC_URL}
+      BACKEND_PUBLIC_URL: ${BACKEND_PUBLIC_URL}
     depends_on:
       backend:
         condition: service_healthy

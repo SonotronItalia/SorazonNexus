@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -23,7 +24,28 @@ const origins = [process.env.FRONTEND_PUBLIC_URL, process.env.BACKEND_PUBLIC_URL
   Boolean,
 ) as string[]
 
+// Email: SMTP solo se configurato (in sviluppo Mailpit, vedi docker-compose.dev.yml).
+// Senza SMTP_HOST Payload scrive le email nel log, come prima.
+const email = process.env.SMTP_HOST
+  ? nodemailerAdapter({
+      defaultFromAddress: process.env.EMAIL_FROM || 'info@sorazon.it',
+      defaultFromName: 'Sorazon',
+      // Non blocca l'avvio se il server SMTP non risponde subito
+      skipVerify: true,
+      transportOptions: {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT || 587),
+        // 465 = TLS diretto; 587 e 1025 (Mailpit) = STARTTLS o in chiaro
+        secure: Number(process.env.SMTP_PORT) === 465,
+        auth: process.env.SMTP_USER
+          ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+          : undefined,
+      },
+    })
+  : undefined
+
 export default buildConfig({
+  email,
   serverURL: process.env.BACKEND_PUBLIC_URL,
   cors: origins,
   csrf: origins,

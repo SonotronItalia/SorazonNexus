@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
@@ -21,7 +22,10 @@ type Args = {
   }>
 }
 
-const queryPostBySlug = cache(getPostBySlug)
+// In anteprima (draftMode) legge la bozza, senza cache; altrimenti la versione pubblicata
+const queryPostBySlug = cache(async (slug: string) =>
+  getPostBySlug(slug, (await draftMode()).isEnabled),
+)
 
 export default async function Post({ params: paramsPromise }: Args) {
   const { slug = '' } = await paramsPromise

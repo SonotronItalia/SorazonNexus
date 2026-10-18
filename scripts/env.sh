@@ -13,9 +13,11 @@ gen() {
 if [ -f .env ] && grep -q '^PAYLOAD_SECRET=' .env; then
   PS="$(grep '^PAYLOAD_SECRET=' .env | cut -d= -f2-)"
   RS="$(grep '^REVALIDATE_SECRET=' .env | cut -d= -f2-)"
+  PV="$(grep '^PREVIEW_SECRET=' .env | cut -d= -f2-)"
 else
   PS="$(gen)"; RS="$(gen)"
 fi
+[ -n "${PV:-}" ] || PV="$(gen)"
 
 make_env() {
   local target="$1" example="$2"
@@ -25,6 +27,7 @@ make_env() {
     case "$line" in
       PAYLOAD_SECRET=*)    echo "PAYLOAD_SECRET=$PS" ;;
       REVALIDATE_SECRET=*) echo "REVALIDATE_SECRET=$RS" ;;
+      PREVIEW_SECRET=*)    echo "PREVIEW_SECRET=$PV" ;;
       SEED_ADMIN_PASSWORD=*) echo "SEED_ADMIN_PASSWORD=$(gen | cut -c1-20)" ;;
       *) echo "$line" ;;
     esac

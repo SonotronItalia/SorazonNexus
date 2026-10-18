@@ -14,6 +14,8 @@ import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { SchedaProdotto } from '@/blocks/SchedaProdotto/config'
+import { GalleriaRisultati } from '@/blocks/GalleriaRisultati/config'
+import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
 import {
   MetaDescriptionField,
@@ -25,6 +27,8 @@ import {
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
+  // Bozze per l'anteprima del frontend (GET /api/pages/anteprima/:slug)
+  endpoints: [anteprimaEndpoint('pages')],
   access: {
     create: authenticated,
     delete: authenticated,
@@ -74,7 +78,16 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, CentriList, SchedaProdotto],
+              blocks: [
+                CallToAction,
+                Content,
+                MediaBlock,
+                Archive,
+                FormBlock,
+                CentriList,
+                SchedaProdotto,
+                GalleriaRisultati,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,

@@ -30,8 +30,8 @@ doctor: ## Controlla strumenti, versioni e Docker
 	@if docker info >/dev/null 2>&1; then printf '\033[32m✔\033[0m Docker è in esecuzione\n'; \
 	else printf '\033[31m✘\033[0m Docker non è in esecuzione\n'; fi
 
-db: ## Avvia solo il database, con la porta 5432 aperta sul Mac (i dati restano)
-	@$(FX) run "Avvio il database" $(COMPOSE_DEV) up -d db
+db: ## Avvia il database (porta 5432 sul Mac) e Mailpit per le email (http://localhost:8025)
+	@$(FX) run "Avvio il database e Mailpit" $(COMPOSE_DEV) up -d db mailpit
 	@$(MAKE) --no-print-directory db-wait
 
 # Per backup e ripristino basta che il database sia acceso, in qualsiasi modalità

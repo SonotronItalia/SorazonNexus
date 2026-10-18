@@ -41,6 +41,10 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 - Tag usati: `pages`, `pages-sitemap`, `posts`, `posts-sitemap`, `globals`, `redirects`, `centri`.
 - Gli script di importazione devono passare `context: { disableRevalidate: true }` alle chiamate di creazione.
 
+**Anteprima delle bozze**: il pannello apre `{FRONTEND_PUBLIC_URL}/next/preview?path=...&previewSecret=...` (`generatePreviewPath`); la rotta attiva il `draftMode` di Next. Le bozze le legge il server del frontend da `GET /api/<pages|posts>/anteprima/:slug` (endpoint in `backend/src/endpoints/anteprima.ts`) con l'header `x-internal-secret` = `REVALIDATE_SECRET`. Il frontend **non ha credenziali del CMS** e le richieste normali sono anonime (vedono solo il pubblicato). Live preview: `components/PreviewBar` con `RefreshRouteOnSave` (`BACKEND_PUBLIC_URL`).
+
+**Email**: adattatore nodemailer attivo solo con `SMTP_HOST`; in sviluppo Mailpit (`make db`, casella su http://localhost:8025). Il mittente (`EMAIL_FROM`) è da confermare con l'azienda.
+
 **Immagini e moduli**: il browser non conosce l'indirizzo del backend. `frontend/next.config.ts` ha rewrite `/media/:path*` → `{backend}/api/media/file/:path*` e `/api/form-submissions` → backend. La funzione `mediaSrc()` in `lib/api.ts` converte gli URL dei media.
 
 **Build senza backend**: il frontend non deve pre-generare pagine che richiedono il backend. `generateStaticParams` restituisce `[]` e le pagine si costruiscono alla prima richiesta (ISR con tag). Così `next build` e `docker build` non hanno bisogno di backend né database.
@@ -49,9 +53,9 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 
 | File | Variabili principali |
 |---|---|
-| `.env` (radice, per Compose) | `POSTGRES_USER/PASSWORD/DB`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PAYLOAD_API_KEY`, `FRONTEND_PUBLIC_URL`, `BACKEND_PUBLIC_URL`, `FRONTEND_HOST`, `BACKEND_HOST` |
-| `backend/.env` (sviluppo senza Docker) | `DATABASE_URL`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `BACKEND_PUBLIC_URL`, `FRONTEND_PUBLIC_URL`, `FRONTEND_INTERNAL_URL` |
-| `frontend/.env` (sviluppo senza Docker) | `PAYLOAD_INTERNAL_URL`, `SITE_URL`, `REVALIDATE_SECRET`, `PAYLOAD_API_KEY` |
+| `.env` (radice, per Compose) | `POSTGRES_USER/PASSWORD/DB`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `FRONTEND_PUBLIC_URL`, `BACKEND_PUBLIC_URL`, `FRONTEND_HOST`, `BACKEND_HOST` |
+| `backend/.env` (sviluppo senza Docker) | `DATABASE_URL`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `BACKEND_PUBLIC_URL`, `FRONTEND_PUBLIC_URL`, `FRONTEND_INTERNAL_URL` |
+| `frontend/.env` (sviluppo senza Docker) | `PAYLOAD_INTERNAL_URL`, `SITE_URL`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `BACKEND_PUBLIC_URL` |
 
 Gli indirizzi interni in Docker sono costanti nel compose (`http://backend:3000`, `http://frontend:3000`). Le variabili vanno lette **a runtime** (non `NEXT_PUBLIC_*`, che verrebbero fissate in build): una sola immagine per ogni ambiente.
 
@@ -92,9 +96,10 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 ## 5. Funzioni già realizzate (da verificare dopo la migrazione)
 
-**Blocchi** (config nel backend, componente nel frontend): `CallToAction`, `Content`, `MediaBlock`, `ArchiveBlock`, `FormBlock` (dal template), più i due nostri:
+**Blocchi** (config nel backend, componente nel frontend): `CallToAction`, `Content`, `MediaBlock`, `ArchiveBlock`, `FormBlock` (dal template), più i nostri:
 
 - `CentriList` ("Elenco centri"): legge `getCentri()` da `lib/content.ts`, raggruppa per regione, indice delle regioni, 2 o 3 colonne. Titoli: il blocco usa `h2` (l'`h1` lo dà l'hero).
+- `GalleriaRisultati`: griglia di immagini (radiografie) con etichetta in sovraimpressione e descrizione facoltativa; opzioni colonne / sfondo. Pagina Risultati non ancora popolata: mancano le immagini e i testi clinici vanno rivisti.
 - `SchedaProdotto`: titolo, descrizione, immagine, gruppi di caratteristiche con voci, componenti con foto e parti; opzioni posizione immagine / sfondo / colonne. Il campo annidato `composto_da` ha `dbName: 'parti'` per non superare i **63 caratteri** degli identificatori Postgres (con il nome lungo erano 68 e venivano troncati in silenzio).
 
 **Hero "Sorazon"** (tipo `sorazon` in `heros/config.ts`): `SorazonHero` con due effetti attivabili singolarmente dall'admin, `effetto_pulsazione` (alone ciano/blu) e `effetto_scarica` (canvas con fulmini **viola**, componente `TeslaDischarge`). Regola: un effetto si vede se è attivo nel CMS **e** il visitatore non li ha disattivati **e** non ha "riduci movimento" nel sistema. Scelta del visitatore in `localStorage` (chiave `sorazon-effetti`) tramite `EffectsProvider` / `EffectsToggle` (pulsante a fulmine in header). Vincoli di sicurezza (fotosensibilità): le scariche sfumano in 0,3-0,5 s, al massimo una ogni 0,7-2 s, nessun lampeggio; l'animazione si ferma fuori schermo. L'hero resta sempre scuro in entrambi i temi.
@@ -133,9 +138,8 @@ Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le an
 
 ## 9. Roadmap tecnica successiva (non ora)
 
-- **CI/CD con GitHub Actions**: CI (lint, typecheck, build, test di build immagini Docker con Postgres di servizio); CD (immagini su GHCR, SSH sul server, `docker compose pull && up -d`, migrazioni prima dell'avvio). Limiti del piano gratuito: 2.000 minuti/mese e 500 MB di Packages per repository privato.
+- **CI/CD con GitHub Actions**: la CI c'è (`.github/workflows/ci.yml`: typecheck, lint non bloccante finché restano gli errori react-hooks del frontend, build, migrazioni su PostGIS vuoto e controllo delle migrazioni dimenticate, build delle immagini su `main`). Da fare: CD (immagini su GHCR, SSH sul server, `docker compose pull && up -d`, migrazioni prima dell'avvio). Limiti del piano gratuito: 2.000 minuti/mese e 500 MB di Packages per repository privato.
 - **Altri servizi** come container con lo stesso schema (rete interna, database separato): Moodle (immagine da costruire, PHP), Keycloak/Authentik per SSO quando i servizi riservati sono almeno due, servizi **Python** (FastAPI) per CRM/portale con AI, Discourse (ha un proprio launcher Docker).
 - **Visualizzatore 3D** (dopo la vetrina): React Three Fiber, file GLB con parti separate e nome chiaro; vista esplosa generica (ogni parte si sposta dal centro del modello), involucro trasparente per prefisso nel nome (`case_`), hotspot agganciati al nome della parte; vista 3D caricata in differita con immagine di anteprima; fallback alla vista classica. I dati del prodotto andranno in una collezione `Prodotti` condivisa tra le due viste.
-- **Blocco "Galleria risultati"** per la pagina Risultati (radiografie con etichetta).
 - **Modulo "diventa centro"** e mappa delle regioni scoperte.
 

@@ -7,6 +7,7 @@ import React from 'react'
 
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
+import { PreviewBar } from '@/components/PreviewBar'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -24,6 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
+          <PreviewBar />
           <Header />
           {children}
           <Footer />

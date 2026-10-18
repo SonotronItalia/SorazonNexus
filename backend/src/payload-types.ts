@@ -206,7 +206,14 @@ export interface Page {
     effetto_scarica?: boolean | null;
   };
   layout: (
-    CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | CentriListBlock | SchedaProdottoBlock
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | CentriListBlock
+    | SchedaProdottoBlock
+    | GalleriaRisultatiBlock
   )[];
   meta?: {
     title?: string | null;
@@ -841,6 +848,28 @@ export interface SchedaProdottoBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleriaRisultatiBlock".
+ */
+export interface GalleriaRisultatiBlock {
+  titolo?: string | null;
+  introduzione?: string | null;
+  colonne?: ('2' | '3') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro') | null;
+  voci: {
+    immagine: number | Media;
+    /**
+     * Ad esempio: Coxartrosi, Epicondilite
+     */
+    etichetta: string;
+    descrizione?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'galleriaRisultati';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "centri".
  */
 export interface Centri {
@@ -1200,6 +1229,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         centriList?: T | CentriListBlockSelect<T>;
         schedaProdotto?: T | SchedaProdottoBlockSelect<T>;
+        galleriaRisultati?: T | GalleriaRisultatiBlockSelect<T>;
       };
   meta?:
     | T
@@ -1345,6 +1375,26 @@ export interface SchedaProdottoBlockSelect<T extends boolean = true> {
               testo?: T;
               id?: T;
             };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleriaRisultatiBlock_select".
+ */
+export interface GalleriaRisultatiBlockSelect<T extends boolean = true> {
+  titolo?: T;
+  introduzione?: T;
+  colonne?: T;
+  sfondo?: T;
+  voci?:
+    | T
+    | {
+        immagine?: T;
+        etichetta?: T;
+        descrizione?: T;
         id?: T;
       };
   id?: T;

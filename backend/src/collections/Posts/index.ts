@@ -17,6 +17,7 @@ import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
+import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
 import {
   MetaDescriptionField,
@@ -29,6 +30,8 @@ import { slugField } from 'payload'
 
 export const Posts: CollectionConfig<'posts'> = {
   slug: 'posts',
+  // Bozze per l'anteprima del frontend (GET /api/posts/anteprima/:slug)
+  endpoints: [anteprimaEndpoint('posts')],
   labels: {
     singular: 'Notizia',
     plural: 'Notizie',
