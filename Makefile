@@ -7,7 +7,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create \
+.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create migrate \
         stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -64,6 +64,9 @@ types: ## Rigenera i tipi di Payload e li copia nel frontend
 migrate-create: db ## Crea una migrazione: make migrate-create NAME=iniziale
 	@test -n "$(NAME)" || (echo "Uso: make migrate-create NAME=iniziale"; exit 1)
 	@pnpm -C backend payload migrate:create $(NAME)
+
+migrate: db ## Applica le migrazioni non ancora eseguite
+	@pnpm -C backend payload migrate
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build

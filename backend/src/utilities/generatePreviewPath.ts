@@ -1,5 +1,12 @@
-import { PreviewSearchParams } from '@/app/(frontend)/next/preview/route'
 import { PayloadRequest, CollectionSlug } from 'payload'
+
+import { getServerSideURL } from './getURL'
+
+// Parametri letti dalla rotta /next/preview del frontend (da ricostruire nella fase 6)
+type PreviewSearchParams = {
+  path: string
+  previewSecret: string
+}
 
 const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
   posts: '/posts',
@@ -25,7 +32,6 @@ export const generatePreviewPath = ({ collection, slug }: Props) => {
     previewSecret: process.env.PREVIEW_SECRET || '',
   } satisfies PreviewSearchParams)
 
-  const url = `/next/preview?${encodedParams.toString()}`
-
-  return url
+  // Indirizzo ASSOLUTO: l'anteprima si apre sul frontend, che è un'altra origine
+  return `${getServerSideURL()}/next/preview?${encodedParams.toString()}`
 }

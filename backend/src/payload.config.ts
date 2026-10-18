@@ -58,6 +58,9 @@ export default buildConfig({
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: postgresAdapter({
+    // Niente sincronizzazione automatica dello schema neanche in sviluppo:
+    // lo schema cambia solo con le migrazioni (make migrate-create, make migrate)
+    push: false,
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
