@@ -43,7 +43,7 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 
 **Anteprima delle bozze**: il pannello apre `{FRONTEND_PUBLIC_URL}/next/preview?path=...&previewSecret=...` (`generatePreviewPath`); la rotta attiva il `draftMode` di Next. Le bozze le legge il server del frontend da `GET /api/<pages|posts>/anteprima/:slug` (endpoint in `backend/src/endpoints/anteprima.ts`) con l'header `x-internal-secret` = `REVALIDATE_SECRET`. Il frontend **non ha credenziali del CMS** e le richieste normali sono anonime (vedono solo il pubblicato). Live preview: `components/PreviewBar` con `RefreshRouteOnSave` (`BACKEND_PUBLIC_URL`).
 
-**Email**: adattatore nodemailer attivo solo con `SMTP_HOST`; in sviluppo Mailpit (`make db`, casella su http://localhost:8025). Il mittente (`EMAIL_FROM`) è da confermare con l'azienda.
+**Email**: adattatore nodemailer attivo solo con `SMTP_HOST`; in sviluppo Mailpit (`make db`, casella su http://localhost:8025). Indirizzi: `EMAIL_FROM` = `it@sonotronitalia.com` per le email di sistema (reset password, account); `EMAIL_INFO` = `info@sonotronitalia.com`, destinatario e mittente predefiniti dei moduli del sito.
 
 **Immagini e moduli**: il browser non conosce l'indirizzo del backend. `frontend/next.config.ts` ha rewrite `/media/:path*` → `{backend}/api/media/file/:path*` e `/api/form-submissions` → backend. La funzione `mediaSrc()` in `lib/api.ts` converte gli URL dei media.
 
@@ -92,7 +92,7 @@ I tipi si generano nel backend e si copiano nel frontend: `make types`.
 
 > L'utente sceglie **cosa** mettere e **quale variante** usare. Il codice decide **come appare**.
 
-Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra o sinistra, sfondo nessuno/tenue/scuro), mappate su classi Tailwind **scritte per intero** (Tailwind non vede le classi costruite al volo). Mai colori, font o dimensioni liberi. L'editor di testo è limitato a titoli, grassetto, corsivo, sottolineato, link.
+Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra o sinistra, sfondo nessuno/tenue/scuro), mappate su classi Tailwind **scritte per intero** (Tailwind non vede le classi costruite al volo). Mai colori, font o dimensioni liberi. L'editor di testo è limitato a titoli, grassetto, corsivo, sottolineato, link (più gli elenchi puntati nel blocco Content).
 
 ## 5. Funzioni già realizzate (da verificare dopo la migrazione)
 
@@ -129,7 +129,7 @@ Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le an
 
 ## 8. Contesto non tecnico utile
 
-- Sede legale: Fano (PU). Due indirizzi email nel sito attuale (`info@sorazon.it`, `info@sonotronitalia.com`): da chiarire quale sia corretto e centralizzarlo.
+- Sede legale: Fano (PU). Email (deciso il 2026-10-19): `info@sonotronitalia.com` per tutto ciò che riguarda il pubblico, `it@sonotronitalia.com` per le questioni IT. Il vecchio `info@sorazon.it` non si usa più nel nuovo sito.
 - Il sito attuale ha un frammento di codice visibile nella pagina Contatti (residuo del plugin anti-spam di Joomla) che nel nuovo sito sparisce.
 - Pagine del vecchio sito: Home, Dispositivo, Terapia, Indicazioni, Risultati, Notizie, Contatti, Distribuzione. Redirect 301 dai vecchi indirizzi (plugin redirects) per non perdere posizionamento.
 - Elenco centri attuale per regione: Marche, Piemonte, Liguria, Lombardia, Emilia-Romagna, Lazio, Puglia, Campania, Basilicata, Abruzzo. I dati stanno in un PDF (`contatti.pdf`, se presente nella cartella): l'importazione va fatta con uno **script**, non a mano.

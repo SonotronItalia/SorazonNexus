@@ -5,6 +5,7 @@ import {
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
@@ -41,6 +42,8 @@ const columnFields: Field[] = [
         return [
           ...rootFeatures,
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          // Elenchi puntati: struttura, non formattazione libera (lo stile lo decide il sito)
+          UnorderedListFeature(),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
         ]

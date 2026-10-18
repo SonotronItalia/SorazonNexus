@@ -28,7 +28,8 @@ const origins = [process.env.FRONTEND_PUBLIC_URL, process.env.BACKEND_PUBLIC_URL
 // Senza SMTP_HOST Payload scrive le email nel log, come prima.
 const email = process.env.SMTP_HOST
   ? nodemailerAdapter({
-      defaultFromAddress: process.env.EMAIL_FROM || 'info@sorazon.it',
+      // Email di sistema del CMS (reset password, account): indirizzo IT
+      defaultFromAddress: process.env.EMAIL_FROM || 'it@sonotronitalia.com',
       defaultFromName: 'Sorazon',
       // Non blocca l'avvio se il server SMTP non risponde subito
       skipVerify: true,

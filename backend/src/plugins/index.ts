@@ -14,8 +14,11 @@ import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return doc?.title ? `${doc.title} | Sorazon` : 'Sorazon'
 }
+
+// Indirizzo per tutto ciò che riguarda il pubblico (moduli del sito)
+const EMAIL_INFO = process.env.EMAIL_INFO || 'info@sonotronitalia.com'
 
 const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
   const url = getServerSideURL()
@@ -58,9 +61,22 @@ export const plugins: Plugin[] = [
     fields: {
       payment: false,
     },
+    // Destinatario predefinito delle email inviate dai moduli
+    defaultToEmail: EMAIL_INFO,
     formOverrides: {
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
+          // Mittente predefinito di ogni email del modulo: l'indirizzo info
+          if ('name' in field && field.name === 'emails' && field.type === 'array') {
+            return {
+              ...field,
+              fields: field.fields.map((sub) =>
+                'name' in sub && sub.name === 'emailFrom' && sub.type === 'text'
+                  ? { ...sub, defaultValue: EMAIL_INFO }
+                  : sub,
+              ),
+            }
+          }
           if ('name' in field && field.name === 'confirmationMessage') {
             return {
               ...field,

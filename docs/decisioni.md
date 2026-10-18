@@ -14,3 +14,6 @@
 | 2026-10-19 | Email con nodemailer solo se c'è `SMTP_HOST`; Mailpit in sviluppo | Servizio email esterno (SendGrid, ecc.) | Nessun costo: in produzione basta l'SMTP di una casella esistente; in sviluppo nessuna email parte davvero |
 | 2026-10-19 | Redirect del CMS permanenti (308) e controllati anche sui percorsi a più livelli | 307 temporanei del template | I vecchi indirizzi Joomla devono passare il posizionamento al nuovo sito |
 | 2026-10-19 | Lint in CI non bloccante finché non si correggono gli errori react-hooks del frontend | Bloccarlo subito; spegnere le regole | Gli errori vanno corretti con verifica visiva, non nascosti né ignorati |
+| 2026-10-19 | Email: `it@sonotronitalia.com` per le email di sistema del CMS, `info@sonotronitalia.com` per i moduli del sito | Un solo indirizzo; `info@sorazon.it` | Scelta dell'azienda: l'IT riceve ciò che riguarda l'IT, il resto va a info |
+| 2026-10-19 | Elenchi puntati nell'editor del blocco Content | Solo titoli e paragrafi | I testi del vecchio sito (Terapia) sono in gran parte elenchi; è struttura, non formattazione libera |
+| 2026-10-19 | Pagine Terapia e Indicazioni create dal seed come bozze, testi del vecchio sito alla lettera | Pubblicarle subito; riscrivere i testi | Contengono affermazioni sanitarie da far rivedere prima della pubblicazione |
