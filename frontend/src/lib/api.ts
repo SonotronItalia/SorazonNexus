@@ -4,16 +4,22 @@ const KEY = process.env.PAYLOAD_API_KEY
 
 type Opts = { tags?: string[]; revalidate?: number | false }
 
-export async function api<T>(path: string, { tags, revalidate }: Opts = {}): Promise<T> {
+// Rete di sicurezza: se un avviso di revalidazione va perso, i dati si rinnovano comunque entro un'ora
+const REVALIDATE_FALLBACK = 3600
+
+export async function api<T>(path: string, { tags, revalidate = REVALIDATE_FALLBACK }: Opts = {}): Promise<T> {
   const res = await fetch(`${INTERNAL}/api${path}`, {
     headers: KEY ? { Authorization: `users API-Key ${KEY}` } : {},
-    next: { tags, ...(revalidate !== undefined ? { revalidate } : {}) },
+    // force-cache esplicito: anche nelle pagine dinamiche i dati restano in cache fino al tag
+    cache: 'force-cache',
+    next: { tags, revalidate },
   })
   if (!res.ok) throw new Error(`Backend ${res.status} su ${path}`)
   return res.json() as Promise<T>
 }
 
 // Le immagini passano dal rewrite del frontend: /api/media/file/x.webp -> /media/x.webp
+// Gestisce sia URL relativi sia assoluti (con serverURL del backend).
 export const mediaSrc = (url?: string | null): string => {
   if (!url) return ''
   const { pathname, search } = new URL(url, 'http://x')

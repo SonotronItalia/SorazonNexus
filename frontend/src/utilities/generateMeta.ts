@@ -2,21 +2,19 @@ import type { Metadata } from 'next'
 
 import type { Media, Page, Post, Config } from '../payload-types'
 
-import { mergeOpenGraph } from './mergeOpenGraph'
+import { mediaSrc } from '@/lib/api'
+import { mergeOpenGraph, SITE_NAME } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
-  let url = serverUrl + '/website-template-OG.webp'
-
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
-
-    url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url
+    return serverUrl + mediaSrc(ogUrl || image.url)
   }
 
-  return url
+  return serverUrl + '/website-template-OG.webp'
 }
 
 export const generateMeta = async (args: {
@@ -26,9 +24,7 @@ export const generateMeta = async (args: {
 
   const ogImage = getImageURL(doc?.meta?.image)
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+  const title = doc?.meta?.title ? `${doc.meta.title} | ${SITE_NAME}` : SITE_NAME
 
   return {
     description: doc?.meta?.description,

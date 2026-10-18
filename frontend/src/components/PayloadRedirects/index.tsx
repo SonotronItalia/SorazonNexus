@@ -1,8 +1,6 @@
 import type React from 'react'
-import type { Page, Post } from '@/payload-types'
 
-import { getCachedDocument } from '@/utilities/getDocument'
-import { getCachedRedirects } from '@/utilities/getRedirects'
+import { getDocumentById, getRedirects } from '@/lib/content'
 import { notFound, redirect } from 'next/navigation'
 
 interface Props {
@@ -10,36 +8,28 @@ interface Props {
   url: string
 }
 
-/* This component helps us with SSR based dynamic redirects */
+/* Redirect gestiti dal CMS (plugin redirects), risolti lato server */
 export const PayloadRedirects: React.FC<Props> = async ({ disableNotFound, url }) => {
-  const redirects = await getCachedRedirects()()
+  const redirects = await getRedirects()
 
-  const redirectItem = redirects.find((redirect) => redirect.from === url)
+  const redirectItem = redirects.find((r) => r.from === url)
 
   if (redirectItem) {
     if (redirectItem.to?.url) {
       redirect(redirectItem.to.url)
     }
 
-    let redirectUrl: string
+    const reference = redirectItem.to?.reference
+    if (reference) {
+      const prefix = reference.relationTo !== 'pages' ? `/${reference.relationTo}` : ''
+      // Con depth=1 il riferimento arriva già popolato; altrimenti è un id
+      const doc =
+        typeof reference.value === 'object'
+          ? reference.value
+          : await getDocumentById(reference.relationTo, reference.value)
 
-    if (typeof redirectItem.to?.reference?.value === 'string') {
-      const collection = redirectItem.to?.reference?.relationTo
-      const id = redirectItem.to?.reference?.value
-
-      const document = (await getCachedDocument(collection, id)()) as Page | Post
-      redirectUrl = `${redirectItem.to?.reference?.relationTo !== 'pages' ? `/${redirectItem.to?.reference?.relationTo}` : ''}/${
-        document?.slug
-      }`
-    } else {
-      redirectUrl = `${redirectItem.to?.reference?.relationTo !== 'pages' ? `/${redirectItem.to?.reference?.relationTo}` : ''}/${
-        typeof redirectItem.to?.reference?.value === 'object'
-          ? redirectItem.to?.reference?.value?.slug
-          : ''
-      }`
+      if (doc?.slug) redirect(`${prefix}/${doc.slug}`)
     }
-
-    if (redirectUrl) redirect(redirectUrl)
   }
 
   if (disableNotFound) return null

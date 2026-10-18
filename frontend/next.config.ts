@@ -5,6 +5,12 @@ const INTERNAL = process.env.PAYLOAD_INTERNAL_URL || 'http://localhost:3001'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  images: {
+    // /media/** arriva dal backend con ?updatedAt per rinnovare la cache; gli altri file locali senza query
+    localPatterns: [{ pathname: '/media/**' }, { pathname: '/**', search: '' }],
+    // ImageMedia usa quality={100}; da Next 16 il valore predefinito ammesso è solo 75
+    qualities: [75, 100],
+  },
   async rewrites() {
     return [
       // Le immagini passano dal dominio del sito: il browser non conosce mai l'indirizzo del backend

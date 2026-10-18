@@ -1,10 +1,14 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      PAYLOAD_SECRET: string
-      DATABASE_URL: string
-      NEXT_PUBLIC_SERVER_URL: string
-      VERCEL_PROJECT_PRODUCTION_URL: string
+      // Indirizzo interno del backend (in Docker http://backend:3000)
+      PAYLOAD_INTERNAL_URL?: string
+      // Indirizzo pubblico del sito, letto a runtime
+      SITE_URL?: string
+      // Segreto condiviso con il backend per /api/revalidate
+      REVALIDATE_SECRET?: string
+      // Chiave dell'utente di servizio (bozze, fase 6)
+      PAYLOAD_API_KEY?: string
     }
   }
 }

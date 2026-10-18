@@ -24,7 +24,7 @@ export const Logo = (props: Props) => {
       decoding="async"
       style={{ filter: 'none !important', mixBlendMode: 'normal' }}
       className={clsx('max-w-[21rem] w-full h-[76px] object-contain [filter:none!important]')}
-      src="media/logo_sorazon.svg"
+      src="/logo_sorazon.svg"
     />
   )
 }

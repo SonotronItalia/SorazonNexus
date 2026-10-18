@@ -3,36 +3,24 @@ import type { Metadata } from 'next/types'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getPosts } from '@/lib/content'
+import { SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
 import PageClient from './page.client'
 
-export const dynamic = 'force-static'
-export const revalidate = 600
+// Rotta statica: senza questa opzione verrebbe generata in build, quando il backend può mancare.
+// La pagina si disegna a ogni richiesta, ma i dati restano in cache (tag "posts").
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const payload = await getPayload({ config: configPromise })
-
-  const posts = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: 12,
-    overrideAccess: false,
-    select: {
-      title: true,
-      slug: true,
-      categories: true,
-      meta: true,
-    },
-  })
+  const posts = await getPosts(1, 12)
 
   return (
     <div className="pt-24 pb-24">
       <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
-          <h1>Posts</h1>
+          <h1>Notizie</h1>
         </div>
       </div>
 
@@ -58,6 +46,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: `Notizie | ${SITE_NAME}`,
   }
 }

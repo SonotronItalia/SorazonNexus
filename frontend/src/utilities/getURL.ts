@@ -1,26 +1,8 @@
 import canUseDOM from './canUseDOM'
 
-export const getServerSideURL = () => {
-  return (
-    process.env.NEXT_PUBLIC_SERVER_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:3000')
-  )
-}
+// Indirizzo pubblico del sito, letto a RUNTIME (niente NEXT_PUBLIC_, che verrebbe fissato in build)
+export const getServerSideURL = (): string => process.env.SITE_URL || 'http://localhost:3000'
 
-export const getClientSideURL = () => {
-  if (canUseDOM) {
-    const protocol = window.location.protocol
-    const domain = window.location.hostname
-    const port = window.location.port
-
-    return `${protocol}//${domain}${port ? `:${port}` : ''}`
-  }
-
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  }
-
-  return process.env.NEXT_PUBLIC_SERVER_URL || ''
-}
+// Nel browser vale l'origine della pagina; sul server l'indirizzo pubblico
+export const getClientSideURL = (): string =>
+  canUseDOM ? window.location.origin : getServerSideURL()
