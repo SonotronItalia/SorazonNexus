@@ -1,87 +1,89 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-APP        := vetrina
-DB_USER    := sorazon
-DB_NAME    := sorazon
-BACKUP_DIR := backup
-FX         := bash scripts/fx.sh
-# Il nome del progetto Compose fissa il nome del volume (vetrina_pgdata):
-# non cambiarlo, altrimenti Docker crea un database nuovo e vuoto
-COMPOSE    := docker compose -p vetrina -f $(APP)/docker-compose.yml
+FX           := bash scripts/fx.sh
+COMPOSE      := docker compose
+BACKUP       := backup
+DB_VOLUME    := sorazon_pgdata
+MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor up wait-db stop down ps logs dev build start types lint check \
-        db-shell backup restore reset-db setup
+.PHONY: help doctor db db-wait stop down ps logs dev-backend dev-frontend types migrate-create \
+        stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
-	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[38;5;135m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[38;5;135m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo
 	@echo "  Senza animazioni: make <comando> EFFECTS=0"
 
-doctor: ## Controlla che gli strumenti siano installati
-	@for t in node pnpm git docker make; do \
-	  if command -v $$t >/dev/null 2>&1; then printf '\033[32m✔\033[0m %s\n' $$t; \
-	  else printf '\033[31m✘\033[0m %s mancante\n' $$t; fi; \
+doctor: ## Controlla strumenti, versioni e Docker
+	@for t in git node pnpm docker make; do \
+	  if command -v $$t >/dev/null 2>&1; then \
+	    printf '\033[32m✔\033[0m %-8s %s\n' $$t "$$($$t --version 2>&1 | head -1)"; \
+	  else printf '\033[31m✘\033[0m %-8s mancante\n' $$t; fi; \
 	done
+	@if docker info >/dev/null 2>&1; then printf '\033[32m✔\033[0m Docker è in esecuzione\n'; \
+	else printf '\033[31m✘\033[0m Docker non è in esecuzione\n'; fi
 
-up: ## Avvia il database (i dati restano)
-	@$(FX) run "Avvio il database" $(COMPOSE) up -d
-	@$(MAKE) --no-print-directory wait-db
+db: ## Avvia solo il database (i dati restano)
+	@$(FX) run "Avvio il database" $(COMPOSE) up -d db
+	@$(MAKE) --no-print-directory db-wait
 
-wait-db:
-	@$(FX) run "Attendo che il database risponda" bash -c 'for i in $$(seq 1 30); do $(COMPOSE) exec -T db pg_isready -U $(DB_USER) >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
+db-wait:
+	@$(FX) run "Attendo che il database risponda" bash -c 'for i in $$(seq 1 30); do $(COMPOSE) exec -T db sh -c "pg_isready -U \"\$$POSTGRES_USER\"" >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
 
-stop: ## Ferma il database (i dati restano)
-	@$(FX) run "Fermo il database" $(COMPOSE) stop
+stop: ## Ferma i container (i dati restano)
+	@$(FX) run "Fermo i container" $(COMPOSE) stop
 
-down: ## Rimuove i container (i dati restano, nessun -v)
+down: ## Rimuove i container (i volumi con i dati restano)
 	@$(FX) run "Rimuovo i container" $(COMPOSE) down
 
 ps: ## Stato dei container
 	@$(COMPOSE) ps
 
-logs: ## Log del database (Ctrl+C per uscire)
-	@$(COMPOSE) logs -f db
+logs: ## Log (Ctrl+C per uscire). Esempio: make logs SERVICE=backend
+	@$(COMPOSE) logs -f $(SERVICE)
 
-dev: up ## Avvia database e server di sviluppo
-	@$(FX) banner "server di sviluppo"
-	@pnpm -C $(APP) dev
+dev-backend: db ## Backend Payload in sviluppo su http://localhost:3001/admin
+	@$(FX) banner "backend (Payload) su :3001"
+	@pnpm -C backend dev
 
-types: ## Rigenera i tipi di Payload
-	@$(FX) run "Rigenero i tipi di Payload" pnpm -C $(APP) generate:types
+dev-frontend: ## Frontend Next.js in sviluppo su http://localhost:3000
+	@$(FX) banner "frontend (Next.js) su :3000"
+	@pnpm -C frontend dev
 
-lint: ## Controlla il codice
-	@$(FX) run "Controllo il codice" pnpm -C $(APP) lint
+types: ## Rigenera i tipi di Payload e li copia nel frontend
+	@$(FX) run "Rigenero i tipi di Payload" pnpm -C backend generate:types
+	@cp backend/src/payload-types.ts frontend/src/payload-types.ts
+	@echo "  Copiati in frontend/src/payload-types.ts"
 
-build: up ## Compila il sito per la produzione
-	@$(FX) run "Compilo il sito" pnpm -C $(APP) build
+migrate-create: db ## Crea una migrazione: make migrate-create NAME=iniziale
+	@test -n "$(NAME)" || (echo "Uso: make migrate-create NAME=iniziale"; exit 1)
+	@pnpm -C backend payload migrate:create $(NAME)
 
-start: ## Avvia il sito compilato (dopo make build)
-	@$(FX) banner "sito in produzione (locale)"
-	@pnpm -C $(APP) start
+stack: ## Costruisce e avvia i tre container (db, backend, frontend)
+	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build
 
-check: lint build ## Come farebbe la CI: lint + build
+stack-proxy: ## Come stack, più il proxy Caddy (simula la produzione)
+	@$(FX) run "Costruisco e avvio i container con il proxy" $(COMPOSE) --profile proxy up -d --build
 
-db-shell: up ## Apre psql sul database
-	@$(COMPOSE) exec db psql -P pager=off -U $(DB_USER) -d $(DB_NAME)
+backup: db ## Salva il database in backup/
+	@mkdir -p $(BACKUP)
+	@$(FX) run "Salvo il backup del database" bash -c '$(COMPOSE) exec -T db sh -c "pg_dump --clean --if-exists --no-owner -U \"\$$POSTGRES_USER\" \"\$$POSTGRES_DB\"" > $(BACKUP)/sorazon-$$(date +%F-%H%M%S).sql'
+	@echo "  File: $(BACKUP)/$$(ls -t $(BACKUP) | head -1)"
 
-backup: ## Salva il database in backup/
-	@mkdir -p $(BACKUP_DIR)
-	@$(FX) run "Salvo il backup del database" bash -c '$(COMPOSE) exec -T db pg_dump --clean --if-exists --no-owner -U $(DB_USER) $(DB_NAME) > $(BACKUP_DIR)/sorazon-$$(date +%F-%H%M%S).sql'
-	@echo "  File: $(BACKUP_DIR)/$$(ls -t $(BACKUP_DIR) | head -1)"
+backup-media: ## Salva i file caricati dal CMS (volume media) in backup/
+	@mkdir -p $(BACKUP)
+	@$(FX) run "Salvo i file caricati" docker run --rm -v $(MEDIA_VOLUME):/data:ro -v "$(CURDIR)/$(BACKUP)":/b alpine sh -c 'tar czf /b/media-$$(date +%F-%H%M%S).tgz -C /data .'
 
-restore: up ## Ripristina un backup: make restore FILE=backup/xxx.sql
+restore: db ## Ripristina un backup: make restore FILE=backup/xxx.sql
 	@test -n "$(FILE)" || (echo "Indica il file: make restore FILE=backup/xxx.sql"; exit 1)
 	@$(FX) confirm "Il database attuale verrà sovrascritto. Scrivi 'ripristina' per continuare:" ripristina
-	@$(FX) run "Ripristino $(FILE)" bash -c '$(COMPOSE) exec -T db psql -U $(DB_USER) -d $(DB_NAME) < $(FILE)'
+	@$(FX) run "Ripristino $(FILE)" bash -c '$(COMPOSE) exec -T db sh -c "psql -U \"\$$POSTGRES_USER\" -d \"\$$POSTGRES_DB\"" < $(FILE)'
 
-reset-db: ## ⚠ Cancella TUTTI i dati locali (backup + conferma)
-	@$(FX) confirm "ATTENZIONE: cancella tutti i dati del database locale. Scrivi 'cancella' per continuare:" cancella
+reset-db: ## ⚠ Cancella SOLO il database (backup + conferma). I file media restano
+	@$(FX) confirm "ATTENZIONE: cancella tutti i dati del database. Scrivi 'cancella' per continuare:" cancella
 	@$(MAKE) --no-print-directory backup
-	@$(FX) run "Elimino container e volume" $(COMPOSE) down -v
-	@$(MAKE) --no-print-directory up
-	@echo "  Database vuoto: avvia 'make dev' per ricreare le tabelle."
-
-setup: ## Prepara il progetto su un computer nuovo
-	@bash scripts/setup.sh
+	@$(FX) run "Elimino il database e il suo volume" bash -c '$(COMPOSE) rm -sf db && docker volume rm $(DB_VOLUME)'
+	@$(MAKE) --no-print-directory db
+	@echo "  Database vuoto: avvia 'make dev-backend' per ricreare le tabelle."

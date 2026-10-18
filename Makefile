@@ -7,7 +7,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor db db-wait stop down ps logs dev-backend dev-frontend types migrate-create \
+.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create \
         stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -30,7 +30,7 @@ db: ## Avvia solo il database (i dati restano)
 	@$(MAKE) --no-print-directory db-wait
 
 db-wait:
-	@$(FX) run "Attendo che il database risponda" bash -c 'for i in $$(seq 1 30); do $(COMPOSE) exec -T db sh -c "pg_isready -U \"\$$POSTGRES_USER\"" >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'
+	@$(FX) run "Attendo che il database risponda" bash -c 'for i in $$(seq 1 60); do $(COMPOSE) exec -T db sh -c "pg_isready -h 127.0.0.1 -U \"\$$POSTGRES_USER\"" >/dev/null 2>&1 && (exec 3<>/dev/tcp/127.0.0.1/5432) 2>/dev/null && exit 0; sleep 1; done; exit 1'
 
 stop: ## Ferma i container (i dati restano)
 	@$(FX) run "Fermo i container" $(COMPOSE) stop
@@ -43,6 +43,10 @@ ps: ## Stato dei container
 
 logs: ## Log (Ctrl+C per uscire). Esempio: make logs SERVICE=backend
 	@$(COMPOSE) logs -f $(SERVICE)
+
+dev: db ## Avvia backend e frontend insieme (database incluso)
+	@$(FX) banner "backend + frontend"
+	@bash scripts/dev.sh
 
 dev-backend: db ## Backend Payload in sviluppo su http://localhost:3001/admin
 	@$(FX) banner "backend (Payload) su :3001"
