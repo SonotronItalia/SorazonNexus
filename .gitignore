@@ -1,24 +1,34 @@
+# Le regole senza "/" iniziale valgono anche in backend/ e frontend/
 build
-dist / media
-node_modules
-.DS_Store
-.env
-.env.local
-/backup
+dist
+node_modules/
 .next
 next-env.d.ts
+*.tsbuildinfo
 .vercel
 .vscode
+.DS_Store
 
-# Payload default media upload directory
+# Segreti: nessun file .env, tranne gli esempi
+.env
+.env.*
+!.env.example
+
+# Backup del database e dei media
+/backup
+
+# File caricati (MEDIA_DIR in sviluppo e media del vecchio monolite)
 public/media/
+/media/
 
+# Generati dalla build
 public/robots.txt
 public/sitemap*.xml
 
+# Archivi scambiati durante il lavoro
+*.zip
 
 # Playwright
-node_modules/
 /test-results/
 /playwright-report/
 /blob-report/
