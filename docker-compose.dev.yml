@@ -1,0 +1,7 @@
+# Solo sviluppo (make db, make dev, make seed): espone il database sul Mac per il backend locale.
+# Non usarlo con lo stack: da Docker 28 una porta pubblicata è raggiungibile anche dalle altre
+# reti Docker, quindi il frontend arriverebbe al database (anche con 127.0.0.1).
+services:
+  db:
+    ports:
+      - "127.0.0.1:5432:5432"

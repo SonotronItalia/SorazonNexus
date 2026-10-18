@@ -29,8 +29,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    ports:
-      - "127.0.0.1:5432:5432"   # solo sviluppo: sul server vero togli questa riga
+    # Nessuna porta pubblicata: renderebbe il database raggiungibile dal frontend.
+    # In sviluppo la apre docker-compose.dev.yml (make db).
     networks: [net_data]
 
   # ---------- Job una tantum: migrazioni (non è un container permanente) ----------

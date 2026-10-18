@@ -63,6 +63,7 @@ Gli indirizzi interni in Docker sono costanti nel compose (`http://backend:3000`
 SorazonNexus/
 ├── Makefile                 # comandi del progetto (ricette con TAB!)
 ├── docker-compose.yml       # db, migrate (job), backend, frontend, caddy (profilo "proxy")
+├── docker-compose.dev.yml   # solo sviluppo: porta 5432 del db sul Mac (make db); mai con lo stack
 ├── Caddyfile  .env.example  requisiti.txt  README.md
 ├── scripts/
 │   ├── fx.sh                # effetti da terminale (spinner, banner, conferme); EFFECTS=0 li disattiva

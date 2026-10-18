@@ -3,11 +3,13 @@ SHELL := /bin/bash
 
 FX           := bash scripts/fx.sh
 COMPOSE      := docker compose
+# Sviluppo: aggiunge la porta 5432 del database sul Mac (vedi docker-compose.dev.yml)
+COMPOSE_DEV  := docker compose -f docker-compose.yml -f docker-compose.dev.yml
 BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
+.PHONY: help doctor db db-wait db-running stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
         stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -25,9 +27,13 @@ doctor: ## Controlla strumenti, versioni e Docker
 	@if docker info >/dev/null 2>&1; then printf '\033[32m✔\033[0m Docker è in esecuzione\n'; \
 	else printf '\033[31m✘\033[0m Docker non è in esecuzione\n'; fi
 
-db: ## Avvia solo il database (i dati restano)
-	@$(FX) run "Avvio il database" $(COMPOSE) up -d db
+db: ## Avvia solo il database, con la porta 5432 aperta sul Mac (i dati restano)
+	@$(FX) run "Avvio il database" $(COMPOSE_DEV) up -d db
 	@$(MAKE) --no-print-directory db-wait
+
+# Per backup e ripristino basta che il database sia acceso, in qualsiasi modalità
+db-running:
+	@$(COMPOSE) ps --status running -q db | grep -q . || $(MAKE) --no-print-directory db
 
 db-wait:
 	@$(FX) run "Attendo che il database risponda" bash -c 'for i in $$(seq 1 60); do $(COMPOSE) exec -T db sh -c "pg_isready -h 127.0.0.1 -U \"\$$POSTGRES_USER\"" >/dev/null 2>&1 && (exec 3<>/dev/tcp/127.0.0.1/5432) 2>/dev/null && exit 0; sleep 1; done; exit 1'
@@ -77,7 +83,7 @@ stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 stack-proxy: ## Come stack, più il proxy Caddy (simula la produzione)
 	@$(FX) run "Costruisco e avvio i container con il proxy" $(COMPOSE) --profile proxy up -d --build
 
-backup: db ## Salva il database in backup/
+backup: db-running ## Salva il database in backup/
 	@mkdir -p $(BACKUP)
 	@$(FX) run "Salvo il backup del database" bash -c '$(COMPOSE) exec -T db sh -c "pg_dump --clean --if-exists --no-owner -U \"\$$POSTGRES_USER\" \"\$$POSTGRES_DB\"" > $(BACKUP)/sorazon-$$(date +%F-%H%M%S).sql'
 	@echo "  File: $(BACKUP)/$$(ls -t $(BACKUP) | head -1)"
@@ -86,7 +92,7 @@ backup-media: ## Salva i file caricati dal CMS (volume media) in backup/
 	@mkdir -p $(BACKUP)
 	@$(FX) run "Salvo i file caricati" docker run --rm -v $(MEDIA_VOLUME):/data:ro -v "$(CURDIR)/$(BACKUP)":/b alpine sh -c 'tar czf /b/media-$$(date +%F-%H%M%S).tgz -C /data .'
 
-restore: db ## Ripristina un backup: make restore FILE=backup/xxx.sql
+restore: db-running ## Ripristina un backup: make restore FILE=backup/xxx.sql
 	@test -n "$(FILE)" || (echo "Indica il file: make restore FILE=backup/xxx.sql"; exit 1)
 	@$(FX) confirm "Il database attuale verrà sovrascritto. Scrivi 'ripristina' per continuare:" ripristina
 	@$(FX) run "Ripristino $(FILE)" bash -c '$(COMPOSE) exec -T db sh -c "psql -U \"\$$POSTGRES_USER\" -d \"\$$POSTGRES_DB\"" < $(FILE)'

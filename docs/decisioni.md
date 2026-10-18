@@ -8,3 +8,5 @@
 | 2026-10-19 | `robots.txt` generato a runtime da `app/robots.ts` al posto di next-sitemap in postbuild | next-sitemap in build | L'indirizzo del sito si legge a runtime: una sola immagine per ogni ambiente |
 | 2026-10-19 | Centri: `regione` come select con valore uguale al nome (apostrofo tipografico in "Valle d’Aosta") | Valori slug con tabella di etichette nel frontend | Il frontend mostra il valore così com'è, senza duplicare l'elenco delle regioni |
 | 2026-10-19 | Seed ripetibile senza cancellazioni (cerca per email, nome file, slug, nome+città+indirizzo) | Svuotare e ricreare | Non distrugge le modifiche fatte a mano nel database di sviluppo |
+| 2026-10-19 | Porta del database solo in `docker-compose.dev.yml` (make db), mai nel compose dello stack | Porta su 127.0.0.1 nel compose principale | Da Docker 28 una porta pubblicata è raggiungibile anche dalle altre reti Docker: il frontend arrivava al database per IP |
+| 2026-10-19 | Versione di pnpm fissata con `packageManager` (12.11.2) in backend e frontend | Lasciare scegliere a corepack | Stessa versione in locale e nelle immagini; il lockfile la registra |
