@@ -846,7 +846,27 @@ export interface SchedaProdottoBlock {
 export interface Centri {
   id: number;
   nome_struttura: string;
-  regione: string;
+  regione:
+    | 'Abruzzo'
+    | 'Basilicata'
+    | 'Calabria'
+    | 'Campania'
+    | 'Emilia-Romagna'
+    | 'Friuli-Venezia Giulia'
+    | 'Lazio'
+    | 'Liguria'
+    | 'Lombardia'
+    | 'Marche'
+    | 'Molise'
+    | 'Piemonte'
+    | 'Puglia'
+    | 'Sardegna'
+    | 'Sicilia'
+    | 'Toscana'
+    | 'Trentino-Alto Adige'
+    | 'Umbria'
+    | 'Valle d’Aosta'
+    | 'Veneto';
   provincia?: string | null;
   citta: string;
   indirizzo?: string | null;

@@ -7,7 +7,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create migrate \
+.PHONY: help doctor db db-wait stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
         stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -67,6 +67,9 @@ migrate-create: db ## Crea una migrazione: make migrate-create NAME=iniziale
 
 migrate: db ## Applica le migrazioni non ancora eseguite
 	@pnpm -C backend payload migrate
+
+seed: migrate ## Contenuti di partenza (admin, Home, Centri, Dispositivo, centri). Ripetibile, non cancella
+	@pnpm -C backend payload run src/seed/index.ts
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build

@@ -1,0 +1,207 @@
+[
+  { "regione": "Marche", "provincia": "AN", "citta": "Ancona", "nome_struttura": "Studio Medico", "telefoni": "337 641384" },
+  { "regione": "Marche", "provincia": "PU", "citta": "Fano", "nome_struttura": "Centro Medico Arcadia", "telefoni": "333 9129395" },
+  { "regione": "Marche", "provincia": "MC", "citta": "Trodica di Morrovalle", "nome_struttura": "Studio Medico", "telefoni": "340 5244629 - 337 641384" },
+  {
+    "regione": "Marche", "provincia": "PU", "citta": "Pesaro",
+    "nome_struttura": "Postural Lab - Posturologia, Fisioterapia, Riabilitazione",
+    "indirizzo": "Strada della Fabbreccia 104", "telefoni": "392 8340398", "email": "maronaldo@libero.it",
+    "professionisti": "Maroncelli Matteo"
+  },
+
+  {
+    "regione": "Piemonte", "provincia": "TO", "citta": "Bricherasio",
+    "nome_struttura": "Studio Fisiò", "indirizzo": "Via Campiglione, 23", "telefoni": "393 4179839",
+    "sito": "www.studiofisio.business.site",
+    "professionisti": "Dott. Toscano Mauro - Fisioterapista\nDott. Bagatin Stefano - Fisioterapista"
+  },
+  {
+    "regione": "Piemonte", "provincia": "VC", "citta": "Vercelli",
+    "nome_struttura": "Studio Fisioterapico", "telefoni": "338 8904113",
+    "professionisti": "Dott. Andrea Suma - Fisioterapista"
+  },
+  {
+    "regione": "Piemonte", "provincia": "NO", "citta": "Gozzano",
+    "nome_struttura": "Studio Fisioterapico", "indirizzo": "Corso XXV Aprile, 65", "telefoni": "333 2227939",
+    "sito": "www.fisioterapiapettinaroli.it",
+    "professionisti": "Dott. Davide Pettinaroli - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Piemonte", "provincia": "NO", "citta": "Galliate",
+    "nome_struttura": "Studio Fisioterapico Pantarei rehab e sport s.r.l.", "indirizzo": "Via Dante Alighieri, 87",
+    "telefoni": "342 9322424", "sito": "www.pantareirehab.it",
+    "professionisti": "Dott. Cevasco Marcello - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Piemonte", "provincia": "CN", "citta": "Cuneo",
+    "nome_struttura": "Studio Assoc. di Fisioterapia-Osteopatia di Pepino Valentina e Greta Biglione",
+    "indirizzo": "Viale Angeli, 38", "telefoni": "333 8880840",
+    "professionisti": "Dott.ssa Pepino Valentina - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Piemonte", "provincia": "CN", "citta": "Centallo",
+    "nome_struttura": "Studio di Fisioterapia e Osteopatia Dott. Mana Matteo",
+    "indirizzo": "Via Passeggiata del Convento 9, 12004 Centallo (CN)", "telefoni": "320 3267583",
+    "email": "m.matteomana@gmail.com",
+    "professionisti": "Dott. Mana Matteo"
+  },
+  {
+    "regione": "Piemonte", "provincia": "AL", "citta": "Acqui Terme",
+    "nome_struttura": "Studio Fisioterapico Manus Medica", "indirizzo": "Corso Bagni, 179/A", "telefoni": "347 9068985",
+    "professionisti": "Dott. Massimo Sgarminato - Fisioterapista Osteopata"
+  },
+
+  {
+    "regione": "Liguria", "provincia": "SV", "citta": "Albenga",
+    "nome_struttura": "Poliambulatorio Bastia Medica", "indirizzo": "Piazza Antonio Anfossi 2 (Bastia)",
+    "telefoni": "0182 20485", "sito": "www.bastiamedica.com"
+  },
+  {
+    "regione": "Liguria", "provincia": "SV", "citta": "Borghetto Santo Spirito",
+    "nome_struttura": "Ambulatorio sociale ABG Salute", "indirizzo": "Via Giardini, 2", "telefoni": "342 6097138",
+    "professionisti": "Dott. Riccardo Vaccaro - Fisioterapista Osteopata\nDonatella Zanconato - Responsabile\nDott. Carlo Meistro - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Liguria", "provincia": "SV", "citta": "Savona",
+    "nome_struttura": "Riviera Wellness", "indirizzo": "Corso Vittorio Veneto, 1", "telefoni": "342 6097138",
+    "professionisti": "Dott. Riccardo Vaccaro - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Liguria", "provincia": "IM", "citta": "Pieve di Teco",
+    "nome_struttura": "Ambulatorio Medico", "indirizzo": "Corso Mario Ponzoni, 65", "telefoni": "342 6097138",
+    "professionisti": "Dott. Riccardo Vaccaro - Fisioterapista Osteopata\nDonatella Zanconato - Responsabile\nDott. Carlo Meistro - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Liguria", "provincia": "SV", "citta": "Andora",
+    "nome_struttura": "Centro Salute Andora", "indirizzo": "Via dei Mille, 10", "telefoni": "0182 87185",
+    "sito": "www.centrosaluteandora.com",
+    "professionisti": "Dott. Riccardo Vaccaro - Fisioterapista Osteopata\nDonatella Zanconato - Responsabile"
+  },
+
+  {
+    "regione": "Lombardia", "provincia": "MI", "citta": "Magnago",
+    "nome_struttura": "Fisio Sigma", "indirizzo": "Via Daniele Manin 15", "telefoni": "339 3883659",
+    "email": "fisio.signo@gmail.com",
+    "professionisti": "Signorini Matteo"
+  },
+  {
+    "regione": "Lombardia", "provincia": "MI", "citta": "Mesero",
+    "nome_struttura": "Studio Medico-Fisioterapico D.A.M.", "indirizzo": "Via San Bernardo, 29", "telefoni": "02 97288454",
+    "professionisti": "Dott. Francesco Masetti - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Lombardia", "provincia": "BS", "citta": "Palazzolo sull'Oglio",
+    "nome_struttura": "Poliambulatorio fisioterapico Moraschi", "indirizzo": "Via Monsignor Zeno Piccinelli, 1",
+    "telefoni": "030 7401541", "sito": "www.poliambulatoriomoraschi.com",
+    "professionisti": "Dott. Moraschi Marco - Fisioterapista"
+  },
+  {
+    "regione": "Lombardia", "provincia": "VA", "citta": "Busto Arsizio",
+    "nome_struttura": "Studio Fisioterapico Stissi Valeria", "indirizzo": "Via Correggio", "telefoni": "349 1644807",
+    "professionisti": "Dott.ssa Stissi Valeria - Fisioterapista\nDott. Stissi Placido - Medico Chirurgo Ortopedico"
+  },
+  {
+    "regione": "Lombardia", "provincia": "VA", "citta": "Varese",
+    "nome_struttura": "Studio VA", "indirizzo": "Via Morosini 19", "telefoni": "349 1644807",
+    "professionisti": "Dott.ssa Stissi Valeria - Fisioterapista\nDott. Stissi Placido - Medico Chirurgo Ortopedico"
+  },
+  {
+    "regione": "Lombardia", "provincia": "BS", "citta": "Darfo Boario Terme",
+    "nome_struttura": "Studio Fisioterapico Salute in Circolo", "indirizzo": "Via S. Agostino, 14 - 25047",
+    "telefoni": "366 9043435",
+    "professionisti": "Dott.ssa Saviori Cinzia - Fisioterapista"
+  },
+  {
+    "regione": "Lombardia", "provincia": "MI", "citta": "Cornaredo",
+    "nome_struttura": "Studio Fisioterapico Pantarei rehab e sport s.r.l.", "indirizzo": "Via Pace, 11-13",
+    "telefoni": "349 2201096", "sito": "www.pantareirehab.it",
+    "professionisti": "Dott. Cevasco Marcello - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Lombardia", "provincia": "MI", "citta": "Milano",
+    "nome_struttura": "Studio Fisioterapico Pantarei rehab e sport s.r.l.", "indirizzo": "Via Cola Montano, 3 (Isola)",
+    "telefoni": "351 5177198", "sito": "www.pantareirehab.it",
+    "professionisti": "Dott. Cevasco Marcello - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Lombardia", "provincia": "MI", "citta": "Milano",
+    "nome_struttura": "Biofisiomed S.r.l.", "indirizzo": "Via Cuneo, 4 (MM1 Wagner)", "telefoni": "335 6566313",
+    "sito": "www.diegociriello.it/sorazon.html",
+    "professionisti": "Dott. Diego Ciriello - Fisioterapista"
+  },
+
+  {
+    "regione": "Emilia-Romagna", "provincia": "BO", "citta": "Funo di Argelato",
+    "nome_struttura": "Studio Fisioterapico", "indirizzo": "Via Galleria, 232/3", "telefoni": "333 5259861",
+    "sito": "www.fisioterapia-funo.it",
+    "professionisti": "Dott. Antonio Dall'Olmo - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Emilia-Romagna", "provincia": "RE", "citta": "Casalgrande",
+    "nome_struttura": "Studio Sherpa", "indirizzo": "Via Statale, 467 n. 63",
+    "telefoni": "+39 388 1507748 - +39 339 8408665", "email": "gottardi91@gmail.com",
+    "professionisti": "Gottardi Gabriele\nZini Francesco"
+  },
+
+  {
+    "regione": "Lazio", "provincia": "RM", "citta": "Roma",
+    "nome_struttura": "Studio Medico-Fisioterapico", "indirizzo": "Via Carlo Spegazzini, 99 (Monte Sacro)",
+    "telefoni": "333 2636379",
+    "professionisti": "Dott. Paolo Diano - Medico Chirurgo Spec. Ortopedia Traumatologia"
+  },
+  {
+    "regione": "Lazio", "provincia": "RM", "citta": "Roma",
+    "nome_struttura": "Studio Di Chiara Osteopatia e Fisioterapia", "indirizzo": "Via Antonio Coppi 8/c",
+    "telefoni": "340 5602452", "sito": "www.fisioterapiadichiara.it",
+    "professionisti": "Dott.ssa Anna Di Chiara (Pizzarello) - Fisioterapista Osteopata"
+  },
+  {
+    "regione": "Lazio", "provincia": "RM", "citta": "Roma",
+    "nome_struttura": "Studio Fisioterapico Pizzini e Carassia", "indirizzo": "Via Candia, 102",
+    "telefoni": "06 39366641", "sito": "www.apfisioterapiaroma.it",
+    "professionisti": "Dott. Alessandro Carassia - Fisioterapista\nDott. Pasquale Pizzini - Fisioterapista"
+  },
+  {
+    "regione": "Lazio", "provincia": "FR", "citta": "Cassino",
+    "nome_struttura": "Studio Medico - Casa di Cura Sant'Anna", "indirizzo": "Via Karl Herold",
+    "telefoni": "338 2656010 - 339 2934245",
+    "professionisti": "Dott. Carmine Papa - Medico Chirurgo Spec. Ortopedia Traumatologia"
+  },
+  {
+    "regione": "Lazio", "provincia": "VT", "citta": "Carbognano",
+    "nome_struttura": "Studio Dott. Danilo Magalotti", "indirizzo": "Via XXVIII Ottobre, 26 - 01030 Carbognano (VT)",
+    "telefoni": "340 8166907", "email": "danilo.magalotti@gmail.com",
+    "professionisti": "Dott. Danilo Magalotti - Dottore in Fisioterapia"
+  },
+
+  {
+    "regione": "Puglia", "provincia": "FG", "citta": "San Giovanni Rotondo",
+    "nome_struttura": "Arcadia Centro Medico s.r.l.", "indirizzo": "Viale della Gioventù, 15", "telefoni": "339 155792",
+    "professionisti": "Mangiacotti Giuseppe"
+  },
+
+  {
+    "regione": "Campania", "provincia": "CE", "citta": "Bellona",
+    "nome_struttura": "Studio Medico", "indirizzo": "Via Aldo Moro, 33 - P.co MaryAnna",
+    "telefoni": "339 2934245 - 0823 990956", "email": "carminepapa@alice.it",
+    "professionisti": "Dott. Carmine Papa - Medico Chirurgo Spec. Ortopedia Traumatologia"
+  },
+  {
+    "regione": "Campania", "provincia": "SA", "citta": "Salerno",
+    "nome_struttura": "Studio Medico - Terapia del dolore", "indirizzo": "Via C.R. Pastore, 3",
+    "telefoni": "089 303004 - 347 1722920",
+    "professionisti": "Dott. Colacino Gianfranco - Medico Chirurgo Spec. Anestesia e Rianimazione"
+  },
+
+  {
+    "regione": "Basilicata", "provincia": "MT", "citta": "Montalbano Jonico",
+    "nome_struttura": "Studio Tommaso Casalnuovo", "indirizzo": "Via Magenta 32", "telefoni": "+39 389 989 8457",
+    "professionisti": "Casalnuovo Tommaso - Fisioterapista Osteopata"
+  },
+
+  {
+    "regione": "Abruzzo", "provincia": "PE", "citta": "Pescara",
+    "nome_struttura": "Apeiron di Mennilli Alessio", "indirizzo": "Via Rigopiano n. 69", "telefoni": "393 5132748",
+    "professionisti": "Mennilli Alessio - Fisioterapista Osteopata"
+  }
+]

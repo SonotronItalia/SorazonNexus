@@ -2,6 +2,29 @@ import type { CollectionConfig } from 'payload'
 
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
+export const REGIONI = [
+  'Abruzzo',
+  'Basilicata',
+  'Calabria',
+  'Campania',
+  'Emilia-Romagna',
+  'Friuli-Venezia Giulia',
+  'Lazio',
+  'Liguria',
+  'Lombardia',
+  'Marche',
+  'Molise',
+  'Piemonte',
+  'Puglia',
+  'Sardegna',
+  'Sicilia',
+  'Toscana',
+  'Trentino-Alto Adige',
+  'Umbria',
+  'Valle d’Aosta',
+  'Veneto',
+] as const
+
 export const Centri: CollectionConfig = {
   slug: 'centri',
   labels: { singular: 'Centro', plural: 'Centri' },
@@ -20,7 +43,14 @@ export const Centri: CollectionConfig = {
     {
       type: 'row', // Raggruppa i campi visivamente nel pannello di controllo
       fields: [
-        { name: 'regione', type: 'text', required: true },
+        {
+          name: 'regione',
+          type: 'select',
+          required: true,
+          // Il valore è il nome stesso: il frontend lo mostra così com'è.
+          // Apostrofo tipografico in "Valle d’Aosta": il valore finisce in un enum di Postgres.
+          options: REGIONI.map((r) => ({ label: r, value: r })),
+        },
         { name: 'provincia', type: 'text' },
         { name: 'citta', type: 'text', required: true },
       ],

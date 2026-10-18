@@ -25,6 +25,7 @@ make_env() {
     case "$line" in
       PAYLOAD_SECRET=*)    echo "PAYLOAD_SECRET=$PS" ;;
       REVALIDATE_SECRET=*) echo "REVALIDATE_SECRET=$RS" ;;
+      SEED_ADMIN_PASSWORD=*) echo "SEED_ADMIN_PASSWORD=$(gen | cut -c1-20)" ;;
       *) echo "$line" ;;
     esac
   done < "$example" > "$target"
