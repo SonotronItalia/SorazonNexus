@@ -4,7 +4,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-APP=vetrina
 NODE_MAJOR=22
 OS="$(uname -s)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -13,7 +12,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 ok()   { printf '\033[32m✔\033[0m %s\n' "$1"; }
 fail() { printf '\033[31m✘ %s\033[0m\n' "$1" >&2; exit 1; }
 node_ok() {
-  have node && node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a>20||(a===20&&b>=9)?0:1)'
+  have node && node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a>20||(a===20&&b>=18)?0:1)'
 }
 
 # Installa solo su macOS con Homebrew; altrove spiega cosa manca
@@ -37,7 +36,7 @@ fi
 
 have pnpm || corepack enable >/dev/null 2>&1 || npm install -g pnpm >/dev/null 2>&1 || true
 have pnpm || fail "pnpm non disponibile: prova 'sudo corepack enable' oppure 'sudo npm i -g pnpm'"
-ok "pnpm $(cd "$APP" && pnpm -v)"
+ok "pnpm $(cd backend && pnpm -v)"
 
 have docker || install_mac "Docker Desktop" bash -c 'brew install --cask docker-desktop || brew install --cask docker'
 if ! docker info >/dev/null 2>&1; then
@@ -52,28 +51,16 @@ ok "docker $(docker --version | cut -d' ' -f3 | tr -d ,)"
 have make || fail "Manca make: su macOS esegui 'xcode-select --install' e rilancia"
 ok "make"
 
-# ---------- 2. File .env con segreti casuali (solo se non esiste) ----------
-gen_secret() {
-  if have openssl; then openssl rand -hex 32
-  else node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"; fi
-}
+# ---------- 2. File .env (radice, backend, frontend) con segreti casuali; non tocca quelli esistenti ----------
+bash scripts/env.sh
 
-if [ -f "$APP/.env" ]; then
-  ok "$APP/.env esiste già: non lo tocco"
-else
-  [ -f "$APP/.env.example" ] || fail "Manca $APP/.env.example"
-  while IFS= read -r line || [ -n "$line" ]; do
-    case "$line" in
-      PAYLOAD_SECRET=*|CRON_SECRET=*|PREVIEW_SECRET=*) echo "${line%%=*}=$(gen_secret)" ;;
-      *) echo "$line" ;;
-    esac
-  done < "$APP/.env.example" > "$APP/.env"
-  ok "Creato $APP/.env con segreti nuovi"
-fi
-
-# ---------- 3. Dipendenze e database ----------
-bash scripts/fx.sh run "Installo le dipendenze" pnpm -C "$APP" install --frozen-lockfile
-make --no-print-directory up
+# ---------- 3. Dipendenze, database e contenuti di partenza ----------
+for dir in backend frontend; do
+  bash scripts/fx.sh run "Installo le dipendenze ($dir)" pnpm -C "$dir" install --frozen-lockfile
+done
+make --no-print-directory seed
 
 echo
-echo "Fatto. Ora:  make dev   e apri http://localhost:3000/admin per creare il primo utente."
+echo "Fatto. Ora:  make dev"
+echo "  sito   http://localhost:3000"
+echo "  admin  http://localhost:3001/admin  (utente SEED_ADMIN_EMAIL, password in backend/.env)"

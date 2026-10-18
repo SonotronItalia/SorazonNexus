@@ -70,10 +70,10 @@ SorazonNexus/
 │   ├── dev.sh               # backend + frontend insieme con output prefissato; Ctrl+C li ferma
 │   ├── env.sh               # crea .env (radice, backend, frontend) con segreti casuali coerenti
 │   ├── setup.sh             # verifica/installa strumenti e prepara il progetto (DA AGGIORNARE, vedi sotto)
-│   └── split-vetrina.sh     # script una tantum già usato per dividere vetrina/ in backend/ e frontend/
+│   └── split-vetrina.sh     # script una tantum già usato per dividere vetrina/ (ora solo nel tag monolite-v1)
 ├── backend/                 # SOLO Payload
-├── frontend/                # SOLO Next.js
-└── vetrina/                 # VECCHIO monolite: da eliminare dopo la verifica (tag git: monolite-v1)
+└── frontend/                # SOLO Next.js
+# Il vecchio monolite vetrina/ è stato eliminato: si recupera dal tag git monolite-v1.
 ```
 
 Nel backend: `src/{access,collections,fields,hooks,plugins,search,Header,Footer,heros,blocks,utilities}`, `src/app/(payload)`, `src/payload.config.ts`, `src/payload-types.ts` (generato). I blocchi e l'hero nel backend contengono **solo `config.ts`**.

@@ -9,7 +9,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help doctor db db-wait db-running stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
+.PHONY: help setup doctor db db-wait db-running stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
         stack stack-proxy backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -17,6 +17,9 @@ help: ## Mostra i comandi disponibili
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[38;5;135m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo
 	@echo "  Senza animazioni: make <comando> EFFECTS=0"
+
+setup: ## Prima installazione: strumenti, .env, dipendenze, database e contenuti di partenza
+	@bash scripts/setup.sh
 
 doctor: ## Controlla strumenti, versioni e Docker
 	@for t in git node pnpm docker make; do \

@@ -1,11 +1,12 @@
 Per avviare il progetto servono:
 
   git
-  Node 22 (minimo 20.9)
-  pnpm
-  Docker Desktop
+  Node 22 (minimo 20.18.1)
+  pnpm 12 (la versione esatta è in package.json, campo packageManager)
+  Docker Desktop (Docker 28 o successivo)
   make        (su macOS: xcode-select --install)
 
-Poi:  bash scripts/setup.sh
+Poi:  make setup
 Lo script controlla ognuno di questi strumenti e installa quelli che mancano (solo su macOS, con Homebrew).
 Su Linux o Windows (WSL2) ti dice cosa manca e va installato a mano.
+Infine crea i file .env, installa le dipendenze di backend e frontend, prepara il database e carica i contenuti di partenza.
