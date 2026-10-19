@@ -6,7 +6,7 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
-import { PostHero } from '@/heros/PostHero'
+import { PostHero, heroAPienoSchermo } from '@/heros/PostHero'
 import { getPostBySlug } from '@/lib/content'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
@@ -38,7 +38,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   return (
     <article className="pt-16 pb-16">
-      <PageClient />
+      <PageClient scuro={heroAPienoSchermo(post)} />
 
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />

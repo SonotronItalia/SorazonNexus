@@ -31,10 +31,12 @@ export const HeaderThemeProvider = ({ children }: { children: React.ReactNode })
 export const useHeaderTheme = (): ContextType => use(HeaderThemeContext)
 
 // Per gli hero che stanno sotto l'header: lo rende scuro finché l'hero è in pagina
-export const useHeaderScuro = () => {
+// (attivo = false: l'hero quella volta non sta sotto l'header e non cambia nulla)
+export const useHeaderScuro = (attivo = true) => {
   const { setHeaderTheme } = useHeaderTheme()
   useEffect(() => {
+    if (!attivo) return
     setHeaderTheme('dark')
     return () => setHeaderTheme(null)
-  }, [setHeaderTheme])
+  }, [attivo, setHeaderTheme])
 }

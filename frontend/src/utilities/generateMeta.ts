@@ -24,7 +24,9 @@ export const generateMeta = async (args: {
 
   const ogImage = getImageURL(doc?.meta?.image)
 
-  const title = doc?.meta?.title ? `${doc.meta.title} | ${SITE_NAME}` : SITE_NAME
+  // Titolo SEO se c'è, altrimenti il titolo della pagina o della notizia (in home solo il nome del sito)
+  const nome = doc?.meta?.title || (doc?.slug === 'home' ? undefined : doc?.title)
+  const title = nome ? `${nome} | ${SITE_NAME}` : SITE_NAME
 
   return {
     description: doc?.meta?.description,

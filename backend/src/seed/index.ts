@@ -285,6 +285,44 @@ while (daCreare.length) {
   idPagine.set(p.slug, pagina.id)
 }
 
+// Notizie (dati/notizie/*.md): intestazione YAML con i campi dell'articolo, sotto il testo in Markdown.
+// "categorie" sono titoli di categoria (create se mancano); "bozza: true" la lascia non pubblicata.
+const idCategorie = new Map<string, number | string>()
+async function categoria(titolo: string) {
+  if (!idCategorie.has(titolo)) {
+    const { docs } = await payload.find({ collection: 'categories', where: { title: { equals: titolo } }, limit: 1 })
+    const slug = titolo.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    const c = docs[0] ?? (await payload.create({ collection: 'categories', data: { title: titolo, slug }, context }))
+    idCategorie.set(titolo, c.id)
+  }
+  return idCategorie.get(titolo)!
+}
+for (const f of fs.readdirSync(dati('notizie')).filter((f) => f.endsWith('.md')).sort()) {
+  const m = fs
+    .readFileSync(dati('notizie', f), 'utf8')
+    .replace(/\r\n/g, '\n')
+    .match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
+  if (!m) throw new Error(`notizie/${f}: manca l'intestazione YAML tra due righe "---"`)
+  const { bozza, categorie = [], ...campi } = (parse(m[1]) ?? {}) as Record<string, unknown> & {
+    categorie?: string[]
+  }
+  if (typeof campi.slug !== 'string' || typeof campi.title !== 'string') {
+    throw new Error(`notizie/${f}: nell'intestazione servono "title" e "slug"`)
+  }
+  const stato = bozza === true ? 'draft' : 'published'
+  const data = {
+    ...(risolvi(campi, risolutori) as object),
+    content: markdown(m[2].trim()),
+    categories: await Promise.all(categorie.map(categoria)),
+    _status: stato,
+  } as RequiredDataFromCollectionSlug<'posts'>
+  const draft = stato === 'draft'
+  const { docs } = await payload.find({ collection: 'posts', where: { slug: { equals: campi.slug } }, limit: 1, draft })
+  if (docs[0]) await payload.update({ collection: 'posts', id: docs[0].id, data, draft, context })
+  else await payload.create({ collection: 'posts', data, draft, context })
+  log(`notizia /posts/${campi.slug} ${docs[0] ? 'aggiornata' : 'creata'}${draft ? ' (bozza)' : ''}`)
+}
+
 // Vecchi indirizzi del sito Joomla verso i nuovi
 for (const { da, a } of leggiTabella('redirect.csv')) await seedRedirect(da, a)
 log('redirect dai vecchi indirizzi aggiornati')

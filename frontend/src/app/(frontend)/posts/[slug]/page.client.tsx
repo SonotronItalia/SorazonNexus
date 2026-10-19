@@ -2,9 +2,9 @@
 import { useHeaderScuro } from '@/providers/HeaderTheme'
 import React from 'react'
 
-// L'immagine dell'articolo sta sotto l'header: header scuro finché si resta qui
-const PageClient: React.FC = () => {
-  useHeaderScuro()
+// Con l'immagine a tutto schermo l'header le sta sopra: header scuro finché si resta qui
+const PageClient: React.FC<{ scuro: boolean }> = ({ scuro }) => {
+  useHeaderScuro(scuro)
   return <React.Fragment />
 }
 

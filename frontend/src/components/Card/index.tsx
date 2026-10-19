@@ -37,9 +37,11 @@ export const Card: React.FC<{
       )}
       ref={cardRef}
     >
-      <div className="relative w-full ">
-        {!metaImage && <div className="">No image</div>}
-        {metaImage && typeof metaImage !== 'string' && <Media resource={metaImage} size="33vw" />}
+      {/* Riquadro fisso: immagini orizzontali e copertine verticali restano intere e allineate */}
+      <div className="relative aspect-[4/3] w-full bg-muted">
+        {metaImage && typeof metaImage !== 'string' && (
+          <Media fill imgClassName="object-contain" resource={metaImage} size="33vw" />
+        )}
       </div>
       <div className="p-4">
         {showCategories && hasCategories && (
@@ -48,7 +50,7 @@ export const Card: React.FC<{
               if (typeof category === 'object') {
                 const { title: titleFromCategory } = category
 
-                const categoryTitle = titleFromCategory || 'Untitled category'
+                const categoryTitle = titleFromCategory || 'Senza categoria'
 
                 const isLast = index === categories.length - 1
 
