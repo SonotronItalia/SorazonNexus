@@ -10,6 +10,7 @@ import * as migration_20261019_151942_effetti from './20261019_151942_effetti';
 import * as migration_20261019_154352_tipi_effetto from './20261019_154352_tipi_effetto';
 import * as migration_20261019_175101_footer_dati_legali from './20261019_175101_footer_dati_legali';
 import * as migration_20261019_180548_footer_social from './20261019_180548_footer_social';
+import * as migration_20261019_185812_voci_visibili from './20261019_185812_voci_visibili';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261019_180548_footer_social.up,
     down: migration_20261019_180548_footer_social.down,
-    name: '20261019_180548_footer_social'
+    name: '20261019_180548_footer_social',
+  },
+  {
+    up: migration_20261019_185812_voci_visibili.up,
+    down: migration_20261019_185812_voci_visibili.down,
+    name: '20261019_185812_voci_visibili'
   },
 ];

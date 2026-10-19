@@ -42,7 +42,9 @@ export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
               <div key={gruppo.id} className="mt-6">
                 <h3 className="font-semibold text-red-600">{gruppo.titolo}</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-5">
-                  {gruppo.voci?.map((voce) => <li key={voce.id}>{voce.testo}</li>)}
+                  {gruppo.voci
+                    ?.filter((voce) => voce.visibile !== false)
+                    .map((voce) => <li key={voce.id}>{voce.testo}</li>)}
                 </ul>
               </div>
             ))}
@@ -58,7 +60,9 @@ export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
                 )}
                 <h3 className="text-lg font-semibold">{c.nome}</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-                  {c.composto_da?.map((p) => <li key={p.id}>{p.testo}</li>)}
+                  {c.composto_da
+                    ?.filter((p) => p.visibile !== false)
+                    .map((p) => <li key={p.id}>{p.testo}</li>)}
                 </ul>
               </div>
             ))}

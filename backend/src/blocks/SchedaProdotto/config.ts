@@ -1,6 +1,23 @@
-import type { Block } from 'payload'
+import type { Block, Field } from 'payload'
 
 import { campiSfondo } from '@/fields/sfondo'
+
+// Voce di un elenco: "Visibile" spento la tiene pronta ma non la mostra sul sito
+// (es. "Marchio CE" in attesa della certificazione)
+const CAMPI_VOCE: Field[] = [
+  {
+    type: 'row',
+    fields: [
+      { name: 'testo', type: 'text', required: true },
+      {
+        name: 'visibile',
+        type: 'checkbox',
+        defaultValue: true,
+        admin: { description: 'Spento: la voce resta salvata ma non compare sul sito' },
+      },
+    ],
+  },
+]
 
 export const SchedaProdotto: Block = {
   slug: 'schedaProdotto',
@@ -45,7 +62,7 @@ export const SchedaProdotto: Block = {
           name: 'voci',
           type: 'array',
           labels: { singular: 'Voce', plural: 'Voci' },
-          fields: [{ name: 'testo', type: 'text', required: true }],
+          fields: CAMPI_VOCE,
         },
       ],
     },
@@ -63,7 +80,7 @@ export const SchedaProdotto: Block = {
           dbName: 'parti',
           type: 'array',
           labels: { singular: 'Parte', plural: 'Parti' },
-          fields: [{ name: 'testo', type: 'text', required: true }],
+          fields: CAMPI_VOCE,
         },
       ],
     },

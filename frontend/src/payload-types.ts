@@ -979,6 +979,10 @@ export interface SchedaProdottoBlock {
         voci?:
           | {
               testo: string;
+              /**
+               * Spento: la voce resta salvata ma non compare sul sito
+               */
+              visibile?: boolean | null;
               id?: string | null;
             }[]
           | null;
@@ -992,6 +996,10 @@ export interface SchedaProdottoBlock {
         composto_da?:
           | {
               testo: string;
+              /**
+               * Spento: la voce resta salvata ma non compare sul sito
+               */
+              visibile?: boolean | null;
               id?: string | null;
             }[]
           | null;
