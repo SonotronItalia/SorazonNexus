@@ -6,6 +6,13 @@ hero:
   richText: '# Contatti'
 layout:
   - blockType: content
+  - blockType: formBlock
+    form: modulo:Contatti
+    enableIntro: true
+    introContent: |
+      ## Scrivici
+
+      Compila il modulo: ti risponderemo il prima possibile.
   - blockType: mappa
     titolo: Dove siamo
     indirizzo: Strada Nazionale Adriatica Sud 44/16, 61032 Fano PU

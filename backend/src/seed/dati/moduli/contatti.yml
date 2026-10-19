@@ -1,0 +1,71 @@
+# Modulo della pagina Contatti. Le pagine lo usano con "form: modulo:Contatti".
+# Le email partono verso EMAIL_INFO (info@sonotronitalia.com) se "emailTo" è vuoto; {{nome}} ecc.
+# sono i valori scritti dal visitatore. I campi con testo (confirmationMessage, message) sono Markdown.
+title: Contatti
+submitButtonLabel: Invia la richiesta
+confirmationType: message
+confirmationMessage: |
+  ### Grazie, abbiamo ricevuto la tua richiesta
+
+  Ti risponderemo il prima possibile all'indirizzo email che hai indicato.
+fields:
+  - blockType: text
+    name: nome
+    label: Nome e cognome
+    required: true
+    width: 50
+  - blockType: email
+    name: email
+    label: Email
+    required: true
+    width: 50
+  - blockType: text
+    name: telefono
+    label: Telefono
+    width: 50
+  - blockType: select
+    name: argomento
+    label: Argomento
+    required: true
+    width: 50
+    placeholder: Scegli un argomento
+    options:
+      - label: Informazioni sulla terapia
+        value: Informazioni sulla terapia
+      - label: Il dispositivo Sorazon
+        value: Il dispositivo Sorazon
+      - label: Diventare un centro Sorazon
+        value: Diventare un centro Sorazon
+      - label: Altro
+        value: Altro
+  - blockType: textarea
+    name: messaggio
+    label: Messaggio
+    required: true
+  - blockType: checkbox
+    name: privacy
+    label: Ho letto l'informativa sulla privacy
+    required: true
+  - blockType: message
+    message: |
+      Useremo i tuoi dati solo per rispondere alla richiesta. Dettagli nell'[informativa sulla privacy](/privacy-policy).
+emails:
+  - emailTo: ''
+    replyTo: '{{email}}'
+    subject: 'Richiesta dal sito: {{argomento}}'
+    message: |
+      **Nuova richiesta dal modulo Contatti del sito**
+
+      **Nome:** {{nome}}
+
+      **Email:** {{email}}
+
+      **Telefono:** {{telefono}}
+
+      **Argomento:** {{argomento}}
+
+      **Messaggio:**
+
+      {{messaggio}}
+
+      Per rispondere basta usare "Rispondi": la risposta arriva a chi ha scritto.

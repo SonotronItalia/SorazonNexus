@@ -11,6 +11,10 @@ import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
 
+// Campo trappola contro lo spam: invisibile ai visitatori, il backend scarta gli invii che lo
+// compilano (stesso nome di CAMPO_TRAPPOLA in backend/src/hooks/controllaModulo.ts)
+const CAMPO_TRAPPOLA = '_sito'
+
 export type FormBlockType = {
   blockName?: string
   blockType?: 'formBlock'
@@ -91,7 +95,7 @@ export const FormBlock: React.FC<
             setIsLoading(false)
 
             setError({
-              message: res.errors?.[0]?.message || 'Internal Server Error',
+              message: res.errors?.[0]?.message || 'Invio non riuscito. Riprova tra poco.',
               status: res.status,
             })
 
@@ -112,7 +116,7 @@ export const FormBlock: React.FC<
           console.warn(err)
           setIsLoading(false)
           setError({
-            message: 'Something went wrong.',
+            message: 'Invio non riuscito: controlla la connessione e riprova.',
           })
         }
       }
@@ -127,24 +131,49 @@ export const FormBlock: React.FC<
       {enableIntro && introContent && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
-      <div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+      <div className="relative p-4 lg:p-6 border border-border rounded-[0.8rem]">
         <FormProvider {...formMethods}>
           {!isLoading && hasSubmitted && confirmationType === 'message' && (
             confirmationMessage && <RichText data={confirmationMessage} />
           )}
-          {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-          {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
+          {isLoading && !hasSubmitted && <p>Invio in corso...</p>}
+          {error && (
+            <p role="alert" className="mb-4 text-sm text-red-500">
+              {error.message}
+            </p>
+          )}
           {!hasSubmitted && (
-            <form id={formDomID} onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4 last:mb-0">
+            <form id={formDomID} onSubmit={handleSubmit(onSubmit)} noValidate>
+              <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                <label htmlFor={`${formDomID}-${CAMPO_TRAPPOLA}`}>Non compilare questo campo</label>
+                <input
+                  id={`${formDomID}-${CAMPO_TRAPPOLA}`}
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  {...register(CAMPO_TRAPPOLA)}
+                />
+              </div>
+              {/* Campi affiancati secondo la larghezza scelta nel CMS (es. 50%) quando il modulo è
+                  abbastanza largo; più stretto (telefono, colonna) ognuno occupa tutta la riga */}
+              <div className="@container mb-8 flex flex-wrap gap-x-4 gap-y-6">
                 {formFromProps &&
                   formFromProps.fields &&
                   formFromProps.fields?.map((field, index) => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
                     if (Field) {
+                      const larghezza = 'width' in field && field.width ? Number(field.width) : 100
                       return (
-                        <div className="mb-6 last:mb-0" key={index}>
+                        <div
+                          className="w-full @lg:w-(--larghezza)"
+                          style={
+                            {
+                              '--larghezza': `calc(${larghezza}% - ${(1 - larghezza / 100).toFixed(2)}rem)`,
+                            } as React.CSSProperties
+                          }
+                          key={index}
+                        >
                           <Field
                             form={formFromProps}
                             {...field}
@@ -160,7 +189,7 @@ export const FormBlock: React.FC<
                   })}
               </div>
 
-              <Button form={formDomID} type="submit" variant="default">
+              <Button form={formDomID} type="submit" variant="default" disabled={isLoading}>
                 {submitButtonLabel}
               </Button>
             </form>

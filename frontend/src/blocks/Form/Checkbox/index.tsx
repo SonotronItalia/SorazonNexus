@@ -16,7 +16,10 @@ export const Checkbox: React.FC<
     register: UseFormRegister<FieldValues>
   }
 > = ({ name, defaultValue, errors, label, register, required, width }) => {
-  const props = register(name, { required: required })
+  // Una casella obbligatoria va spuntata (required da solo accetta anche il valore false)
+  const props = register(name, {
+    validate: required ? (v) => v === true || 'Campo obbligatorio' : undefined,
+  })
   const { setValue } = useFormContext()
 
   return (
@@ -33,7 +36,7 @@ export const Checkbox: React.FC<
         <Label htmlFor={name}>
           {required && (
             <span className="required">
-              * <span className="sr-only">(required)</span>
+              * <span className="sr-only">(obbligatorio)</span>
             </span>
           )}
           {label}

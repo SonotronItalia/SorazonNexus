@@ -28,7 +28,7 @@ export const State: React.FC<
         {label}
         {required && (
           <span className="required">
-            * <span className="sr-only">(required)</span>
+            * <span className="sr-only">(obbligatorio)</span>
           </span>
         )}
       </Label>

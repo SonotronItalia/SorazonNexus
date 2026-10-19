@@ -16,11 +16,12 @@ export const FormBlock: Block = {
       type: 'relationship',
       relationTo: 'forms',
       required: true,
+      label: 'Modulo',
     },
     {
       name: 'enableIntro',
       type: 'checkbox',
-      label: 'Enable Intro Content',
+      label: 'Mostra un testo sopra il modulo',
     },
     {
       name: 'introContent',
@@ -38,14 +39,14 @@ export const FormBlock: Block = {
           ]
         },
       }),
-      label: 'Intro Content',
+      label: 'Testo sopra il modulo',
     },
   ],
   graphQL: {
     singularName: 'FormBlock',
   },
   labels: {
-    plural: 'Form Blocks',
-    singular: 'Form Block',
+    plural: 'Moduli',
+    singular: 'Modulo',
   },
 }

@@ -205,6 +205,37 @@ for (const r of leggiTabella('effetti.csv')) {
 }
 log(`effetti pronti (${idEffetti.size})`)
 
+// Moduli (dati/moduli/*.yml), cercati per titolo: le pagine li usano con "modulo:Titolo"
+const idModuli = new Map<string, number | string>()
+const risolutoriModuli = {
+  markdown,
+  media: () => {
+    throw new Error('nei moduli non si usano immagini')
+  },
+  pagina: () => {
+    throw new Error('nei moduli i collegamenti alle pagine si scrivono come link Markdown')
+  },
+  colore: () => {
+    throw new Error('nei moduli non si usano colori')
+  },
+  effetto: () => {
+    throw new Error('nei moduli non si usano effetti')
+  },
+  modulo: () => {
+    throw new Error('un modulo non può contenerne un altro')
+  },
+}
+for (const f of fs.readdirSync(dati('moduli')).filter((f) => f.endsWith('.yml')).sort()) {
+  const data = risolvi(parse(fs.readFileSync(dati('moduli', f), 'utf8')), risolutoriModuli) as RequiredDataFromCollectionSlug<'forms'>
+  if (!data.title) throw new Error(`moduli/${f}: manca "title"`)
+  const { docs } = await payload.find({ collection: 'forms', where: { title: { equals: data.title } }, limit: 1, depth: 0 })
+  const modulo = docs[0]
+    ? await payload.update({ collection: 'forms', id: docs[0].id, data, context })
+    : await payload.create({ collection: 'forms', data, context })
+  idModuli.set(data.title, modulo.id)
+}
+log(`moduli pronti (${idModuli.size})`)
+
 // Pagine: prima quelle senza collegamenti, poi quelle che puntano a pagine già create
 const idPagine = new Map<string, number | string>()
 const { docs: pagineEsistenti } = await payload.find({ collection: 'pages', pagination: false, depth: 0, draft: true })
@@ -230,6 +261,11 @@ const risolutori = {
   pagina: (slug: string) => {
     const id = idPagine.get(slug)
     if (id == null) throw new Error(`collegamento alla pagina "${slug}", che non esiste`)
+    return id
+  },
+  modulo: (titolo: string) => {
+    const id = idModuli.get(titolo)
+    if (id == null) throw new Error(`modulo "${titolo}" che non esiste in dati/moduli`)
     return id
   },
 }

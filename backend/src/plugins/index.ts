@@ -5,6 +5,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
+import { controllaModulo } from '@/hooks/controllaModulo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
@@ -63,6 +64,12 @@ export const plugins: Plugin[] = [
     },
     // Destinatario predefinito delle email inviate dai moduli
     defaultToEmail: EMAIL_INFO,
+    // Mittente delle email dei moduli: info@ se il modulo non ne indica uno
+    beforeEmail: (emails) => emails.map((e) => ({ ...e, from: e.from || EMAIL_INFO })),
+    // Controlli sugli invii (anti-spam, obbligatori, email valide): vedi hooks/controllaModulo.ts
+    formSubmissionOverrides: {
+      hooks: { beforeValidate: [controllaModulo] },
+    },
     formOverrides: {
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {

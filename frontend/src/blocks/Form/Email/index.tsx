@@ -21,7 +21,7 @@ export const Email: React.FC<
 
         {required && (
           <span className="required">
-            * <span className="sr-only">(required)</span>
+            * <span className="sr-only">(obbligatorio)</span>
           </span>
         )}
       </Label>
@@ -29,7 +29,12 @@ export const Email: React.FC<
         defaultValue={defaultValue}
         id={name}
         type="text"
-        {...register(name, { pattern: /^\S[^\s@]*@\S+$/, required })}
+        inputMode="email"
+        autoComplete="email"
+        {...register(name, {
+          pattern: { value: /^\S[^\s@]*@\S+\.\S+$/, message: 'Indirizzo email non valido' },
+          required,
+        })}
       />
 
       {errors[name] && <Error name={name} />}

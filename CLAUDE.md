@@ -45,6 +45,8 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 
 **Email**: adattatore nodemailer attivo solo con `SMTP_HOST`; in sviluppo Mailpit (`make db`, casella su http://localhost:8025). Indirizzi: `EMAIL_FROM` = `it@sonotronitalia.com` per le email di sistema (reset password, account); `EMAIL_INFO` = `info@sonotronitalia.com`, destinatario e mittente predefiniti dei moduli del sito.
 
+**Moduli del sito** (plugin form-builder): definiti in `backend/src/seed/dati/moduli/*.yml` e inseriti nelle pagine con il blocco `formBlock` (`form: modulo:Contatti`). Ogni invio passa da `backend/src/hooks/controllaModulo.ts` (campo trappola `_sito`, obbligatori, email valida, lunghezza, solo i campi del modulo): l'API `/api/form-submissions` è pubblica, i controlli del browser non bastano. Gli invii restano nell'admin (Form Submissions); l'email parte solo se c'è `SMTP_HOST`.
+
 **Immagini e moduli**: il browser non conosce l'indirizzo del backend. `frontend/next.config.ts` ha rewrite `/media/:path*` → `{backend}/api/media/file/:path*` e `/api/form-submissions` → backend. La funzione `mediaSrc()` in `lib/api.ts` converte gli URL dei media.
 
 **Build senza backend**: il frontend non deve pre-generare pagine che richiedono il backend. `generateStaticParams` restituisce `[]` e le pagine si costruiscono alla prima richiesta (ISR con tag). Così `next build` e `docker build` non hanno bisogno di backend né database.
