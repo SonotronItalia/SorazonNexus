@@ -15,6 +15,7 @@ import { Colori } from './collections/Colori'
 import { Effetti } from './collections/Effetti'
 import { TipiEffetto } from './collections/TipiEffetto'
 import { BLOCCHI_PAGINA } from './blocks/blocchiPagina'
+import { TornaSu } from './TornaSu/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -95,7 +96,7 @@ export default buildConfig({
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
   collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users],
-  globals: [Header, Footer],
+  globals: [Header, Footer, TornaSu],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

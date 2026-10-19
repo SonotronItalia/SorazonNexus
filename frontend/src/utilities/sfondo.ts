@@ -19,7 +19,7 @@ export const codiceColore = (colore: number | Colori | null | undefined): string
     : undefined
 
 // Luminanza relativa (WCAG): sotto 0,179 il testo bianco contrasta più di quello scuro
-const scuro = (codice: string) => {
+export const scuro = (codice: string) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
     const c = parseInt(codice.slice(i, i + 2), 16) / 255
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4

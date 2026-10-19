@@ -117,6 +117,8 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Consenso ai cookie**: `frontend/src/providers/Consenso` (scelta in `localStorage`, 6 mesi) + `components/Consenso` (banner, Consent Mode v2, gtag.js solo dopo il consenso). Categorie: statistiche (`GA_MEASUREMENT_ID`), marketing (`GOOGLE_ADS_ID`), contenuti esterni (YouTube, Google Maps: usare `useConsenso().scelte.esterni` prima di caricarli). Pagine `/cookie-policy` e `/privacy-policy` nel seed **in bozza, da far redigere a un consulente**.
 
+**Pulsante "torna su"** (globale `torna-su`, nell'admin "Pulsante torna su" nel gruppo "Aspetto del sito"): attivo, anche su telefono, icona (4), posizione (destra/sinistra/centro in basso), forma, dimensione, dopo quanto scorrimento compare, colore dalla tavolozza. Componente `frontend/src/components/TornaSu` (classi scritte per intero; "riduci movimento" rispettato; il banner dei cookie gli sta sopra).
+
 **Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
 **Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema).

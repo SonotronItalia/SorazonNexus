@@ -17,7 +17,8 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getColori } from '@/lib/content'
+import { getColori, getTornaSu } from '@/lib/content'
+import { TornaSu } from '@/components/TornaSu'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // ID di Google letti a runtime (una sola immagine per ogni ambiente); vuoti = niente tag
@@ -32,7 +33,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non
   // risponde restano i valori di riserva salvati nel testo.
-  const colori = await getColori().catch(() => [])
+  const [colori, tornaSu] = await Promise.all([
+    getColori().catch(() => []),
+    getTornaSu().catch(() => null),
+  ])
   const variabiliColori = colori
     .filter((c) => /^#[0-9a-fA-F]{6}$/.test(c.codice))
     .map((c) => `--colore-${c.id}:${c.codice};`)
@@ -53,6 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header />
           {children}
           <Footer />
+          {tornaSu && <TornaSu impostazioni={tornaSu} />}
           <CookieBanner gaId={gaId} adsId={adsId} />
           <GoogleTag gaId={gaId} adsId={adsId} />
         </Providers>

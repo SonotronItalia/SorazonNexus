@@ -133,10 +133,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'torna-su': TornaSu;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'torna-su': TornaSuSelect<false> | TornaSuSelect<true>;
   };
   locale: null;
   widgets: {
@@ -2213,6 +2215,34 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Il pulsante che compare scorrendo la pagina e riporta in cima.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "torna-su".
+ */
+export interface TornaSu {
+  id: number;
+  /**
+   * Spento: il pulsante non compare in nessuna pagina
+   */
+  attivo?: boolean | null;
+  /**
+   * Spento: solo su schermi larghi (tablet e computer)
+   */
+  telefono?: boolean | null;
+  icona?: ('freccia' | 'punta' | 'doppia' | 'riga') | null;
+  posizione?: ('destra' | 'sinistra' | 'centro') | null;
+  forma?: ('cerchio' | 'quadrato') | null;
+  dimensione?: ('piccola' | 'media' | 'grande') | null;
+  comparsa?: ('breve' | 'mezzo' | 'schermo') | null;
+  /**
+   * Vuoto: il colore principale del sito (scuro nel tema chiaro, chiaro nel tema scuro). Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -2271,6 +2301,23 @@ export interface FooterSelect<T extends boolean = true> {
         rea?: T;
         pec?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "torna-su_select".
+ */
+export interface TornaSuSelect<T extends boolean = true> {
+  attivo?: T;
+  telefono?: T;
+  icona?: T;
+  posizione?: T;
+  forma?: T;
+  dimensione?: T;
+  comparsa?: T;
+  colore?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
