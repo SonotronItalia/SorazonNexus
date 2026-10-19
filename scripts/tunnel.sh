@@ -3,12 +3,16 @@
 # Cloudflare (gratuiti, senza account): uno per il sito e uno per l'admin.
 # Gli indirizzi cambiano a ogni avvio: lo script li passa a backend e frontend ricreando i due
 # container (il file .env non viene toccato). Ctrl+C chiude i tunnel e rimette gli indirizzi locali.
+# Tra Cloudflare e lo stack c'è un nginx temporaneo (nginx/tunnel.conf) che aggiunge "no-transform":
+# senza, Cloudflare riscrive le email nelle pagine e il sito diventa bianco dopo un secondo.
 set -u
 cd "$(dirname "$0")/.."
 
 COMPOSE=${COMPOSE:-docker compose}
 FRONTEND_PORT=${FRONTEND_PORT:-3000}
 BACKEND_PORT=${BACKEND_PORT:-3001}
+RETE=${TUNNEL_NETWORK:-sorazon_net_app}
+PROXY=sorazon-tunnel-proxy
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
   PURPLE=$'\033[38;5;135m'; DIM=$'\033[2m'; BOLD=$'\033[1m'; RED=$'\033[31m'; RESET=$'\033[0m'
@@ -42,12 +46,13 @@ chiudi() {
   local p
   for p in "${pids[@]}"; do kill "$p" 2>/dev/null || true; done
   wait 2>/dev/null || true
+  docker rm -f "$PROXY" >/dev/null 2>&1 || true
   # Senza le variabili sovrascritte, Compose torna a leggere quelle del .env
   $COMPOSE up -d --no-build --no-deps --wait backend frontend >/dev/null 2>&1 ||
     echo "${RED}✘${RESET} non sono riuscito a ricreare backend e frontend: lancia make stack"
   rm -rf "$LOG"
 }
-trap 'chiudi; exit 130' INT
+trap 'chiudi; exit 0' INT   # Ctrl+C è il modo normale di chiudere, non un errore
 trap 'chiudi; exit 143' TERM
 trap chiudi EXIT
 
@@ -67,8 +72,9 @@ indirizzo() {
 }
 
 echo "${DIM}Apro i tunnel (sito e admin)...${RESET}"
-apri sito "$FRONTEND_PORT"
-apri admin "$BACKEND_PORT"
+docker rm -f "$PROXY" >/dev/null 2>&1 || true
+apri sito 3080
+apri admin 3081
 SITO=$(indirizzo sito) || { cat "$LOG/sito.log" >&2; die "Cloudflare non ha assegnato l'indirizzo del sito"; }
 ADMIN=$(indirizzo admin) || { cat "$LOG/admin.log" >&2; die "Cloudflare non ha assegnato l'indirizzo dell'admin"; }
 
@@ -78,6 +84,12 @@ echo "${DIM}Passo gli indirizzi pubblici a backend e frontend...${RESET}"
 FRONTEND_PUBLIC_URL=$SITO BACKEND_PUBLIC_URL=$ADMIN \
   $COMPOSE up -d --no-build --no-deps --wait backend frontend >/dev/null ||
   die "non sono riuscito a ricreare backend e frontend"
+
+# Il proxy parte dopo i container ricreati: nginx risolve i nomi frontend/backend all'avvio
+docker run -d --rm --name "$PROXY" --network "$RETE" \
+  -p 127.0.0.1:3080:3080 -p 127.0.0.1:3081:3081 \
+  -v "$PWD/nginx/tunnel.conf:/etc/nginx/conf.d/default.conf:ro" nginx:1.28-alpine >/dev/null ||
+  die "non sono riuscito ad avviare il proxy del tunnel"
 
 echo
 echo "${PURPLE}${BOLD}  Sito:  ${SITO}${RESET}"
