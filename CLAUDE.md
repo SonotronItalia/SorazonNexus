@@ -81,7 +81,7 @@ SorazonNexus/
 # Il vecchio monolite vetrina/ è stato eliminato: si recupera dal tag git monolite-v1.
 ```
 
-Contenuti di partenza (`make seed`): dati in `backend/src/seed/dati/` (tabelle CSV e pagine in Markdown con intestazione YAML, formato spiegato in `seed/pagine.ts`), immagini in `seed/media/`; `seed/index.ts` contiene solo la logica. Nuovi contenuti di partenza si aggiungono come file, non nel codice.
+Contenuti di partenza (`make seed`): dati in `backend/src/seed/dati/` (tabelle CSV e pagine in Markdown con intestazione YAML, formato spiegato in `seed/pagine.ts`), immagini in `seed/media/`; `seed/index.ts` contiene solo la logica. Nuovi contenuti di partenza si aggiungono come file, non nel codice. Il menu (`dati/menu.csv`) può già elencare pagine in bozza: il sito le mostra solo quando sono pubblicate (il collegamento a una bozza resta vuoto e non viene disegnato) e la pubblicazione di una pagina rinfresca anche la cache del menu.
 
 Nel backend: `src/{access,collections,fields,hooks,plugins,search,Header,Footer,heros,blocks,utilities}`, `src/app/(payload)`, `src/payload.config.ts`, `src/payload-types.ts` (generato). I blocchi e l'hero nel backend contengono **solo `config.ts`**.
 

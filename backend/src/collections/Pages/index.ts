@@ -134,10 +134,12 @@ export const Pages: CollectionConfig<'pages'> = {
     },
     slugField(),
   ],
+  // "globals": il menu dell'header mostra solo le pagine pubblicate, quindi va rinfrescato
+  // anche quando una pagina viene pubblicata, ritirata, rinominata o eliminata
   hooks: {
-    afterChange: [notifyFrontend('pages', 'pages-sitemap')],
+    afterChange: [notifyFrontend('pages', 'pages-sitemap', 'globals')],
     beforeChange: [populatePublishedAt],
-    afterDelete: [notifyFrontend('pages', 'pages-sitemap')],
+    afterDelete: [notifyFrontend('pages', 'pages-sitemap', 'globals')],
   },
   versions: {
     drafts: {
