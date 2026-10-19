@@ -10,6 +10,8 @@ import { PostHero, heroAPienoSchermo } from '@/heros/PostHero'
 import { getPostBySlug } from '@/lib/content'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
+import { DatiStrutturati } from '@/components/DatiStrutturati'
+import { briciole, datiNotizia } from '@/utilities/datiStrutturati'
 
 // Nessuna notizia pre-generata in build: si costruiscono alla prima richiesta
 export async function generateStaticParams() {
@@ -43,6 +45,15 @@ export default async function Post({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
+      <DatiStrutturati
+        dati={[
+          datiNotizia(post),
+          briciole([
+            { nome: 'Notizie', percorso: '/posts' },
+            { nome: post.title, percorso: url },
+          ]),
+        ]}
+      />
       <PostHero post={post} />
 
       <div className="flex flex-col items-center gap-4 pt-8">
@@ -64,5 +75,5 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug = '' } = await paramsPromise
   const post = await queryPostBySlug(decodeURIComponent(slug))
 
-  return generateMeta({ doc: post })
+  return generateMeta({ doc: post, percorso: `/posts/${slug}`, tipo: 'article' })
 }

@@ -2210,6 +2210,11 @@ export interface Footer {
     codiceFiscale?: string | null;
     rea?: string | null;
     pec?: string | null;
+    /**
+     * Con prefisso internazionale, es. +39 0721 808759
+     */
+    telefono?: string | null;
+    email?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -2300,6 +2305,8 @@ export interface FooterSelect<T extends boolean = true> {
         codiceFiscale?: T;
         rea?: T;
         pec?: T;
+        telefono?: T;
+        email?: T;
       };
   updatedAt?: T;
   createdAt?: T;

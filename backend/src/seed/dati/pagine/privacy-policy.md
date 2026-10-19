@@ -3,6 +3,10 @@
 # consulente privacy quando possibile, e da aggiornare se si aggiungono moduli o servizi.
 title: Privacy
 slug: privacy-policy
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Informativa sulla privacy"
+  description: "Come Sonotron Italia tratta i dati di chi visita il sito Sorazon o lo contatta: finalità, basi giuridiche, tempi di conservazione e diritti previsti dal GDPR."
 hero:
   type: lowImpact
   richText: '# Informativa sulla privacy'

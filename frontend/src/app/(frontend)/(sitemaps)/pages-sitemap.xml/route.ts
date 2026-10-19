@@ -13,7 +13,6 @@ export async function GET() {
   const pages = await getPagesForSitemap()
 
   const sitemap = [
-    { loc: `${SITE_URL}/search`, lastmod: dateFallback },
     { loc: `${SITE_URL}/posts`, lastmod: dateFallback },
     ...pages
       .filter((page) => Boolean(page?.slug))

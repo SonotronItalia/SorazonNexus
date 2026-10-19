@@ -1,6 +1,10 @@
 ---
 title: Contatti
 slug: contatti
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Contatti: Sorazon e Sonotron Italia, Fano"
+  description: "Sede a Fano (PU), telefoni, email e modulo di contatto per informazioni sulla terapia Sorazon e sui dispositivi prodotti da Sonotron Italia."
 hero:
   type: lowImpact
   richText: '# Contatti'

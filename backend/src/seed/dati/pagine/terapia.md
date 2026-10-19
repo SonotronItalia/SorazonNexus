@@ -3,6 +3,10 @@
 # dall'azienda (19/10/2026).
 title: Terapia
 slug: terapia
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Terapia Sorazon: come funziona"
+  description: "Terapia antinfiammatoria non invasiva, non a contatto e non dolorosa, a tripla azione: onde soniche pressorie, radiofrequenza ionizzante ed energia di ozono."
 bozza: false
 hero:
   type: lowImpact

@@ -4,7 +4,7 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
-import { SITE_NAME } from '@/utilities/mergeOpenGraph'
+import { immagineOg, mergeOpenGraph, SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
 
 // Rotta statica: senza questa opzione verrebbe generata in build, quando il backend può mancare.
@@ -45,5 +45,13 @@ export default async function Page() {
 export function generateMetadata(): Metadata {
   return {
     title: `Notizie | ${SITE_NAME}`,
+    description:
+      'Notizie su Sorazon: articoli della rivista Senza Età sulla terapia antinfiammatoria con ozono, eventi e aggiornamenti dalla rete dei centri.',
+    alternates: { canonical: '/posts' },
+    openGraph: mergeOpenGraph({
+      title: `Notizie | ${SITE_NAME}`,
+      url: '/posts',
+      images: [{ url: immagineOg('Notizie'), width: 1200, height: 630 }],
+    }),
   }
 }

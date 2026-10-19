@@ -40,5 +40,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
 export function generateMetadata(): Metadata {
   return {
     title: `Cerca | ${SITE_NAME}`,
+    // Risultati di ricerca: utili ai visitatori, non agli indici dei motori
+    robots: { index: false, follow: true },
   }
 }

@@ -4,6 +4,10 @@
 # "Marchio CE" è pronto ma nascosto (visibile: false) finché la certificazione non è conclusa.
 title: Dispositivi
 slug: dispositivo
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Dispositivi Sorazon Studio e Sorazon Maxi"
+  description: "Sorazon Studio e Sorazon Maxi: unità base con monitor 7\" a colori, generatori di radiofrequenza e onde soniche, manipolo con camera di ionizzazione e ozono."
 hero:
   type: lowImpact
   richText: '# Dispositivi Sorazon'

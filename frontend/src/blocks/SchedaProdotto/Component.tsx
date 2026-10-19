@@ -4,6 +4,8 @@ import type { SchedaProdottoBlock as SchedaProdottoProps } from '@/payload-types
 import { Media } from '@/components/Media'
 import { sfondo as stileSfondo } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
+import { DatiStrutturati } from '@/components/DatiStrutturati'
+import { ID_AZIENDA, urlImmagine } from '@/utilities/datiStrutturati'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
 const COLONNE = {
@@ -24,8 +26,27 @@ export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
 }) => {
   const { className: classeSfondo, ...attributiSfondo } = stileSfondo(sfondo, colore)
 
+  // Dati strutturati del prodotto: solo quello che la scheda mostra (voci visibili)
+  const immagineUrl = urlImmagine(immagine)
+  const prodotto = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: titolo,
+    ...(descrizione ? { description: descrizione } : {}),
+    ...(immagineUrl ? { image: immagineUrl } : {}),
+    brand: { '@type': 'Brand', name: 'Sorazon' },
+    manufacturer: { '@id': ID_AZIENDA() },
+    category: 'Apparecchio elettromedicale',
+    additionalProperty: (gruppi ?? []).flatMap((g) =>
+      (g.voci ?? [])
+        .filter((v) => v.visibile !== false)
+        .map((v) => ({ '@type': 'PropertyValue', name: g.titolo, value: v.testo })),
+    ),
+  }
+
   return (
     <section className={cn('py-16', classeSfondo)} {...attributiSfondo}>
+      <DatiStrutturati dati={prodotto} />
       <div className="container @container">
         <div className="grid items-center gap-10 @4xl:grid-cols-2">
           <div className={posizioneImmagine === 'destra' ? '@4xl:order-2' : ''}>

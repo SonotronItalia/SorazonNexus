@@ -2,6 +2,7 @@ import React from 'react'
 
 import type { CentriListBlock as CentriListProps } from '@/payload-types'
 import { getCentri } from '@/lib/content'
+import { DatiStrutturati } from '@/components/DatiStrutturati'
 
 const slugify = (s: string) =>
   s
@@ -34,8 +35,41 @@ export const CentriListBlock: React.FC<CentriListProps> = async ({
   }
   const regioni = [...perRegione.keys()].sort((a, b) => a.localeCompare(b, 'it'))
 
+  // Dati strutturati: ogni centro come struttura sanitaria con indirizzo e contatti, così i
+  // motori di ricerca e gli assistenti AI possono indicare il centro più vicino
+  const elencoCentri = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Centri di riferimento Sorazon in Italia',
+    numberOfItems: docs.length,
+    itemListElement: docs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'MedicalClinic',
+        name: c.nome_struttura?.trim() || `Centro Sorazon ${c.citta ?? ''}`.trim(),
+        address: {
+          '@type': 'PostalAddress',
+          ...(c.indirizzo ? { streetAddress: c.indirizzo } : {}),
+          ...(c.citta ? { addressLocality: c.citta } : {}),
+          ...(c.provincia ? { addressRegion: c.provincia } : {}),
+          addressCountry: 'IT',
+        },
+        // Più numeri nello stesso campo: il primo è quello principale
+        ...(c.telefoni ? { telephone: c.telefoni.split(/\s*[\/,;]\s*|\s+-\s+/)[0] } : {}),
+        ...(c.email ? { email: c.email } : {}),
+        ...(c.sito ? { url: toUrl(c.sito) } : {}),
+        // Il campo "point" di Payload è [longitudine, latitudine]
+        ...(c.coordinate
+          ? { geo: { '@type': 'GeoCoordinates', latitude: c.coordinate[1], longitude: c.coordinate[0] } }
+          : {}),
+      },
+    })),
+  }
+
   return (
     <section className="container my-16 @container">
+      {docs.length > 0 && <DatiStrutturati dati={elencoCentri} />}
       {titolo && <h2 className="text-3xl font-semibold">{titolo}</h2>}
       {introduzione && (
         <p className="mt-4 max-w-3xl whitespace-pre-line text-muted-foreground">{introduzione}</p>

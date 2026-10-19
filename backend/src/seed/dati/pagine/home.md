@@ -1,6 +1,10 @@
 ---
 title: Home
 slug: home
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Sorazon: terapia antinfiammatoria non invasiva"
+  description: "Apparecchio elettromedicale brevettato per la terapia antinfiammatoria non invasiva con ozono, radiofrequenza e onde soniche. Trova il centro Sorazon più vicino."
 hero:
   type: sorazon
   # Titolo e sottotitolo del vecchio sito; il claim sanitario resta fuori finché non è rivisto

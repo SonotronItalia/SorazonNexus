@@ -6,6 +6,9 @@ datiLegali:
   codiceFiscale: '02654710413'
   rea: '199122'
   pec: sonotron@legalmail.it
+  # Contatti principali: usati nei dati strutturati per Google e gli assistenti AI
+  telefono: +39 0721 808759
+  email: info@sonotronitalia.com
 # Profili social: si aggiungono dall'admin (Footer > Social). Se si scrivono qui, il seed li
 # sostituisce a ogni esecuzione. Piattaforme: facebook, instagram, linkedin, youtube, x, tiktok,
 # whatsapp, threads, telegram, pinterest. Esempio:

@@ -119,6 +119,8 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Pulsante "torna su"** (globale `torna-su`, nell'admin "Pulsante torna su" nel gruppo "Aspetto del sito"): attivo, anche su telefono, icona (4), posizione (destra/sinistra/centro in basso), forma, dimensione, dopo quanto scorrimento compare, colore dalla tavolozza. Componente `frontend/src/components/TornaSu` (classi scritte per intero; "riduci movimento" rispettato; il banner dei cookie gli sta sopra).
 
+**SEO e motori di risposta AI (GEO)**: metadati in `frontend/src/utilities/generateMeta.ts` (titolo e descrizione SEO dal CMS o di riserva `DESCRIZIONE_SITO`, canonico, Open Graph); immagine di condivisione generata in `app/og/route.tsx` quando manca un'immagine SEO larga almeno 600 px; dati strutturati JSON-LD (`components/DatiStrutturati` + `utilities/datiStrutturati.ts`: azienda dal Footer, sito, percorso, notizie, prodotti nella Scheda prodotto, centri come MedicalClinic nell'Elenco centri), solo fatti presi dal CMS, mai affermazioni sanitarie; `robots.ts` con i crawler AI permessi in modo esplicito; `/llms.txt` generato dal CMS. Titoli e descrizioni delle pagine nel seed (`meta:` nelle pagine Markdown).
+
 **Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
 **Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema).

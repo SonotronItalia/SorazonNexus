@@ -4,6 +4,10 @@
 # Testi sanitari rivisti e approvati dall'azienda (19/10/2026).
 title: Risultati
 slug: risultati
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Risultati clinici Sorazon in Italia dal 1992"
+  description: "Immagini dei risultati clinici della terapia Sorazon: calcificazione, coxartrosi, colonna cervicale e lombare, gonartrosi, piede artrosico ed epicondilite."
 bozza: false
 hero:
   type: banner

@@ -55,6 +55,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { pageNumber } = await paramsPromise
   return {
     title: `Notizie, pagina ${pageNumber || ''} | ${SITE_NAME}`,
+    alternates: { canonical: `/posts/page/${pageNumber}` },
   }
 }
 

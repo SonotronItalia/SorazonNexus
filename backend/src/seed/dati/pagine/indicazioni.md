@@ -3,6 +3,10 @@
 # dall'azienda (19/10/2026).
 title: Indicazioni
 slug: indicazioni
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Indicazioni terapeutiche della terapia Sorazon"
+  description: "Dove si applica la terapia Sorazon: dalla colonna vertebrale alla spalla, dall'anca al ginocchio e al piede, per artrosi, infiammazioni e traumi."
 bozza: false
 hero:
   type: lowImpact

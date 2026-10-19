@@ -21,6 +21,7 @@ const CARD_SELECT = {
   'select[slug]': 'true',
   'select[categories]': 'true',
   'select[meta]': 'true',
+  'select[publishedAt]': 'true',
 }
 
 // --- Globali ---
@@ -43,6 +44,22 @@ export async function getPageBySlug(slug: string, draft = false): Promise<Page |
   const q = qs({ 'where[slug][equals]': slug, limit: 1, depth: 2 })
   const { docs } = await api<List<Page>>(`/pages?${q}`, { tags: ['pages', `page_${slug}`] })
   return docs[0] ?? null
+}
+
+// Per llms.txt: titolo, slug e descrizione SEO delle pagine pubblicate
+export async function getPagineSommario() {
+  const q = qs({
+    'where[_status][equals]': 'published',
+    pagination: 'false',
+    depth: 0,
+    'select[title]': 'true',
+    'select[slug]': 'true',
+    'select[meta]': 'true',
+  })
+  const { docs } = await api<List<Pick<Page, 'title' | 'slug' | 'meta'>>>(`/pages?${q}`, {
+    tags: ['pages'],
+  })
+  return docs
 }
 
 // Per la sitemap: solo slug e data di modifica delle pagine pubblicate

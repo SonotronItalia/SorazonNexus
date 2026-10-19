@@ -3,6 +3,10 @@
 # che il sito usa davvero: aggiornarla se se ne aggiungono. Da far rivedere a un consulente.
 title: Cookie policy
 slug: cookie-policy
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Cookie policy"
+  description: "Cookie e strumenti usati dal sito Sorazon (tecnici, Google Analytics, Google Ads, YouTube, Google Maps) e come scegliere o cambiare le preferenze."
 hero:
   type: lowImpact
   richText: '# Cookie policy'

@@ -5,6 +5,8 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { DatiStrutturati } from '@/components/DatiStrutturati'
+import { briciole } from '@/utilities/datiStrutturati'
 import { RenderHero } from '@/heros/RenderHero'
 import { getPageBySlug } from '@/lib/content'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -57,6 +59,9 @@ export default async function Page({ params: paramsPromise }: Args) {
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
+      {slug !== 'home' && (
+        <DatiStrutturati dati={briciole([{ nome: page.title, percorso: `/${slug}` }])} />
+      )}
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
     </article>
@@ -68,5 +73,8 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug } = parse(segments)
   if (!slug) return {}
 
-  return generateMeta({ doc: await queryPageBySlug(slug) })
+  return generateMeta({
+    doc: await queryPageBySlug(slug),
+    percorso: slug === 'home' ? '/' : `/${slug}`,
+  })
 }

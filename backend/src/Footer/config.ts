@@ -90,6 +90,18 @@ export const Footer: GlobalConfig = {
           ],
         },
         { name: 'pec', label: 'PEC', type: 'email' },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'telefono',
+              label: 'Telefono principale',
+              type: 'text',
+              admin: { description: 'Con prefisso internazionale, es. +39 0721 808759' },
+            },
+            { name: 'email', label: 'Email principale', type: 'email' },
+          ],
+        },
       ],
     },
   ],

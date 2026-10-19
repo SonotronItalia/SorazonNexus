@@ -13,11 +13,13 @@ import { GoogleTag } from '@/components/Consenso/GoogleTag'
 import { PreviewBar } from '@/components/PreviewBar'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
-import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import { DESCRIZIONE_SITO, mergeOpenGraph, SITE_NAME } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getColori, getTornaSu } from '@/lib/content'
+import { getColori, getFooter, getTornaSu } from '@/lib/content'
+import { DatiStrutturati } from '@/components/DatiStrutturati'
+import { datiAziendaESito } from '@/utilities/datiStrutturati'
 import { TornaSu } from '@/components/TornaSu'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -33,9 +35,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non
   // risponde restano i valori di riserva salvati nel testo.
-  const [colori, tornaSu] = await Promise.all([
+  const [colori, tornaSu, footer] = await Promise.all([
     getColori().catch(() => []),
     getTornaSu().catch(() => null),
+    getFooter().catch(() => null),
   ])
   const variabiliColori = colori
     .filter((c) => /^#[0-9a-fA-F]{6}$/.test(c.codice))
@@ -50,6 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {variabiliColori && <style>{`:root{${variabiliColori}}`}</style>}
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <DatiStrutturati dati={datiAziendaESito(footer)} />
       </head>
       <body>
         <Providers>
@@ -70,6 +74,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export function generateMetadata(): Metadata {
   return {
     metadataBase: new URL(getServerSideURL()),
+    title: SITE_NAME,
+    description: DESCRIZIONE_SITO,
+    applicationName: SITE_NAME,
+    publisher: 'SONOTRON ITALIA S.R.L.S.',
     openGraph: mergeOpenGraph(),
     twitter: {
       card: 'summary_large_image',

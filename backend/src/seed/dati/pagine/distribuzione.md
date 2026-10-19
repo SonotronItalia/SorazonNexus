@@ -1,6 +1,10 @@
 ---
 title: Distribuzione
 slug: distribuzione
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Distribuzione dei dispositivi Sorazon"
+  description: "Sorazon Studio e Maxi sono prodotti e distribuiti da Sonotron Italia di Fano: acquisto, preventivi, assistenza e informazioni per diventare centro di riferimento."
 hero:
   type: lowImpact
   richText: '# Distribuzione'

@@ -3,45 +3,51 @@ import type { Metadata } from 'next'
 import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mediaSrc } from '@/lib/api'
-import { mergeOpenGraph, SITE_NAME } from './mergeOpenGraph'
+import { DESCRIZIONE_SITO, immagineOg, mergeOpenGraph, SITE_NAME } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 
-const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
-  const serverUrl = getServerSideURL()
+// Immagine SEO solo se abbastanza grande per le anteprime dei social (es. non le copertine da 200 px)
+const LARGHEZZA_MINIMA = 600
+const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) =>
+  image && typeof image === 'object' && 'url' in image && (image.width ?? 0) >= LARGHEZZA_MINIMA
+    ? getServerSideURL() + mediaSrc(image.sizes?.og?.url || image.url)
+    : undefined
 
-  if (image && typeof image === 'object' && 'url' in image) {
-    const ogUrl = image.sizes?.og?.url
-    return serverUrl + mediaSrc(ogUrl || image.url)
-  }
-
-  return serverUrl + '/website-template-OG.webp'
-}
-
+/**
+ * Metadati di una pagina o notizia: titolo e descrizione SEO (o il titolo del documento e la
+ * descrizione del sito), indirizzo canonico, Open Graph e Twitter. Senza immagine SEO si usa
+ * quella generata con il titolo (app/og).
+ */
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Post> | null
+  /** Percorso della pagina, es. "/terapia" o "/posts/slug" */
+  percorso: string
+  tipo?: 'website' | 'article'
 }): Promise<Metadata> => {
-  const { doc } = args
+  const { doc, percorso, tipo = 'website' } = args
 
-  const ogImage = getImageURL(doc?.meta?.image)
-
-  // Titolo SEO se c'è, altrimenti il titolo della pagina o della notizia (in home solo il nome del sito)
   const nome = doc?.meta?.title || (doc?.slug === 'home' ? undefined : doc?.title)
-  const title = nome ? `${nome} | ${SITE_NAME}` : SITE_NAME
+  // Il nome del sito in coda, se il titolo non lo contiene già
+  const title = !nome ? SITE_NAME : nome.includes(SITE_NAME) ? nome : `${nome} | ${SITE_NAME}`
+  const description = doc?.meta?.description || DESCRIZIONE_SITO
+  const caricata = getImageURL(doc?.meta?.image)
+  const immagine = caricata ?? immagineOg(nome ?? undefined)
+  const post = tipo === 'article' ? (doc as Partial<Post>) : null
 
   return {
-    description: doc?.meta?.description,
-    openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
-      images: ogImage
-        ? [
-            {
-              url: ogImage,
-            },
-          ]
-        : undefined,
-      title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
-    }),
     title,
+    description,
+    alternates: { canonical: percorso },
+    openGraph: mergeOpenGraph({
+      type: tipo,
+      title,
+      description,
+      url: percorso,
+      // Le misure si dichiarano solo per l'immagine generata (le altre possono variare)
+      images: [caricata ? { url: immagine } : { url: immagine, width: 1200, height: 630, alt: nome ?? SITE_NAME }],
+      ...(post?.publishedAt ? { publishedTime: post.publishedAt } : {}),
+      ...(post?.updatedAt ? { modifiedTime: post.updatedAt } : {}),
+    }),
+    twitter: { card: 'summary_large_image', title, description, images: [immagine] },
   }
 }

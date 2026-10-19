@@ -1,6 +1,10 @@
 ---
 title: Centri
 slug: centri
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+meta:
+  title: "Centri Sorazon in Italia, divisi per regione"
+  description: "Elenco degli ambulatori abilitati alla terapia Sorazon in Italia, per regione, con indirizzi e telefoni. Gli operatori sono formati presso la sede di Fano (PU)."
 hero:
   type: lowImpact
   richText: '# Centri di riferimento'
