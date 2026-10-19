@@ -109,6 +109,8 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Hero "Sorazon"** (tipo `sorazon` in `heros/config.ts`): `SorazonHero` con due effetti attivabili singolarmente dall'admin, `effetto_pulsazione` (alone ciano/blu) e `effetto_scarica` (canvas con fulmini **viola**, componente `TeslaDischarge`). Regola: un effetto si vede se è attivo nel CMS **e** il visitatore non li ha disattivati **e** non ha "riduci movimento" nel sistema. Scelta del visitatore in `localStorage` (chiave `sorazon-effetti`) tramite `EffectsProvider` / `EffectsToggle` (pulsante a fulmine in header). Vincoli di sicurezza (fotosensibilità): le scariche sfumano in 0,3-0,5 s, al massimo una ogni 0,7-2 s, nessun lampeggio; l'animazione si ferma fuori schermo. L'hero resta sempre scuro in entrambi i temi.
 
+**Consenso ai cookie**: `frontend/src/providers/Consenso` (scelta in `localStorage`, 6 mesi) + `components/Consenso` (banner, Consent Mode v2, gtag.js solo dopo il consenso). Categorie: statistiche (`GA_MEASUREMENT_ID`), marketing (`GOOGLE_ADS_ID`), contenuti esterni (YouTube, Google Maps: usare `useConsenso().scelte.esterni` prima di caricarli). Pagine `/cookie-policy` e `/privacy-policy` nel seed **in bozza, da far redigere a un consulente**.
+
 **Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
 **Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema).

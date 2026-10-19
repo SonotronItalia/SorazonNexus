@@ -6,6 +6,7 @@ import React from 'react'
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { PreferenzeCookie } from '@/components/Consenso/CookieBanner'
 
 export async function Footer() {
   // Se il backend non risponde il sito resta in piedi, con la navigazione vuota
@@ -29,6 +30,14 @@ export async function Footer() {
             {navItems.map(({ link }, i) => {
               return <CMSLink className="text-white" key={i} {...link} />
             })}
+            {/* Sempre presenti: richiesti dalle norme sulla privacy */}
+            <Link className="text-white" href="/privacy-policy">
+              Privacy
+            </Link>
+            <Link className="text-white" href="/cookie-policy">
+              Cookie policy
+            </Link>
+            <PreferenzeCookie className="text-left text-white hover:underline" />
           </nav>
         </div>
       </div>

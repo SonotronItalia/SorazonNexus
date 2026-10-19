@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 
 import type { MappaBlock as MappaProps } from '@/payload-types'
 import { Button } from '@/components/ui/button'
+import { useConsenso } from '@/providers/Consenso'
 import { cn } from '@/utilities/ui'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
@@ -15,19 +16,22 @@ const ALTEZZE = {
 } as const
 
 /**
- * Mappa di Google Maps caricata solo su richiesta del visitatore: Google imposta cookie,
- * quindi prima si mostra un riquadro con l'indirizzo, il pulsante e il collegamento esterno.
+ * Mappa di Google Maps caricata solo con il consenso ai contenuti esterni (banner dei cookie)
+ * o su richiesta del visitatore per questa sola mappa: Google imposta cookie, quindi prima si
+ * mostra un riquadro con l'indirizzo, il pulsante e il collegamento esterno.
  * Usa l'incorporamento senza chiave API (nessun costo e nessun account Google Cloud).
  */
 export const MappaBlock: React.FC<MappaProps> = ({ titolo, indirizzo, altezza }) => {
   const [caricata, setCaricata] = useState(false)
+  // Con il consenso ai contenuti esterni (banner dei cookie) la mappa si carica da sola
+  const { scelte } = useConsenso()
   const query = encodeURIComponent(indirizzo)
 
   return (
     <section className="container">
       {titolo && <h2 className="mb-6 text-3xl font-semibold">{titolo}</h2>}
       <div className={cn('overflow-hidden rounded-lg border bg-muted', ALTEZZE[altezza ?? 'media'])}>
-        {caricata ? (
+        {caricata || scelte.esterni ? (
           <iframe
             title={`Mappa: ${indirizzo}`}
             src={`https://www.google.com/maps?q=${query}&output=embed`}

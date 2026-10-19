@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { ConsensoProvider } from './Consenso'
 import { EffectsProvider } from './Effects'
 import { HeaderThemeProvider } from './HeaderTheme'
 import { ThemeProvider } from './Theme'
@@ -10,7 +11,9 @@ export const Providers: React.FC<{
   return (
     <ThemeProvider>
       <HeaderThemeProvider>
-        <EffectsProvider>{children}</EffectsProvider>
+        <EffectsProvider>
+          <ConsensoProvider>{children}</ConsensoProvider>
+        </EffectsProvider>
       </HeaderThemeProvider>
     </ThemeProvider>
   )

@@ -98,6 +98,8 @@ services:
       PREVIEW_SECRET: ${PREVIEW_SECRET}
       SITE_URL: ${FRONTEND_PUBLIC_URL}
       BACKEND_PUBLIC_URL: ${BACKEND_PUBLIC_URL}
+      GA_MEASUREMENT_ID: ${GA_MEASUREMENT_ID:-}
+      GOOGLE_ADS_ID: ${GOOGLE_ADS_ID:-}
     depends_on:
       backend:
         condition: service_healthy

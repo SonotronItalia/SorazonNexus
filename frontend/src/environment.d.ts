@@ -11,6 +11,9 @@ declare global {
       PREVIEW_SECRET?: string
       // Indirizzo pubblico del pannello: il live preview accetta messaggi solo da qui
       BACKEND_PUBLIC_URL?: string
+      // Google Analytics 4 (G-XXXXXXX) e Google Ads (AW-XXXXXXX): vuoti = nessun tag Google
+      GA_MEASUREMENT_ID?: string
+      GOOGLE_ADS_ID?: string
     }
   }
 }
