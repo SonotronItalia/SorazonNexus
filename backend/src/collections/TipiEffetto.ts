@@ -5,7 +5,7 @@ import { notifyFrontend } from '@/hooks/notifyFrontend'
 
 // Esempio proposto a ogni nuovo tipo: stelle che si accendono e spengono lentamente
 const ESEMPIO_JS = `// Disegna sul canvas "effetto". Parametri in window.EFFETTO:
-//   colore ("#rrggbb"), intensita (0.5 / 1 / 1.4), velocita (0.6 / 1 / 1.5), puntoX (0-1)
+//   colore ("#rrggbb"), intensita (0.5 / 1 / 1.4), velocita (0.6 / 1 / 1.5), puntoX e puntoY (0-1)
 // Usa requestAnimationFrame e movimenti lenti: niente lampeggi.
 const { colore, intensita, velocita } = window.EFFETTO
 const canvas = document.getElementById('effetto')
@@ -82,7 +82,7 @@ export const TipiEffetto: CollectionConfig = {
       admin: {
         language: 'javascript',
         description:
-          'Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX. Niente rete, niente accesso alla pagina: il codice gira isolato.',
+          'Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX, puntoY (punto di partenza, da 0 a 1). Niente rete, niente accesso alla pagina: il codice gira isolato.',
       },
     },
     {

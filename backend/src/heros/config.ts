@@ -1,4 +1,5 @@
 import type { Field } from 'payload'
+import { POSIZIONI } from '@/fields/posizioni'
 
 import {
   FixedToolbarFeature,
@@ -14,13 +15,6 @@ import { idYouTube } from '@/utilities/youtube'
 // Hero con immagine grande: hanno sovrapposizione, video e posizione del titolo
 const HERO_GRANDI = ['banner', 'highImpact']
 
-// Posizione del titolo: riga (alto, centro, basso) e colonna (sinistra, centro, destra)
-const POSIZIONI = ['alto', 'centro', 'basso'].flatMap((riga) =>
-  ['sinistra', 'centro', 'destra'].map((colonna) => ({
-    label: `${riga[0].toUpperCase()}${riga.slice(1)} ${colonna}`,
-    value: `${riga}-${colonna}`,
-  })),
-)
 
 export const hero: Field = {
   name: 'hero',
@@ -92,6 +86,16 @@ export const hero: Field = {
       },
       relationTo: 'media',
       required: true,
+    },
+    {
+      name: 'bordoImmagine',
+      label: "Bordo attorno all'immagine",
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        condition: (_, { type } = {}) => type === 'sorazon',
+        description: "Spento: l'immagine si fonde con lo sfondo, senza cornice né ombra.",
+      },
     },
     // --- Opzioni degli hero grandi (Banner e High Impact) ---
     {

@@ -194,7 +194,7 @@ for (const r of leggiTabella('effetti.csv')) {
     colore: r.colore ? (idColori.get(r.colore) as number) : null,
     intensita: (r.intensita || 'media') as 'media',
     velocita: (r.velocita || 'normale') as 'normale',
-    posizione: (r.posizione || 'destra') as 'destra',
+    posizione: (r.posizione || 'centro-destra') as 'centro-destra',
   }
   if (r.colore && !idColori.has(r.colore)) throw new Error(`dati/effetti.csv: colore "${r.colore}" non in colori.csv`)
   const { docs } = await payload.find({ collection: 'effetti', where: { nome: { equals: r.nome } }, limit: 1 })

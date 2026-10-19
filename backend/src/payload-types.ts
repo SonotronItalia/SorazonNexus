@@ -277,6 +277,10 @@ export interface Page {
      * Con un video fa da anteprima: si vede prima del caricamento, con "riduci movimento" e senza consenso a YouTube.
      */
     media?: (number | null) | Media;
+    /**
+     * Spento: l'immagine si fonde con lo sfondo, senza cornice né ombra.
+     */
+    bordoImmagine?: boolean | null;
     sfondoMedia?: ('immagine' | 'video') | null;
     /**
      * Vuoto: in alto al centro (Banner), al centro (High Impact).
@@ -625,7 +629,19 @@ export interface Effetti {
   colore?: (number | null) | Colori;
   intensita?: ('bassa' | 'media' | 'alta') | null;
   velocita?: ('lenta' | 'normale' | 'veloce') | null;
-  posizione?: ('sinistra' | 'centro' | 'destra') | null;
+  posizione?:
+    | (
+        | 'alto-sinistra'
+        | 'alto-centro'
+        | 'alto-destra'
+        | 'centro-sinistra'
+        | 'centro-centro'
+        | 'centro-destra'
+        | 'basso-sinistra'
+        | 'basso-centro'
+        | 'basso-destra'
+      )
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -643,7 +659,7 @@ export interface TipiEffetto {
   nome: string;
   descrizione?: string | null;
   /**
-   * Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX. Niente rete, niente accesso alla pagina: il codice gira isolato.
+   * Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX, puntoY (punto di partenza, da 0 a 1). Niente rete, niente accesso alla pagina: il codice gira isolato.
    */
   javascript?: string | null;
   /**
@@ -1566,6 +1582,7 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        bordoImmagine?: T;
         sfondoMedia?: T;
         posizioneTitolo?: T;
         proporzione?: T;

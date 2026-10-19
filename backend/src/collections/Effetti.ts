@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { POSIZIONI } from '@/fields/posizioni'
 
 import { authenticated } from '../access/authenticated'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
@@ -107,16 +108,12 @@ export const Effetti: CollectionConfig = {
           name: 'posizione',
           label: 'Punto di partenza',
           type: 'select',
-          defaultValue: 'destra',
+          defaultValue: 'centro-destra',
           admin: {
             condition: (_, s = {}) =>
               ['scarica', 'onde', 'pulsazione', 'personalizzato'].includes(s.tipo),
           },
-          options: [
-            { label: 'Sinistra', value: 'sinistra' },
-            { label: 'Centro', value: 'centro' },
-            { label: 'Destra', value: 'destra' },
-          ],
+          options: POSIZIONI,
         },
       ],
     },

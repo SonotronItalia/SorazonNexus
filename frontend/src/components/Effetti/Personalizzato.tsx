@@ -4,7 +4,13 @@ import React, { useMemo } from 'react'
 
 import type { TipiEffetto } from '@/payload-types'
 
-type Parametri = { colore: string; intensita: number; velocita: number; puntoX: number }
+type Parametri = {
+  colore: string
+  intensita: number
+  velocita: number
+  puntoX: number
+  puntoY: number
+}
 
 // Il codice non deve poter chiudere i propri tag e "uscire" dal documento dell'iframe
 const neutralizza = (codice: string, tag: 'script' | 'style') =>

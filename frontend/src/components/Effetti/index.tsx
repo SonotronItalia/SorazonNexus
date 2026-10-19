@@ -17,7 +17,16 @@ type Riga = { effetto?: number | Effetto | null; attivo?: boolean | null; id?: s
 // Parametri comuni dei tipi di effetto
 const INTENSITA = { bassa: 0.5, media: 1, alta: 1.4 } as const
 const RITMO = { lenta: 1.6, normale: 1, veloce: 0.65 } as const
-const PUNTO = { sinistra: 0.28, centro: 0.5, destra: 0.72 } as const
+// Punto di partenza "riga-colonna" (es. "alto-centro") -> coordinate da 0 a 1 nel riquadro
+const RIGA = { alto: 0.28, centro: 0.5, basso: 0.72 } as const
+const COLONNA = { sinistra: 0.28, centro: 0.5, destra: 0.72 } as const
+const punto = (valore: string | null | undefined) => {
+  const [riga, colonna] = (valore || 'centro-destra').split('-')
+  return {
+    x: COLONNA[colonna as keyof typeof COLONNA] ?? COLONNA.destra,
+    y: RIGA[riga as keyof typeof RIGA] ?? RIGA.centro,
+  }
+}
 
 // Colore tipico di ogni effetto quando non se ne sceglie uno dalla tavolozza
 const COLORE_TIPICO = {
@@ -34,12 +43,12 @@ const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
   const colore = scelto ?? COLORE_TIPICO[e.tipo]
   const intensita = INTENSITA[e.intensita ?? 'media']
   const ritmo = RITMO[e.velocita ?? 'normale']
-  const x = PUNTO[e.posizione ?? 'destra']
+  const { x, y } = punto(e.posizione)
 
   switch (e.tipo) {
     case 'pulsazione':
       // Senza colore e al centro: identico all'alone storico dell'hero Sorazon (ciano verso blu)
-      if (!scelto && (e.posizione ?? 'centro') === 'centro') {
+      if (!scelto && (e.posizione ?? 'centro-centro') === 'centro-centro') {
         return (
           <div
             aria-hidden
@@ -53,14 +62,14 @@ const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
           aria-hidden
           className="pointer-events-none absolute inset-0 motion-safe:animate-pulse"
           style={{
-            background: `radial-gradient(circle at ${x * 100}% 50%, ${colore}, transparent 70%)`,
+            background: `radial-gradient(circle at ${x * 100}% ${y * 100}%, ${colore}, transparent 70%)`,
             opacity: 0.3 * intensita,
             animationDuration: `${2 * ritmo}s`,
           }}
         />
       )
     case 'scarica':
-      return <TeslaDischarge origin={{ x, y: 0.5 }} colore={colore} ritmo={ritmo} intensita={intensita} />
+      return <TeslaDischarge origin={{ x, y }} colore={colore} ritmo={ritmo} intensita={intensita} />
     case 'particelle':
       return (
         <Particelle
@@ -80,7 +89,7 @@ const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
               className="effetto-onda absolute rounded-full border-2"
               style={{
                 left: `${x * 100}%`,
-                top: '50%',
+                top: `${y * 100}%`,
                 borderColor: colore,
                 opacity: 0,
                 animationDuration: `${6 * ritmo}s`,
@@ -111,7 +120,7 @@ const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
       return (
         <Personalizzato
           tipo={e.tipoPersonalizzato}
-          parametri={{ colore, intensita, velocita: 1 / ritmo, puntoX: x }}
+          parametri={{ colore, intensita, velocita: 1 / ritmo, puntoX: x, puntoY: y }}
         />
       )
     default:

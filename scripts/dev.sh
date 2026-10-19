@@ -4,6 +4,10 @@
 set -u
 cd "$(dirname "$0")/.."
 
+# I dati letti dal frontend restano in cache tra un avvio e l'altro: se nel frattempo il database
+# è cambiato da un'altra parte (seed nello stack, ripristino) la cache non lo sa. Si riparte puliti.
+rm -rf frontend/.next/dev/cache/fetch-cache frontend/.next/cache/fetch-cache   # Next 16: .next/dev in sviluppo
+
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
   PURPLE=$'\033[38;5;135m'; CYAN=$'\033[36m'; DIM=$'\033[2m'; BOLD=$'\033[1m'; RESET=$'\033[0m'
 else
