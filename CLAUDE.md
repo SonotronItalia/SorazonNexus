@@ -81,6 +81,8 @@ SorazonNexus/
 # Il vecchio monolite vetrina/ è stato eliminato: si recupera dal tag git monolite-v1.
 ```
 
+Contenuti di partenza (`make seed`): dati in `backend/src/seed/dati/` (tabelle CSV e pagine in Markdown con intestazione YAML, formato spiegato in `seed/pagine.ts`), immagini in `seed/media/`; `seed/index.ts` contiene solo la logica. Nuovi contenuti di partenza si aggiungono come file, non nel codice.
+
 Nel backend: `src/{access,collections,fields,hooks,plugins,search,Header,Footer,heros,blocks,utilities}`, `src/app/(payload)`, `src/payload.config.ts`, `src/payload-types.ts` (generato). I blocchi e l'hero nel backend contengono **solo `config.ts`**.
 
 Nel frontend: `src/{app,blocks,components,heros,Header,Footer,providers,lib,utilities}`; i blocchi hanno solo `Component.tsx`.
@@ -133,7 +135,7 @@ Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le an
 - Sede legale: Fano (PU). Email (deciso il 2026-10-19): `info@sonotronitalia.com` per tutto ciò che riguarda il pubblico, `it@sonotronitalia.com` per le questioni IT. Il vecchio `info@sorazon.it` non si usa più nel nuovo sito.
 - Il sito attuale ha un frammento di codice visibile nella pagina Contatti (residuo del plugin anti-spam di Joomla) che nel nuovo sito sparisce.
 - Pagine del vecchio sito: Home, Dispositivo, Terapia, Indicazioni, Risultati, Notizie, Contatti, Distribuzione. Redirect 301 dai vecchi indirizzi (plugin redirects) per non perdere posizionamento.
-- Elenco centri attuale per regione: Marche, Piemonte, Liguria, Lombardia, Emilia-Romagna, Lazio, Puglia, Campania, Basilicata, Abruzzo. I dati, estratti dal PDF del vecchio sito (`contatti.pdf`), stanno in `backend/src/seed/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel); `make seed` li importa e li aggiorna senza creare doppioni (chiave: città + indirizzo, o città + nome).
+- Elenco centri attuale per regione: Marche, Piemonte, Liguria, Lombardia, Emilia-Romagna, Lazio, Puglia, Campania, Basilicata, Abruzzo. I dati, estratti dal PDF del vecchio sito (`contatti.pdf`), stanno in `backend/src/seed/dati/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel); `make seed` li importa e li aggiorna senza creare doppioni (chiave: città + indirizzo, o città + nome).
 - Hosting attuale: Aruba (probabile hosting condiviso: **non disdirlo** finché le caselle email non sono migrate). Obiettivo di rilascio: **Aruba Cloud Server** (OpenStack, fatturazione anche oraria), una VPS con Docker Compose. Prezzi letti a ottobre 2026: 4 GB a 10,05 € (promo) / 20,10 € (listino) al mese, 8 GB a 15,60 € / 31,20 €, IVA esclusa. Il budget si fa a prezzo di listino.
 - Esistono due documenti di budget già prodotti (proposta di progetto in formato documento e foglio `Budget_Progetto_Sorazon.xlsx`) per l'approvazione dei costi dell'azienda.
 

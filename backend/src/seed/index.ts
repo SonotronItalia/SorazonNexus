@@ -1,5 +1,7 @@
 /**
  * Contenuti di partenza per lo sviluppo: "make seed" (pnpm payload run src/seed/index.ts).
+ * I contenuti stanno in src/seed/dati (tabelle CSV e pagine in Markdown, vedi pagine.ts) e le
+ * immagini in src/seed/media: questo file contiene solo la logica di caricamento.
  *
  * Ripetibile: cerca prima di creare (utente per email, media per nome file, pagine per slug,
  * centri per città + indirizzo, o città + nome se manca l'indirizzo) e aggiorna quello che trova.
@@ -11,12 +13,24 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import config from '@payload-config'
+import {
+  BoldFeature,
+  convertMarkdownToLexical,
+  editorConfigFactory,
+  HeadingFeature,
+  ItalicFeature,
+  LinkFeature,
+  ParagraphFeature,
+  UnderlineFeature,
+  UnorderedListFeature,
+} from '@payloadcms/richtext-lexical'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
 
 import type { Centri, Media, Page } from '@/payload-types'
 import { revalidateFrontend } from '@/hooks/notifyFrontend'
 
 import { leggiCsv } from './csv'
+import { leggiPagina, risolvi } from './pagine'
 
 const dir = path.dirname(fileURLToPath(import.meta.url))
 const context = { disableRevalidate: true }
@@ -24,37 +38,24 @@ const context = { disableRevalidate: true }
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
 
-// --- Rich text (Lexical) minimale: titoli e paragrafi ---
+// Cartella dei dati: tabelle CSV (separatore ";", si aprono con Excel) e pagine in Markdown
+const dati = (...parti: string[]) => path.join(dir, 'dati', ...parti)
+const leggiTabella = (file: string) => leggiCsv(fs.readFileSync(dati(file), 'utf8'))
 
-type RichText = NonNullable<Page['hero']['richText']>
-type Node = RichText['root']['children'][number]
-
-// Un pezzo di testo; "**così**" all'inizio di un paragrafo o di una voce diventa grassetto
-const text = (t: string, bold = false) => ({
-  type: 'text',
-  text: t,
-  version: 1,
-  format: bold ? 1 : 0,
-  detail: 0,
-  mode: 'normal',
-  style: '',
+// Markdown -> rich text di Payload, con le stesse funzioni di testo dei campi del sito
+const editorMarkdown = await editorConfigFactory.fromFeatures({
+  config: payload.config,
+  features: [
+    ParagraphFeature(),
+    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+    BoldFeature(),
+    ItalicFeature(),
+    UnderlineFeature(),
+    LinkFeature(),
+    UnorderedListFeature(),
+  ],
 })
-const inline = (t: string) => {
-  const m = t.match(/^\*\*(.+?)\*\*(.*)$/s)
-  return m ? [text(m[1], true), ...(m[2] ? [text(m[2])] : [])] : [text(t)]
-}
-const block = { direction: 'ltr' as const, format: '' as const, indent: 0, version: 1 }
-const heading = (tag: 'h1' | 'h2' | 'h3', t: string): Node => ({ type: 'heading', tag, children: [text(t)], ...block })
-const paragraph = (t: string): Node => ({ type: 'paragraph', children: inline(t), textFormat: 0, ...block })
-const list = (...voci: string[]): Node => ({
-  type: 'list',
-  listType: 'bullet',
-  tag: 'ul',
-  start: 1,
-  children: voci.map((v, i) => ({ type: 'listitem', value: i + 1, children: inline(v), ...block })),
-  ...block,
-})
-const richText = (...children: Node[]): RichText => ({ root: { type: 'root', children, ...block } })
+const markdown = (testo: string) => convertMarkdownToLexical({ editorConfig: editorMarkdown, markdown: testo })
 
 // --- Utente amministratore di sviluppo ---
 
@@ -70,12 +71,14 @@ async function seedAdmin() {
   log(`creato utente ${email} (password in backend/.env)`)
 }
 
-// --- Media: i file stanno in src/seed/media ---
+// --- Media: i file stanno in src/seed/media, l'elenco con il testo alternativo in dati/media.csv ---
 
 async function seedMedia(file: string, alt: string): Promise<Media> {
   const { docs } = await payload.find({ collection: 'media', where: { filename: { equals: file } }, limit: 1 })
   if (docs[0]) return docs[0]
-  return payload.create({ collection: 'media', data: { alt }, filePath: path.join(dir, 'media', file), context })
+  const filePath = path.join(dir, 'media', file)
+  if (!fs.existsSync(filePath)) throw new Error(`dati/media.csv: manca il file src/seed/media/${file}`)
+  return payload.create({ collection: 'media', data: { alt }, filePath, context })
 }
 
 // --- Pagine: aggiornate se lo slug esiste già, sempre pubblicate ---
@@ -109,20 +112,7 @@ async function seedRedirect(from: string, url: string) {
   else await payload.create({ collection: 'redirects', data, context })
 }
 
-// Blocco di testo a tutta larghezza (o due colonne affiancate)
-const testo = (...children: Node[]) => ({
-  blockType: 'content' as const,
-  columns: [{ size: 'full' as const, richText: richText(...children) }],
-})
-const dueColonne = (sinistra: Node[], destra: Node[]) => ({
-  blockType: 'content' as const,
-  columns: [
-    { size: 'half' as const, richText: richText(...sinistra) },
-    { size: 'half' as const, richText: richText(...destra) },
-  ],
-})
-
-// --- Centri da src/seed/centri.csv (estratto da contatti.pdf; si può modificare con Excel) ---
+// --- Centri da dati/centri.csv (estratto da contatti.pdf) ---
 
 type CentroSeed = Omit<Centri, 'id' | 'createdAt' | 'updatedAt' | 'coordinate'>
 
@@ -142,7 +132,7 @@ const CAMPI_CENTRO = [
 async function seedCentri() {
   // Nei professionisti ogni riga della cella è una persona. Una cella vuota svuota il campo
   // anche nel database. Regione e città obbligatorie le controlla Payload.
-  const righe = leggiCsv(fs.readFileSync(path.join(dir, 'centri.csv'), 'utf8'))
+  const righe = leggiTabella('centri.csv')
   const centri = righe.map((r) =>
     Object.fromEntries(CAMPI_CENTRO.map((k) => [k, r[k] ?? null])),
   ) as unknown as CentroSeed[]
@@ -172,303 +162,63 @@ async function seedCentri() {
 
 await seedAdmin()
 
-const fotoDispositivo = await seedMedia('dispositivo-sorazon.jpg', 'Dispositivo Sorazon: unità base e manipolo')
-const fotoUnitaBase = await seedMedia('unita_base.jpg', 'Unità base Sorazon')
-const fotoManipolo = await seedMedia('manipolo_trasduttore.jpg', 'Manipolo trasduttore Sorazon')
+const idMedia = new Map<string, number | string>()
+for (const { file, alt } of leggiTabella('media.csv')) idMedia.set(file, (await seedMedia(file, alt ?? file)).id)
 log('media pronti')
 
 await seedCentri()
 
-const centri = await seedPage({
-  title: 'Centri',
-  slug: 'centri',
-  hero: { type: 'lowImpact', richText: richText(heading('h1', 'Centri di riferimento')) },
-  layout: [
-    {
-      blockType: 'centriList',
-      titolo: 'Elenco per regione',
-      // Testo del vecchio sito (pagina Contatti)
-      introduzione:
-        'Ambulatori in Italia abilitati a praticare la terapia Sorazon, con operatori che hanno effettuato il corso Formativo-Operativo-Teorico Pratico, con acquisizione di Attestato di Idoneità.\nConseguito presso la sede aziendale ed il Centro Medico Polispecialistico di Fano (PU).',
-      mostraIndice: true,
-      colonne: '2',
-    },
-  ],
-})
+// Pagine: prima quelle senza collegamenti, poi quelle che puntano a pagine già create
+const idPagine = new Map<string, number | string>()
+const { docs: pagineEsistenti } = await payload.find({ collection: 'pages', pagination: false, depth: 0, draft: true })
+pagineEsistenti.forEach((p) => p.slug && idPagine.set(p.slug, p.id))
 
-// Dati del vecchio sito (pagina Dispositivo), riportati senza modifiche di contenuto
-const dispositivo = await seedPage({
-  title: 'Dispositivo',
-  slug: 'dispositivo',
-  hero: { type: 'lowImpact', richText: richText(heading('h1', 'Dispositivo')) },
-  layout: [
-    {
-      blockType: 'schedaProdotto',
-      titolo: 'Sorazon',
-      descrizione: 'Apparecchio elettromedicale composto da unità base e manipolo trasduttore.',
-      immagine: fotoDispositivo.id,
-      posizioneImmagine: 'sinistra',
-      sfondo: 'nessuno',
-      colonneComponenti: '2',
-      gruppi: [
-        {
-          titolo: 'Dati tecnici',
-          voci: [{ testo: 'Tensione di lavoro: 220 Vac' }, { testo: 'Potenza assorbita: 200 W' }],
-        },
-        {
-          titolo: 'Dimensioni apparecchio',
-          voci: [
-            { testo: 'L 49 cm × H 30,5 cm × P 49 cm' },
-            { testo: 'Monitor: 10" LCD colore' },
-            { testo: 'Peso apparecchio: 20 kg' },
-          ],
-        },
-        {
-          titolo: 'Omologazione',
-          voci: [
-            { testo: 'Marchio CE' },
-            { testo: 'Elettromedicale Classe 2a' },
-            { testo: 'Apparecchiatura non invasiva, non a contatto' },
-          ],
-        },
-      ],
-      componenti: [
-        {
-          nome: 'Unità base',
-          foto: fotoUnitaBase.id,
-          composto_da: [
-            { testo: 'Monitor LCD 10" colore' },
-            { testo: 'Generatore di radiofrequenza' },
-            { testo: 'Generatore di onde soniche (risonanza magnetica)' },
-            { testo: 'Software in lingua italiana' },
-            { testo: 'Mouse' },
-          ],
-        },
-        {
-          nome: 'Manipolo trasduttore',
-          foto: fotoManipolo.id,
-          composto_da: [{ testo: 'Camera di ionizzazione' }, { testo: 'Generatore di ozono' }],
-        },
-      ],
-    },
-  ],
-})
-
-await seedPage({
-  title: 'Home',
-  slug: 'home',
-  hero: {
-    type: 'sorazon',
-    // Titolo e sottotitolo del vecchio sito; il claim sanitario resta fuori finché non è rivisto
-    richText: richText(heading('h1', 'Evoluzione terapeutica'), paragraph('Brevetto Italia Europa')),
-    links: [
-      {
-        link: {
-          type: 'reference',
-          reference: { relationTo: 'pages', value: centri.id },
-          label: 'Trova un centro',
-          appearance: 'default',
-        },
-      },
-      {
-        link: {
-          type: 'reference',
-          reference: { relationTo: 'pages', value: dispositivo.id },
-          label: 'Il dispositivo',
-          appearance: 'outline',
-        },
-      },
-    ],
-    media: fotoDispositivo.id,
-    effetto_pulsazione: true,
-    effetto_scarica: false,
+const risolutori = {
+  markdown,
+  media: (file: string) => {
+    const id = idMedia.get(file)
+    if (id == null) throw new Error(`immagine "${file}" non elencata in dati/media.csv`)
+    return id
   },
-  layout: [
-    {
-      blockType: 'cta',
-      richText: richText(
-        heading('h2', 'Trova il centro più vicino'),
-        paragraph('Ambulatori in Italia abilitati a praticare la terapia Sorazon.'),
-      ),
-      links: [
-        {
-          link: {
-            type: 'reference',
-            reference: { relationTo: 'pages', value: centri.id },
-            label: 'Elenco dei centri',
-            appearance: 'default',
-          },
-        },
-      ],
-    },
-  ],
-})
-
-// --- Terapia e Indicazioni: testi del vecchio sito riportati alla lettera, IN BOZZA.
-// Contengono affermazioni sanitarie: vanno riviste da chi è competente prima di pubblicarle.
-
-await seedPage(
-  {
-    title: 'Terapia',
-    slug: 'terapia',
-    hero: { type: 'lowImpact', richText: richText(heading('h1', 'Terapia')) },
-    layout: [
-      testo(
-        heading('h2', 'Terapia intensiva antinfiammatoria'),
-        paragraph('Mirata > infiltrante > profonda. Non invasiva, non a contatto, non dolorosa.'),
-        paragraph('**A tripla azione:**'),
-        list(
-          'Ad onde soniche pressorie',
-          'A radiofrequenza con campo elettromagnetico ionizzante',
-          'Ad energia ossigenatoria di OZONO',
-        ),
-        heading('h2', 'Azione terapeutica'),
-        list(
-          '**Stato degenerativo articolare** (artrosi): cartilagine articolare, liquido sinoviale',
-          '**Artrite** - Flogosi - inibizione delle prostaglandine',
-          '**Dolore** - Ossidazione (inattivazione) dei trasmettitori nervosi',
-          '**Traumi** - Contusivi - Distorsivi',
-          "**Si utilizza anche come terapia antinfiammatoria:** prima di un intervento chirurgico per ridurre il dolore e la flogosi; dopo l'intervento chirurgico quando il paziente avverte ancora dolore ed è limitato nei movimenti",
-          '**Seduta terapeutica:** 1 volta a settimana per 4/6 settimane.',
-        ),
-        heading('h2', "Meccanismo d'azione"),
-        heading('h3', 'Onde soniche pressorie'),
-        paragraph(
-          "Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.",
-        ),
-        heading('h3', 'Radiofrequenza con campo elettromagnetico ionizzante'),
-        paragraph(
-          "La RADIOFREQUENZA, nota anche con l'acronimo RF indica generalmente un segnale elettrico o un'onda elettromagnetica ad alta frequenza che si propaga nell'etere o in un cavo coassiale.",
-        ),
-        paragraph(
-          "La radiofrequenza emettendo l'alta frequenza modulata nella camera di ionizzazione, crea un campo elettromagnetico ionizzante antinfiammatorio che a distanza va a polarizzare i tessuti aprendo i canali ionici.",
-        ),
-        heading('h3', 'Energia ossigenatoria di ozono'),
-        paragraph(
-          "Un elevatore di tensione genera una scarica a corona che produce nella camera di ionizzazione un'energia ossigenatoria di ozono che si va ad incanalare nelle parti che stiamo trattando a livello transdermico, tramite i canali ionici.",
-        ),
-        paragraph(
-          "L'ozono per la formazione di perossidi ha effetto antibatterico, antivirale e germicida con proprietà ossidante; agisce come antinfiammatorio per inibizione delle prostaglandine, sostanze fondamentali nello sviluppo di un processo infiammatorio e come antidolorifico per ossidazione dei trasmettitori nervosi che determinano il dolore. Agisce sulla riduzione delle calcificazioni presenti nei tessuti e nelle articolazioni, possiede anche una significativa attività antalgica, riabilitativa nell'ambito del dolore muscolo scheletrico vertebrale, osteoarticolare, acuto - cronico riferito ad artrosi, periartriti, tendiniti, fasciti e borsiti.",
-        ),
-        paragraph(
-          'Le applicazioni di Ossigeno/Ozono sono assolutamente innocue e prive di effetti collaterali. "Si tratta di Ossigeno e quindi non si può neanche essere allergici" e non presentano, in linea di massima, controindicazioni. E\' medicina naturale.',
-        ),
-        paragraph(
-          "L'Ossigeno/Ozono terapia, è una tecnica dolce che sfrutta le potenzialità dell'ozono, combinato con l'ossigeno, di stimolare ed aumentare i meccanismi di protezione nei confronti della produzione dei radicali liberi (determinandone la riduzione) e di sostanze tossiche per le cellule.",
-        ),
-        paragraph(
-          "Attiva la circolazione in tutti i tessuti, stimolandone anche la rigenerazione e favorendo il rilascio dell'ossigeno agli stessi, svolgendo azione:",
-        ),
-        list('Analgesica', 'Antinfiammatoria', 'Antivirale', 'Antibatterica', 'Immunomodulante'),
-        paragraph(
-          "E' una miscela di gas costituita da Ossigeno/Ozono, utilizzata nel trattamento del dolore di diversa origine e nel trattamento conservativo di patologie traumatiche che interessano muscoli, tendini ed articolazioni.",
-        ),
-        paragraph(
-          'I dati emersi dalla ricerca scientifica evidenziano un ruolo antinfiammatorio ed analgesico dovuti da diversi meccanismi di azione:',
-        ),
-        list(
-          'Una minore produzione dei mediatori della FLOGOSI (infiammazione), inibizione delle PROSTAGLANDINE',
-          "L'ossidazione (inattivazione) dei METABOLITI ALGOGENI delle parti nervose",
-          'Netto miglioramento della MICROCIRCOLAZIONE SANGUIGNA LOCALE, che con un miglior apporto di ossigeno agisce con una più rapida eliminazione delle sostanze tossiche con rigenerazione delle strutture anatomiche lese.',
-          'Una riduzione ed eliminazione dei cataboliti (sostanze tossiche) nel liquido sinoviale, migliorando lo stato degenerativo della cartilagine.',
-        ),
-      ),
-    ],
+  pagina: (slug: string) => {
+    const id = idPagine.get(slug)
+    if (id == null) throw new Error(`collegamento alla pagina "${slug}", che non esiste`)
+    return id
   },
-  'draft',
-)
-
-// Zone del corpo e patologie, in due colonne
-const zona = (nome: string, patologie: string) => [heading('h3', nome), paragraph(patologie)]
-
-await seedPage(
-  {
-    title: 'Indicazioni',
-    slug: 'indicazioni',
-    hero: { type: 'lowImpact', richText: richText(heading('h1', 'Indicazioni terapeutiche')) },
-    layout: [
-      testo(list('Artrosi', 'Infiammazioni articolari', 'Traumi')),
-      dueColonne(
-        [
-          ...zona('Temporo mandibolare', 'artrite - artrosi - dolore di masticazione'),
-          ...zona(
-            'Colonna cervicale',
-            'artrite - artrosi - cervicalgia - discopatie - vertigini - nausea - traumi contrattivi, contusivi',
-          ),
-          ...zona(
-            'Colonna dorsale',
-            'artrite - artrosi - discopatie - dolori crolli vertebrali - traumi contrattivi, contusivi',
-          ),
-          ...zona(
-            'Colonna lombare sacrale',
-            'artrite - artrosi - discopatia - radicolite - sciatalgia sacroileite - lombalgia - colpo della strega - traumi contrattivi, contusivi - dolore trauma coccige',
-          ),
-          ...zona(
-            'Spalla',
-            'artrite - artrosi - periartrite scapolo omerale - cuffia rotatori - tendinopatia calcifica - sovraspinato - CLBO - acromion claveare - borsite sad - calcificazioni - brachialgia - lussazione - lesione muscolo tendinea traumi contrattivi - contusivi',
-          ),
-          ...zona('Gomito', 'artrite - artrosi - epicondilite (gomito tennista) - traumi contrattivi, contusivi'),
-          ...zona('Polso', 'artrite - artrosi - rizartrosi - tendinite - traumi contrattivi, contusivi, distorsivi'),
-        ],
-        [
-          ...zona(
-            'Mano',
-            'artrite - artrosi - tunnel carpale - dito a scatto - metacarpalgia - traumi contrattivi, contusivi',
-          ),
-          ...zona(
-            'Anca',
-            'artrite - coxartrosi - coxalgia - pubalgia - lussazione - necrosi testa femore, ovalizzata',
-          ),
-          ...zona('Coscia/Gamba', 'traumi contrattivi, contusivi - ematomi'),
-          ...zona(
-            'Ginocchio',
-            'artrite - gonartrosi - meniscopatie degenerative - lesioni legamenti - sinoviti - traumi distorsivi, contusivi - cisti di baker',
-          ),
-          ...zona(
-            'Caviglia',
-            "artrite - artrosi - traumi distorsivi, contusivi - lesioni - calcificazioni tendine d'achille",
-          ),
-          ...zona(
-            'Piede',
-            'artrite - artrosi - talloniti - tarsalgie - speroni calcaneari - metatarsalgie - alluce valgo - sesamoidi - neuroma di Morton - tendinite - fascite plantare - trauma contusivo',
-          ),
-          ...zona(
-            'Patologie varie',
-            'artrite reumatoide - artralgia - tendinite tenosinovite - calcificazioni - borsiti - sinoviti periostite - ritardi di consolidazione ossea',
-          ),
-        ],
-      ),
-    ],
-  },
-  'draft',
-)
-
-// Vecchi indirizzi del sito Joomla (menu di www.sorazon.it) verso i nuovi
-for (const [from, url] of [
-  ['/it', '/'],
-  ['/index.php', '/'],
-  ['/it/dispositivo', '/dispositivo'],
-  ['/it/terapia', '/terapia'],
-  ['/it/indicazioni', '/indicazioni'],
-  ['/it/notizie', '/posts'],
-  ['/it/contatti', '/centri'],
-]) {
-  await seedRedirect(from, url)
 }
+
+const daCreare = fs
+  .readdirSync(dati('pagine'))
+  .filter((f) => f.endsWith('.md'))
+  .sort()
+  .map((f) => leggiPagina(f, fs.readFileSync(dati('pagine', f), 'utf8')))
+const slugNeiFile = new Set(daCreare.map((p) => p.slug))
+while (daCreare.length) {
+  const i = daCreare.findIndex((p) => p.collegamenti.every((s) => s === p.slug || !slugNeiFile.has(s) || idPagine.has(s)))
+  if (i < 0) throw new Error(`collegamenti circolari tra: ${daCreare.map((p) => p.file).join(', ')}`)
+  const [p] = daCreare.splice(i, 1)
+  const data = risolvi(p.dati, risolutori) as RequiredDataFromCollectionSlug<'pages'>
+  const pagina = await seedPage(data, p.bozza ? 'draft' : 'published')
+  idPagine.set(p.slug, pagina.id)
+}
+
+// Vecchi indirizzi del sito Joomla verso i nuovi
+for (const { da, a } of leggiTabella('redirect.csv')) await seedRedirect(da, a)
 log('redirect dai vecchi indirizzi aggiornati')
 
+// Menu dell'header: una voce per riga, verso una pagina (per slug) o un indirizzo
 await payload.updateGlobal({
   slug: 'header',
   data: {
-    navItems: [
-      { link: { type: 'reference', reference: { relationTo: 'pages', value: dispositivo.id }, label: 'Dispositivo' } },
-      { link: { type: 'reference', reference: { relationTo: 'pages', value: centri.id }, label: 'Centri' } },
-      { link: { type: 'custom', url: '/posts', label: 'Notizie' } },
-    ],
+    navItems: leggiTabella('menu.csv').map(({ etichetta, pagina, url }) => ({
+      link: pagina
+        ? { type: 'reference' as const, reference: risolvi(`pagina:${pagina}`, risolutori) as never, label: etichetta }
+        : { type: 'custom' as const, url, label: etichetta },
+    })),
   },
   context,
 })
-log('menu dell\'header aggiornato')
+log("menu dell'header aggiornato")
 
 // Durante il seed gli avvisi al frontend sono spenti: uno solo alla fine, con tutti i tag
 await revalidateFrontend(
