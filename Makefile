@@ -9,7 +9,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help setup doctor db db-wait db-running stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
+.PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed \
         stack stack-proxy tunnel backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
@@ -53,15 +53,19 @@ ps: ## Stato dei container
 logs: ## Log (Ctrl+C per uscire). Esempio: make logs SERVICE=backend
 	@$(COMPOSE) logs -f $(SERVICE)
 
-dev: db ## Avvia backend e frontend insieme (database incluso)
+# Prima di make dev: con lo stack Docker acceso avvisa e chiede se fermarlo (stesse porte e database)
+controlla-stack:
+	@bash scripts/controlla-stack.sh
+
+dev: controlla-stack db ## Avvia backend e frontend insieme (database incluso)
 	@$(FX) banner "backend + frontend"
 	@bash scripts/dev.sh
 
-dev-backend: db ## Backend Payload in sviluppo su http://localhost:3001/admin
+dev-backend: controlla-stack db ## Backend Payload in sviluppo su http://localhost:3001/admin
 	@$(FX) banner "backend (Payload) su :3001"
 	@pnpm -C backend dev
 
-dev-frontend: ## Frontend Next.js in sviluppo su http://localhost:3000
+dev-frontend: controlla-stack ## Frontend Next.js in sviluppo su http://localhost:3000
 	@$(FX) banner "frontend (Next.js) su :3000"
 	@pnpm -C frontend dev
 
@@ -77,14 +81,19 @@ migrate-create: db ## Crea una migrazione: make migrate-create NAME=iniziale
 migrate: db ## Applica le migrazioni non ancora eseguite
 	@pnpm -C backend payload migrate
 
-# Con lo stack Docker acceso il seed gira in un container e salva i media nel volume del backend;
-# altrimenti (make dev) gira sul Mac e li salva in backend/public/media, dove li legge il backend locale.
+# Con lo stack Docker acceso il seed gira in un container e salva i media nel volume del backend,
+# poi li copia anche in backend/public/media (dove li legge make dev); altrimenti gira sul Mac.
+# Il database è lo stesso: le immagini devono esserci in tutte e due le cartelle.
 seed: ## Contenuti di partenza (pagine, centri, media, menu). Ripetibile, non cancella
 	@if $(COMPOSE) ps --status running -q backend 2>/dev/null | grep -q .; then \
-	  $(FX) run "Contenuti di partenza nello stack Docker" $(COMPOSE) --profile strumenti run --rm --build seed; \
+	  $(FX) run "Contenuti di partenza nello stack Docker" $(COMPOSE) --profile strumenti run --rm --build seed && \
+	  bash scripts/allinea-media.sh; \
 	else \
 	  $(MAKE) --no-print-directory migrate && pnpm -C backend payload run src/seed/index.ts; \
 	fi
+
+allinea-media: ## Copia le immagini mancanti tra il Mac (make dev) e lo stack Docker, nei due sensi
+	@bash scripts/allinea-media.sh
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build

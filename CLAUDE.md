@@ -125,7 +125,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 ## 6. Comandi del progetto (Makefile)
 
-`make seed` sceglie da solo dove girare: con lo stack Docker acceso usa il servizio `seed` (profilo "strumenti", immagine di build) e salva i media nel volume del backend; altrimenti gira sul Mac e li salva in `backend/public/media` (quelli che legge `make dev`). I due modi condividono il database ma **non** i file dei media.
+`make seed` sceglie da solo dove girare: con lo stack Docker acceso usa il servizio `seed` (profilo "strumenti", immagine di build) e salva i media nel volume del backend; altrimenti gira sul Mac e li salva in `backend/public/media` (quelli che legge `make dev`). I due modi condividono il database ma **non** i file dei media: dopo il seed nello stack `scripts/allinea-media.sh` copia i file mancanti nei due sensi (anche `make allinea-media`). `make dev` con lo stack acceso avvisa e chiede di fermarne backend, frontend e proxy (stesse porte 3000/3001).
 
 `make help` · `make doctor` · `make db` · `make dev` (db + backend :3001 + frontend :3000) · `make dev-backend` · `make dev-frontend` · `make types` · `make migrate-create NAME=...` · `make stack` (tre container) · `make stack-proxy` (con nginx, simula la produzione) · `make tunnel` (stack acceso visibile da internet con Cloudflare quick tunnel, indirizzi nuovi a ogni avvio; Ctrl+C rimette quelli locali) · `make backup` · `make backup-media` · `make restore FILE=...` · `make reset-db` · `make stop` · `make down` · `make logs SERVICE=...` · `make ps`.
 
