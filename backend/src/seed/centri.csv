@@ -1,0 +1,48 @@
+﻿regione;provincia;citta;nome_struttura;indirizzo;telefoni;email;sito;professionisti
+Marche;AN;Ancona;Studio Medico;;337 641384;;;
+Marche;PU;Fano;Centro Medico Arcadia;;333 9129395;;;
+Marche;MC;Trodica di Morrovalle;Studio Medico;;340 5244629 - 337 641384;;;
+Marche;PU;Pesaro;Postural Lab - Posturologia, Fisioterapia, Riabilitazione;Strada della Fabbreccia 104;392 8340398;maronaldo@libero.it;;Maroncelli Matteo
+Piemonte;TO;Bricherasio;Studio Fisiò;Via Campiglione, 23;393 4179839;;www.studiofisio.business.site;"Dott. Toscano Mauro - Fisioterapista
+Dott. Bagatin Stefano - Fisioterapista"
+Piemonte;VC;Vercelli;Studio Fisioterapico;;338 8904113;;;Dott. Andrea Suma - Fisioterapista
+Piemonte;NO;Gozzano;Studio Fisioterapico;Corso XXV Aprile, 65;333 2227939;;www.fisioterapiapettinaroli.it;Dott. Davide Pettinaroli - Fisioterapista Osteopata
+Piemonte;NO;Galliate;Studio Fisioterapico Pantarei rehab e sport s.r.l.s.;Via Dante Alighieri, 87;342 9322424;;www.pantareirehab.it;Dott. Cevasco Marcello - Fisioterapista Osteopata
+Piemonte;CN;Cuneo;Studio Assoc. di Fisioterapia-Osteopatia di Pepino Valentina e Greta Biglione;Viale Angeli, 38;333 8880840;;;Dott.ssa Pepino Valentina - Fisioterapista Osteopata
+Piemonte;CN;Centallo;Studio di Fisioterapia e Osteopatia Dott. Mana Matteo;Via Passeggiata del Convento 9, 12004 Centallo (CN);320 3267583;m.matteomana@gmail.com;;Dott. Mana Matteo
+Piemonte;AL;Acqui Terme;Studio Fisioterapico Manus Medica;Corso Bagni, 179/A;347 9068985;;;Dott. Massimo Sgarminato - Fisioterapista Osteopata
+Liguria;SV;Albenga;Poliambulatorio Bastia Medica;Piazza Antonio Anfossi 2 (Bastia);0182 20485;;www.bastiamedica.com;
+Liguria;SV;Borghetto Santo Spirito;Ambulatorio sociale ABG Salute;Via Giardini, 2;342 6097138;;;"Dott. Riccardo Vaccaro - Fisioterapista Osteopata
+Donatella Zanconato - Responsabile
+Dott. Carlo Meistro - Fisioterapista Osteopata"
+Liguria;SV;Savona;Riviera Wellness;Corso Vittorio Veneto, 1;342 6097138;;;Dott. Riccardo Vaccaro - Fisioterapista Osteopata
+Liguria;IM;Pieve di Teco;Ambulatorio Medico;Corso Mario Ponzoni, 65;342 6097138;;;"Dott. Riccardo Vaccaro - Fisioterapista Osteopata
+Donatella Zanconato - Responsabile
+Dott. Carlo Meistro - Fisioterapista Osteopata"
+Liguria;SV;Andora;Centro Salute Andora;Via dei Mille, 10;0182 87185;;www.centrosaluteandora.com;"Dott. Riccardo Vaccaro - Fisioterapista Osteopata
+Donatella Zanconato - Responsabile"
+Lombardia;MI;Magnago;Fisio Sigma;Via Daniele Manin 15;339 3883659;fisio.signo@gmail.com;;Signorini Matteo
+Lombardia;MI;Mesero;Studio Medico-Fisioterapico D.A.M.;Via San Bernardo, 29;02 97288454;;;Dott. Francesco Masetti - Fisioterapista Osteopata
+Lombardia;BS;Palazzolo sull'Oglio;Poliambulatorio fisioterapico Moraschi;Via Monsignor Zeno Piccinelli, 1;030 7401541;;www.poliambulatoriomoraschi.com;Dott. Moraschi Marco - Fisioterapista
+Lombardia;VA;Busto Arsizio;Studio Fisioterapico Stissi Valeria;Via Correggio;349 1644807;;;"Dott.ssa Stissi Valeria - Fisioterapista
+Dott. Stissi Placido - Medico Chirurgo Ortopedico"
+Lombardia;VA;Varese;Studio VA;Via Morosini 19;349 1644807;;;"Dott.ssa Stissi Valeria - Fisioterapista
+Dott. Stissi Placido - Medico Chirurgo Ortopedico"
+Lombardia;BS;Darfo Boario Terme;Studio Fisioterapico Salute in Circolo;Via S. Agostino, 14 - 25047;366 9043435;;;Dott.ssa Saviori Cinzia - Fisioterapista
+Lombardia;MI;Cornaredo;Studio Fisioterapico Pantarei rehab e sport s.r.l.s.;Via Pace, 11-13;349 2201096;;www.pantareirehab.it;Dott. Cevasco Marcello - Fisioterapista Osteopata
+Lombardia;MI;Milano;Studio Fisioterapico Pantarei rehab e sport s.r.l.s.;Via Cola Montano, 3 (Isola);351 5177198;;www.pantareirehab.it;Dott. Cevasco Marcello - Fisioterapista Osteopata
+Lombardia;MI;Milano;Biofisiomed S.r.l.;Via Cuneo, 4 (MM1 Wagner);335 6566313;;www.diegociriello.it/sorazon.html;Dott. Diego Ciriello - Fisioterapista
+Emilia-Romagna;BO;Funo di Argelato;Studio Fisioterapico;Via Galleria, 232/3;333 5259861;;www.fisioterapia-funo.it;Dott. Antonio Dall'Olmo - Fisioterapista Osteopata
+Emilia-Romagna;RE;Casalgrande;Studio Sherpa;Via Statale, 467 n. 63;+39 388 1507748 - +39 339 8408665;gottardi91@gmail.com;;"Gottardi Gabriele
+Zini Francesco"
+Lazio;RM;Roma;Studio Medico-Fisioterapico;Via Carlo Spegazzini, 99 (Monte Sacro);333 2636379;;;Dott. Paolo Diano - Medico Chirurgo Spec. Ortopedia Traumatologia
+Lazio;RM;Roma;Studio Di Chiara Osteopatia e Fisioterapia;Via Antonio Coppi 8/c;340 5602452;;www.fisioterapiadichiara.it;Dott.ssa Anna Di Chiara (Pizzarello) - Fisioterapista Osteopata
+Lazio;RM;Roma;Studio Fisioterapico Pizzini e Carassia;Via Candia, 102;06 39366641;;www.apfisioterapiaroma.it;"Dott. Alessandro Carassia - Fisioterapista
+Dott. Pasquale Pizzini - Fisioterapista"
+Lazio;FR;Cassino;Studio Medico - Casa di Cura Sant'Anna;Via Karl Herold;338 2656010 - 339 2934245;;;Dott. Carmine Papa - Medico Chirurgo Spec. Ortopedia Traumatologia
+Lazio;VT;Carbognano;Studio Dott. Danilo Magalotti;Via XXVIII Ottobre, 26 - 01030 Carbognano (VT);340 8166907;danilo.magalotti@gmail.com;;Dott. Danilo Magalotti - Dottore in Fisioterapia
+Puglia;FG;San Giovanni Rotondo;Arcadia Centro Medico s.r.l.s.;Viale della Gioventù, 15;339 155792;;;Mangiacotti Giuseppe
+Campania;CE;Bellona;Studio Medico;Via Aldo Moro, 33 - P.co MaryAnna;339 2934245 - 0823 990956;carminepapa@alice.it;;Dott. Carmine Papa - Medico Chirurgo Spec. Ortopedia Traumatologia
+Campania;SA;Salerno;Studio Medico - Terapia del dolore;Via C.R. Pastore, 3;089 303004 - 347 1722920;;;Dott. Colacino Gianfranco - Medico Chirurgo Spec. Anestesia e Rianimazione
+Basilicata;MT;Montalbano Jonico;Studio Tommaso Casalnuovo;Via Magenta 32;+39 389 989 8457;;;Casalnuovo Tommaso - Fisioterapista Osteopata
+Abruzzo;PE;Pescara;Apeiron di Mennilli Alessio;Via Rigopiano n. 69;393 5132748;;;Mennilli Alessio - Fisioterapista Osteopata

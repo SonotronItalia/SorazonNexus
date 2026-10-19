@@ -2,7 +2,8 @@
  * Contenuti di partenza per lo sviluppo: "make seed" (pnpm payload run src/seed/index.ts).
  *
  * Ripetibile: cerca prima di creare (utente per email, media per nome file, pagine per slug,
- * centri per nome + città + indirizzo) e aggiorna quello che trova. Non cancella nulla.
+ * centri per città + indirizzo, o città + nome se manca l'indirizzo) e aggiorna quello che trova.
+ * Non cancella nulla.
  * Le chiamate passano context.disableRevalidate: niente avvisi al frontend durante l'importazione.
  */
 import fs from 'node:fs'
@@ -14,6 +15,8 @@ import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
 
 import type { Centri, Media, Page } from '@/payload-types'
 import { revalidateFrontend } from '@/hooks/notifyFrontend'
+
+import { leggiCsv } from './csv'
 
 const dir = path.dirname(fileURLToPath(import.meta.url))
 const context = { disableRevalidate: true }
@@ -119,14 +122,33 @@ const dueColonne = (sinistra: Node[], destra: Node[]) => ({
   ],
 })
 
-// --- Centri da src/seed/centri.json ---
+// --- Centri da src/seed/centri.csv (estratto da contatti.pdf; si può modificare con Excel) ---
 
 type CentroSeed = Omit<Centri, 'id' | 'createdAt' | 'updatedAt' | 'coordinate'>
 
+// Colonne del CSV = campi della collezione
+const CAMPI_CENTRO = [
+  'regione',
+  'provincia',
+  'citta',
+  'nome_struttura',
+  'indirizzo',
+  'telefoni',
+  'email',
+  'sito',
+  'professionisti',
+]
+
 async function seedCentri() {
-  const centri = JSON.parse(fs.readFileSync(path.join(dir, 'centri.json'), 'utf8')) as CentroSeed[]
+  // Nei professionisti ogni riga della cella è una persona. Una cella vuota svuota il campo
+  // anche nel database. Regione e città obbligatorie le controlla Payload.
+  const righe = leggiCsv(fs.readFileSync(path.join(dir, 'centri.csv'), 'utf8'))
+  const centri = righe.map((r) =>
+    Object.fromEntries(CAMPI_CENTRO.map((k) => [k, r[k] ?? null])),
+  ) as unknown as CentroSeed[]
+  // Il nome resta fuori quando c'è l'indirizzo: correggerlo nel CSV aggiorna il centro, non lo duplica
   const key = (c: Pick<Centri, 'nome_struttura' | 'citta' | 'indirizzo'>) =>
-    [c.nome_struttura, c.citta, c.indirizzo ?? ''].join('|').toLowerCase()
+    [c.citta, c.indirizzo || c.nome_struttura].join('|').toLowerCase()
 
   const { docs: esistenti } = await payload.find({ collection: 'centri', pagination: false, depth: 0 })
   const perChiave = new Map(esistenti.map((c) => [key(c), c.id]))
