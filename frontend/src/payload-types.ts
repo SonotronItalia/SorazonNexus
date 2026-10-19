@@ -84,6 +84,7 @@ export interface Config {
     posts: Post;
     centri: Centri;
     colori: Colori;
+    effetti: Effetti;
     media: Media;
     categories: Category;
     users: User;
@@ -108,6 +109,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     centri: CentriSelect<false> | CentriSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
+    effetti: EffettiSelect<false> | EffettiSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -310,8 +312,16 @@ export interface Page {
      * Vuoto: nero.
      */
     coloreOverlay?: (number | null) | Colori;
-    effetto_pulsazione?: boolean | null;
-    effetto_scarica?: boolean | null;
+    /**
+     * Effetti animati dalla sezione "Effetti". Si vedono solo se attivi anche lì; il visitatore può spegnerli (fulmine nell'header).
+     */
+    effetti?:
+      | {
+          effetto: number | Effetti;
+          attivo?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   layout: (
     | CallToActionBlock
@@ -568,7 +578,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
+ * Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo ("Stile testo" nell'editor).
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "colori".
@@ -583,6 +593,33 @@ export interface Colori {
    * Codice esadecimale a 6 cifre, es. #0095AC
    */
   codice: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Effetti animati per hero e contenitori. Spegnendo "Attivo" l'effetto sparisce da tutte le pagine che lo usano.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effetti".
+ */
+export interface Effetti {
+  id: number;
+  /**
+   * Es. Scarica celeste
+   */
+  nome: string;
+  /**
+   * Spento: l'effetto non si vede in nessuna pagina
+   */
+  attivo?: boolean | null;
+  tipo: 'pulsazione' | 'scarica' | 'particelle' | 'onde' | 'bagliore';
+  /**
+   * Dalla tavolozza. Vuoto: il colore tipico dell'effetto.
+   */
+  colore?: (number | null) | Colori;
+  intensita?: ('bassa' | 'media' | 'alta') | null;
+  velocita?: ('lenta' | 'normale' | 'veloce') | null;
+  posizione?: ('sinistra' | 'centro' | 'destra') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -996,6 +1033,16 @@ export interface ContenitoreBlock {
    */
   colore?: (number | null) | Colori;
   /**
+   * Effetti animati dalla sezione "Effetti". Si vedono solo se attivi anche lì; il visitatore può spegnerli (fulmine nell'header).
+   */
+  effetti?:
+    | {
+        effetto: number | Effetti;
+        attivo?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
    */
   colonne: {
@@ -1035,6 +1082,16 @@ export interface Contenitore2Block {
    */
   colore?: (number | null) | Colori;
   /**
+   * Effetti animati dalla sezione "Effetti". Si vedono solo se attivi anche lì; il visitatore può spegnerli (fulmine nell'header).
+   */
+  effetti?:
+    | {
+        effetto: number | Effetti;
+        attivo?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
    */
   colonne: {
@@ -1073,6 +1130,16 @@ export interface Contenitore3Block {
    * Si aggiunge o si modifica in "Colori del sito".
    */
   colore?: (number | null) | Colori;
+  /**
+   * Effetti animati dalla sezione "Effetti". Si vedono solo se attivi anche lì; il visitatore può spegnerli (fulmine nell'header).
+   */
+  effetti?:
+    | {
+        effetto: number | Effetti;
+        attivo?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
    */
@@ -1349,6 +1416,10 @@ export interface PayloadLockedDocument {
         value: number | Colori;
       } | null)
     | ({
+        relationTo: 'effetti';
+        value: number | Effetti;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1461,8 +1532,13 @@ export interface PagesSelect<T extends boolean = true> {
             };
         overlay?: T;
         coloreOverlay?: T;
-        effetto_pulsazione?: T;
-        effetto_scarica?: T;
+        effetti?:
+          | T
+          | {
+              effetto?: T;
+              attivo?: T;
+              id?: T;
+            };
       };
   layout?: T | {};
   meta?:
@@ -1535,6 +1611,21 @@ export interface CentriSelect<T extends boolean = true> {
 export interface ColoriSelect<T extends boolean = true> {
   nome?: T;
   codice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effetti_select".
+ */
+export interface EffettiSelect<T extends boolean = true> {
+  nome?: T;
+  attivo?: T;
+  tipo?: T;
+  colore?: T;
+  intensita?: T;
+  velocita?: T;
+  posizione?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -240,3 +240,23 @@ html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
 }
+
+/* Effetti animati (components/Effetti): movimenti lenti e dissolvenze, nessun lampeggio */
+@keyframes effetto-onda {
+  0% { width: 0; height: 0; opacity: var(--onda-alfa, 0.45); transform: translate(-50%, -50%); }
+  100% { width: 140vmax; height: 140vmax; opacity: 0; transform: translate(-50%, -50%); }
+}
+.effetto-onda {
+  animation-name: effetto-onda;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+@keyframes effetto-bagliore {
+  0% { left: -40%; }
+  100% { left: 110%; }
+}
+.effetto-bagliore {
+  animation-name: effetto-bagliore;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}

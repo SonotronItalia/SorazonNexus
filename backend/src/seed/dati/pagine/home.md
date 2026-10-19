@@ -20,8 +20,12 @@ hero:
         label: Il dispositivo
         appearance: outline
   media: media:dispositivo-sorazon.jpg
-  effetto_pulsazione: true
-  effetto_scarica: false
+  # Effetti della sezione "Effetti" (dati/effetti.csv); "attivo: false" lo lascia ma spento
+  effetti:
+    - effetto: effetto:Pulsazione
+      attivo: true
+    - effetto: effetto:Scarica di Tesla
+      attivo: false
 layout:
   - blockType: cta
     richText: |

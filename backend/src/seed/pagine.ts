@@ -7,7 +7,8 @@
  * - un campo "richText" scritto come testo è Markdown (titoli, grassetto, corsivo, link, elenchi);
  * - "media:nomefile.jpg" è un'immagine di src/seed/media (elencata in dati/media.csv);
  * - "pagina:slug" è un collegamento a un'altra pagina.
- * - "colore:Nome" è un colore della tavolozza (dati/colori.csv, nell'admin "Colori del sito").
+ * - "colore:Nome" è un colore della tavolozza (dati/colori.csv, nell'admin "Colori del sito");
+ * - "effetto:Nome" è un effetto della sezione "Effetti" (dati/effetti.csv).
  * Sotto l'intestazione, il testo in Markdown diventa uno o più blocchi di testo:
  * "<!-- blocco -->" separa i blocchi, "<!-- colonna -->" divide un blocco in colonne affiancate.
  * Senza "layout" nell'intestazione i blocchi di testo sono tutta la pagina; con "layout", ogni
@@ -72,9 +73,10 @@ type Risolutori = {
   media: (file: string) => number | string
   pagina: (slug: string) => number | string
   colore: (nome: string) => number | string
+  effetto: (nome: string) => number | string
 }
 
-// Applica le convenzioni: Markdown nei campi richText, "media:", "pagina:" e "colore:" negli altri
+// Applica le convenzioni: Markdown nei campi richText, "media:", "pagina:", "colore:", "effetto:" negli altri
 export function risolvi(valore: unknown, r: Risolutori, chiave = ''): unknown {
   if (Array.isArray(valore)) return valore.map((v) => risolvi(v, r))
   if (valore && typeof valore === 'object') {
@@ -84,6 +86,7 @@ export function risolvi(valore: unknown, r: Risolutori, chiave = ''): unknown {
     if (chiave === 'richText') return r.markdown(valore)
     if (valore.startsWith('media:')) return r.media(valore.slice('media:'.length))
     if (valore.startsWith('colore:')) return r.colore(valore.slice('colore:'.length))
+    if (valore.startsWith('effetto:')) return r.effetto(valore.slice('effetto:'.length))
     if (valore.startsWith('pagina:'))
       return { relationTo: 'pages', value: r.pagina(valore.slice('pagina:'.length)) }
   }

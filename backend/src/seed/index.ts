@@ -181,6 +181,27 @@ for (const { nome, codice } of leggiTabella('colori.csv')) {
 }
 log(`colori pronti (${idColori.size})`)
 
+// Effetti (dati/effetti.csv): aggiornati per nome; "attivo" si/no, colore per nome dalla tavolozza
+const idEffetti = new Map<string, number | string>()
+for (const r of leggiTabella('effetti.csv')) {
+  const data = {
+    nome: r.nome,
+    tipo: r.tipo as 'pulsazione',
+    attivo: (r.attivo ?? 'si').toLowerCase() !== 'no',
+    colore: r.colore ? (idColori.get(r.colore) as number) : null,
+    intensita: (r.intensita || 'media') as 'media',
+    velocita: (r.velocita || 'normale') as 'normale',
+    posizione: (r.posizione || 'destra') as 'destra',
+  }
+  if (r.colore && !idColori.has(r.colore)) throw new Error(`dati/effetti.csv: colore "${r.colore}" non in colori.csv`)
+  const { docs } = await payload.find({ collection: 'effetti', where: { nome: { equals: r.nome } }, limit: 1 })
+  const effetto = docs[0]
+    ? await payload.update({ collection: 'effetti', id: docs[0].id, data, context })
+    : await payload.create({ collection: 'effetti', data, context })
+  idEffetti.set(r.nome, effetto.id)
+}
+log(`effetti pronti (${idEffetti.size})`)
+
 // Pagine: prima quelle senza collegamenti, poi quelle che puntano a pagine già create
 const idPagine = new Map<string, number | string>()
 const { docs: pagineEsistenti } = await payload.find({ collection: 'pages', pagination: false, depth: 0, draft: true })
@@ -191,6 +212,11 @@ const risolutori = {
   media: (file: string) => {
     const id = idMedia.get(file)
     if (id == null) throw new Error(`immagine "${file}" non elencata in dati/media.csv`)
+    return id
+  },
+  effetto: (nome: string) => {
+    const id = idEffetti.get(nome)
+    if (id == null) throw new Error(`effetto "${nome}" non elencato in dati/effetti.csv`)
     return id
   },
   colore: (nome: string) => {

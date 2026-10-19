@@ -17,6 +17,7 @@ export const Colori: CollectionConfig = {
   admin: {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'codice'],
+    group: 'Aspetto del sito',
     description:
       "Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo (\"Stile testo\" nell'editor).",
   },

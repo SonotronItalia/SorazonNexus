@@ -1,12 +1,14 @@
 'use client'
 
 import { Pause, Play } from 'lucide-react'
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import type { Page } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { mediaSrc } from '@/lib/api'
 import { useConsenso } from '@/providers/Consenso'
+import { Effetti } from '@/components/Effetti'
+import { useRiduciMovimento } from '@/utilities/riduciMovimento'
 import { codiceColore } from '@/utilities/sfondo'
 import { idYouTube } from '@/utilities/youtube'
 import { cn } from '@/utilities/ui'
@@ -14,21 +16,10 @@ import { cn } from '@/utilities/ui'
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
 const INTENSITA = { nessuna: '', leggera: 'opacity-30', media: 'opacity-50', forte: 'opacity-70' } as const
 
-// "Riduci movimento" del sistema: il video non parte da solo (sul server: falso)
-const query = '(prefers-reduced-motion: reduce)'
-const iscriviMovimento = (cb: () => void) => {
-  const m = window.matchMedia(query)
-  m.addEventListener('change', cb)
-  return () => m.removeEventListener('change', cb)
-}
-const useRiduciMovimento = () =>
-  useSyncExternalStore(
-    iscriviMovimento,
-    () => window.matchMedia(query).matches,
-    () => false,
-  )
-
-type Props = Pick<Page['hero'], 'media' | 'sfondoMedia' | 'video' | 'overlay' | 'coloreOverlay'> & {
+type Props = Pick<
+  Page['hero'],
+  'media' | 'sfondoMedia' | 'video' | 'overlay' | 'coloreOverlay' | 'effetti'
+> & {
   // L'immagine la disegna già il chiamante (Banner con le proporzioni dell'immagine)
   senzaImmagine?: boolean
 }
@@ -46,6 +37,7 @@ export const SfondoHero: React.FC<Props> = ({
   video,
   overlay,
   coloreOverlay,
+  effetti,
   senzaImmagine = false,
 }) => {
   const { scelte } = useConsenso()
@@ -132,6 +124,9 @@ export const SfondoHero: React.FC<Props> = ({
           style={{ backgroundColor: codiceColore(coloreOverlay) ?? '#000000' }}
         />
       )}
+
+      {/* Effetti animati sopra immagine e sovrapposizione, sotto il titolo */}
+      <Effetti effetti={effetti} />
 
       {idYT && !youTubeAttivo && (
         <button

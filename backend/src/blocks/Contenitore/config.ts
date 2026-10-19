@@ -1,6 +1,7 @@
 import type { Block, BlockSlug } from 'payload'
 
 import { campoLarghezza } from '@/fields/larghezza'
+import { campoEffetti } from '@/fields/effetti'
 import { campiSfondo } from '@/fields/sfondo'
 
 // Spazi a misure fisse: la scelta è "quanto", la misura esatta la decide il sito
@@ -86,6 +87,7 @@ const creaContenitore = (livello: number): Block => ({
       ],
     },
     { type: 'row', fields: campiSfondo() },
+    campoEffetti(),
     {
       name: 'colonne',
       type: 'array',

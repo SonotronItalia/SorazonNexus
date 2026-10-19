@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '@/fields/linkGroup'
+import { campoEffetti } from '@/fields/effetti'
 import { idYouTube } from '@/utilities/youtube'
 
 // Hero con immagine grande: hanno sovrapposizione, video e posizione del titolo
@@ -165,12 +166,18 @@ export const hero: Field = {
             condition: (_, s = {}) => s.sorgente === 'youtube' || s.sorgente === 'url',
             description: 'YouTube: il link del video. URL: indirizzo di un file .mp4 o .webm.',
           },
-          validate: (valore: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => {
+          validate: (
+            valore: unknown,
+            { siblingData }: { siblingData: Record<string, unknown> },
+          ) => {
             const sorgente = siblingData?.sorgente
             if (sorgente === 'file') return true
             if (typeof valore !== 'string' || !valore) return 'Inserisci il link del video'
-            if (sorgente === 'youtube') return idYouTube(valore) ? true : 'Non è un link di YouTube valido'
-            return /^https?:\/\/\S+$/i.test(valore) || 'Inserisci un indirizzo che inizia con http(s)://'
+            if (sorgente === 'youtube')
+              return idYouTube(valore) ? true : 'Non è un link di YouTube valido'
+            return (
+              /^https?:\/\/\S+$/i.test(valore) || 'Inserisci un indirizzo che inizia con http(s)://'
+            )
           },
         },
       ],
@@ -203,20 +210,15 @@ export const hero: Field = {
         },
       ],
     },
-{
-  name: 'effetto_pulsazione',
-  type: 'checkbox',
-  label: 'Effetto pulsazione (alone luminoso)',
-  defaultValue: true,
-  admin: { condition: (_, { type } = {}) => type === 'sorazon' },
-},
-{
-  name: 'effetto_scarica',
-  type: 'checkbox',
-  label: 'Effetto scarica di Tesla (viola)',
-  defaultValue: false,
-  admin: { condition: (_, { type } = {}) => type === 'sorazon' },
-},
+    // Effetti animati (sezione "Effetti"): negli hero grandi e in quello Sorazon
+    campoEffetti({
+      admin: {
+        initCollapsed: false,
+        condition: (_, { type } = {}) => ['sorazon', 'banner', 'highImpact'].includes(type),
+        description:
+          'Effetti animati dalla sezione "Effetti". Si vedono solo se attivi anche lì; il visitatore può spegnerli (fulmine nell\'header).',
+      },
+    }),
   ],
   label: false,
 }

@@ -6,6 +6,7 @@ import * as migration_20261019_104831_colori_sito from './20261019_104831_colori
 import * as migration_20261019_110639_contenitore_larghezze from './20261019_110639_contenitore_larghezze';
 import * as migration_20261019_123340_hero_banner from './20261019_123340_hero_banner';
 import * as migration_20261019_133414_hero_video_overlay from './20261019_133414_hero_video_overlay';
+import * as migration_20261019_151942_effetti from './20261019_151942_effetti';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20261019_133414_hero_video_overlay.up,
     down: migration_20261019_133414_hero_video_overlay.down,
-    name: '20261019_133414_hero_video_overlay'
+    name: '20261019_133414_hero_video_overlay',
+  },
+  {
+    up: migration_20261019_151942_effetti.up,
+    down: migration_20261019_151942_effetti.down,
+    name: '20261019_151942_effetti'
   },
 ];

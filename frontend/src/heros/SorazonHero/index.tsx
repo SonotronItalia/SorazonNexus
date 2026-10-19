@@ -2,17 +2,17 @@ import React from 'react'
 import type { Page } from '@/payload-types'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
-import { HeroEffects } from './HeroEffects'
+import { Effetti } from '@/components/Effetti'
 
 export const SorazonHero: React.FC<Page['hero']> = ({
   richText,
   media,
-  effetto_pulsazione,
-  effetto_scarica,
+  effetti,
 }) => {
   return (
     <div className="relative overflow-hidden bg-slate-950 px-6 py-24 text-white md:px-12">
-      <HeroEffects pulsazione={effetto_pulsazione} scarica={effetto_scarica} />
+      {/* Effetti dalla sezione "Effetti" (prima: caselle pulsazione e scarica) */}
+      <Effetti effetti={effetti} />
 
       <div className="container relative z-10 mx-auto grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         <div>{richText && <RichText data={richText} enableGutter={false} />}</div>

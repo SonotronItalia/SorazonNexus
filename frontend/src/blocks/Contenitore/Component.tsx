@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { ContenitoreBlock as ContenitoreProps } from '@/payload-types'
+import { Effetti } from '@/components/Effetti'
 import { classeLarghezza } from '@/utilities/larghezza'
 import { sfondo as stileSfondo } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
@@ -48,7 +49,17 @@ type Colonna = NonNullable<ContenitoreProps['colonne']>[number]
  */
 export const ContenitoreBlock: React.FC<
   ContenitoreProps & { renderBlocchi: (blocchi: Colonna['blocchi']) => React.ReactNode }
-> = ({ larghezza, allineamento, spazioColonne, spazioVerticale, sfondo, colore, colonne, renderBlocchi }) => {
+> = ({
+  larghezza,
+  allineamento,
+  spazioColonne,
+  spazioVerticale,
+  sfondo,
+  colore,
+  effetti,
+  colonne,
+  renderBlocchi,
+}) => {
   const { className: classeSfondo, ...attributiSfondo } = stileSfondo(sfondo, colore)
   const conSfondo = Boolean(classeSfondo || attributiSfondo.style)
 
@@ -57,6 +68,8 @@ export const ContenitoreBlock: React.FC<
       <div
         className={cn(
           classeLarghezza(larghezza),
+          // Gli effetti animati stanno dietro le colonne, dentro il riquadro
+          effetti?.length && 'relative overflow-hidden',
           SPAZIO_VERTICALE[spazioVerticale ?? 'nessuno'],
           // Con uno sfondo il contenitore diventa un riquadro con margine interno
           conSfondo && 'rounded-lg px-6 md:px-10',
@@ -65,9 +78,10 @@ export const ContenitoreBlock: React.FC<
         )}
         {...attributiSfondo}
       >
+        <Effetti effetti={effetti} />
         <div
           className={cn(
-            'flex flex-col @2xl:flex-row',
+            'relative flex flex-col @2xl:flex-row',
             SPAZIO_COLONNE[spazioColonne ?? 'medio'],
             ALLINEAMENTO[allineamento ?? 'inizio'],
           )}
