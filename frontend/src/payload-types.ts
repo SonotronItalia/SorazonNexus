@@ -2153,6 +2153,29 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Il logo della piattaforma compare in fondo a ogni pagina e apre il profilo in una nuova scheda.
+   */
+  social?:
+    | {
+        piattaforma:
+          | 'facebook'
+          | 'instagram'
+          | 'linkedin'
+          | 'youtube'
+          | 'x'
+          | 'tiktok'
+          | 'whatsapp'
+          | 'threads'
+          | 'telegram'
+          | 'pinterest';
+        /**
+         * Es. https://www.facebook.com/sorazon (WhatsApp: https://wa.me/39...)
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   datiLegali?: {
     ragioneSociale?: string | null;
     indirizzo?: string | null;
@@ -2204,6 +2227,13 @@ export interface FooterSelect<T extends boolean = true> {
               url?: T;
               label?: T;
             };
+        id?: T;
+      };
+  social?:
+    | T
+    | {
+        piattaforma?: T;
+        url?: T;
         id?: T;
       };
   datiLegali?:

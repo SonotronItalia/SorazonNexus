@@ -7,6 +7,7 @@ import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { PreferenzeCookie } from '@/components/Consenso/CookieBanner'
+import { Social } from '@/components/Social'
 
 export async function Footer() {
   // Se il backend non risponde il sito resta in piedi, con la navigazione vuota
@@ -34,9 +35,12 @@ export async function Footer() {
   return (
     <footer className="mt-auto border-t border-border bg-black dark:bg-card text-white">
       <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
-        <Link className="flex items-center" href="/">
-          <Logo />
-        </Link>
+        <div className="flex flex-col gap-6">
+          <Link className="flex items-center" href="/">
+            <Logo />
+          </Link>
+          <Social profili={footerData?.social} />
+        </div>
 
         <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center">
           <ThemeSelector />
