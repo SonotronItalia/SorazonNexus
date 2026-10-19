@@ -95,7 +95,7 @@ I tipi si generano nel backend e si copiano nel frontend: `make types`.
 
 > L'utente sceglie **cosa** mettere e **quale variante** usare. Il codice decide **come appare**.
 
-Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra o sinistra, sfondo nessuno/tenue/scuro), mappate su classi Tailwind **scritte per intero** (Tailwind non vede le classi costruite al volo). Mai colori, font o dimensioni liberi. L'editor di testo è limitato a titoli, grassetto, corsivo, sottolineato, link (più gli elenchi puntati nel blocco Content).
+Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra o sinistra, sfondo nessuno/tenue/scuro), mappate su classi Tailwind **scritte per intero** (Tailwind non vede le classi costruite al volo). Mai font o dimensioni liberi; i **colori** solo dalla tavolozza del sito (collezione "Colori del sito": nome + codice esadecimale, salvati una volta e scelti dai blocchi con sfondo; il testo chiaro o scuro lo decide il sito in base al colore, `frontend/src/utilities/sfondo.ts`). L'editor di testo è limitato a titoli, grassetto, corsivo, sottolineato, link (più gli elenchi puntati nel blocco Content).
 
 ## 5. Funzioni già realizzate (da verificare dopo la migrazione)
 
@@ -111,7 +111,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema).
 
-**Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Header`, `Footer`. Plugin: redirects, nested-docs, SEO, form-builder, search.
+**Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Colori` ("Colori del sito", tavolozza per gli sfondi dei blocchi: Galleria risultati, Scheda prodotto, Invito all'azione), `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Header`, `Footer`. Plugin: redirects, nested-docs, SEO, form-builder, search.
 
 ## 6. Comandi del progetto (Makefile)
 

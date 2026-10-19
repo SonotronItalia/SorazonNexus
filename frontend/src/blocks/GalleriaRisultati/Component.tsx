@@ -2,23 +2,19 @@ import React from 'react'
 
 import type { GalleriaRisultatiBlock as GalleriaRisultatiProps } from '@/payload-types'
 import { Media } from '@/components/Media'
+import { codiceColore, sfondo as stileSfondo } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo.
-// "celeste": #0095ac è il celeste del marchio (vecchio sito), le schede restano scure (#36353a).
-const SFONDI = {
-  nessuno: '',
-  tenue: 'bg-muted',
-  scuro: 'bg-background text-foreground',
-  celeste: 'bg-[#0095ac] text-white',
+// Larghezza rispetto ai contenuti della pagina, sempre centrata; sui telefoni sempre 100%.
+const LARGHEZZE = {
+  '100': '',
+  '75': 'md:w-3/4',
+  '50': 'md:w-3/4 lg:w-1/2',
 } as const
 
-const TESTO_SECONDARIO = {
-  nessuno: 'text-muted-foreground',
-  tenue: 'text-muted-foreground',
-  scuro: 'text-muted-foreground',
-  celeste: 'text-white/90',
-} as const
+// Schede dietro le immagini: grigio scuro del vecchio sito se non si sceglie un colore
+const SCHEDE_PREDEFINITE = '#36353a'
 
 const COLONNE = {
   '2': 'sm:grid-cols-2',
@@ -35,29 +31,40 @@ export const GalleriaRisultatiBlock: React.FC<GalleriaRisultatiProps> = ({
   titolo,
   introduzione,
   colonne,
+  larghezza,
   sfondo,
+  colore,
+  schede,
   voci,
 }) => {
-  const variante = sfondo ?? 'nessuno'
+  const { className: classeSfondo, ...attributiSfondo } = stileSfondo(sfondo, colore)
+  const conSfondo = Boolean(classeSfondo || attributiSfondo.style)
+  const coloreSchede = codiceColore(schede) ?? SCHEDE_PREDEFINITE
 
   return (
-    <section
-      className={cn('py-16', SFONDI[variante])}
-      // "Scuro" usa il tema scuro del sito solo per questa sezione
-      {...(variante === 'scuro' ? { 'data-theme': 'dark' } : {})}
-    >
-      <div className="container">
+    <div className="container">
+      <section
+        className={cn(
+          'mx-auto w-full',
+          LARGHEZZE[larghezza ?? '100'],
+          // Con uno sfondo il blocco diventa un riquadro con margine interno
+          conSfondo && 'rounded-lg px-6 py-10 md:px-10 md:py-12',
+          classeSfondo,
+        )}
+        {...attributiSfondo}
+      >
         {titolo && <h2 className="text-3xl font-semibold">{titolo}</h2>}
         {introduzione && (
-          <p className={cn('mt-4 max-w-3xl whitespace-pre-line', TESTO_SECONDARIO[variante])}>
-            {introduzione}
-          </p>
+          <p className="mt-4 max-w-3xl whitespace-pre-line text-muted-foreground">{introduzione}</p>
         )}
 
         <ul className={cn('grid grid-cols-1 gap-6', COLONNE[colonne ?? '2'], (titolo || introduzione) && 'mt-8')}>
           {voci?.map((voce) => (
             <li key={voce.id}>
-              <figure className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-[#36353a]">
+              <figure
+                className="group relative aspect-[4/3] overflow-hidden rounded-lg"
+                style={{ backgroundColor: coloreSchede }}
+              >
                 {/* Più larga di 50px e spostata di 40px: al passaggio del mouse scorre al suo posto */}
                 <div className="absolute inset-y-0 left-0 w-full opacity-80 transition duration-350 group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none pointer-fine:w-[calc(100%+50px)] pointer-fine:-translate-x-10 pointer-fine:opacity-50">
                   {voce.immagine && typeof voce.immagine === 'object' && (
@@ -89,12 +96,12 @@ export const GalleriaRisultatiBlock: React.FC<GalleriaRisultatiProps> = ({
                 </figcaption>
               </figure>
               {voce.descrizione && (
-                <p className={cn('mt-3 text-sm', TESTO_SECONDARIO[variante])}>{voce.descrizione}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{voce.descrizione}</p>
               )}
             </li>
           ))}
         </ul>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }

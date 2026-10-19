@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { campiSfondo } from '@/fields/sfondo'
+
 export const SchedaProdotto: Block = {
   slug: 'schedaProdotto',
   interfaceName: 'SchedaProdottoBlock',
@@ -21,16 +23,6 @@ export const SchedaProdotto: Block = {
           ],
         },
         {
-          name: 'sfondo',
-          type: 'select',
-          defaultValue: 'nessuno',
-          options: [
-            { label: 'Nessuno', value: 'nessuno' },
-            { label: 'Tenue', value: 'tenue' },
-            { label: 'Scuro', value: 'scuro' },
-          ],
-        },
-        {
           name: 'colonneComponenti',
           type: 'select',
           defaultValue: '3',
@@ -41,6 +33,7 @@ export const SchedaProdotto: Block = {
         },
       ],
     },
+    { type: 'row', fields: campiSfondo() },
     {
       name: 'gruppi',
       type: 'array',

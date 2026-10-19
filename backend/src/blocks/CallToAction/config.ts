@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '../../fields/linkGroup'
+import { campiSfondo } from '@/fields/sfondo'
 
 export const CallToAction: Block = {
   slug: 'cta',
@@ -34,6 +35,8 @@ export const CallToAction: Block = {
         maxRows: 2,
       },
     }),
+    // "Nessuno" è il riquadro chiaro con il bordo di sempre
+    { type: 'row', fields: campiSfondo() },
   ],
   labels: {
     plural: 'Calls to Action',

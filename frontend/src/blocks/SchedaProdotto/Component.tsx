@@ -2,15 +2,10 @@ import React from 'react'
 
 import type { SchedaProdottoBlock as SchedaProdottoProps } from '@/payload-types'
 import { Media } from '@/components/Media'
+import { sfondo as stileSfondo } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
-const SFONDI = {
-  nessuno: '',
-  tenue: 'bg-muted',
-  scuro: 'bg-background text-foreground',
-} as const
-
 const COLONNE = {
   '2': 'md:grid-cols-2',
   '3': 'md:grid-cols-2 lg:grid-cols-3',
@@ -22,18 +17,15 @@ export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
   immagine,
   posizioneImmagine,
   sfondo,
+  colore,
   colonneComponenti,
   gruppi,
   componenti,
 }) => {
-  const variante = sfondo ?? 'nessuno'
+  const { className: classeSfondo, ...attributiSfondo } = stileSfondo(sfondo, colore)
 
   return (
-    <section
-      className={cn('py-16', SFONDI[variante])}
-      // "Scuro" usa il tema scuro del sito solo per questa sezione
-      {...(variante === 'scuro' ? { 'data-theme': 'dark' } : {})}
-    >
+    <section className={cn('py-16', classeSfondo)} {...attributiSfondo}>
       <div className="container">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className={posizioneImmagine === 'destra' ? 'lg:order-2' : ''}>

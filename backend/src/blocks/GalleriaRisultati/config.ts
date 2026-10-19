@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { campiSfondo } from '@/fields/sfondo'
+
 // Griglia di immagini (es. radiografie) con etichetta e sottotitolo, come la vecchia pagina Risultati:
 // al passaggio del mouse l'immagine si illumina e compare il sottotitolo.
 // I testi clinici vanno rivisti da chi è competente in azienda prima della pubblicazione.
@@ -23,18 +25,26 @@ export const GalleriaRisultati: Block = {
           ],
         },
         {
-          name: 'sfondo',
+          // Rispetto alla larghezza dei contenuti della pagina, sempre centrata (sui telefoni 100%)
+          name: 'larghezza',
           type: 'select',
-          defaultValue: 'nessuno',
+          defaultValue: '100',
           options: [
-            { label: 'Nessuno', value: 'nessuno' },
-            { label: 'Tenue', value: 'tenue' },
-            { label: 'Scuro', value: 'scuro' },
-            // Il celeste del marchio con le schede scure, come nel vecchio sito
-            { label: 'Celeste', value: 'celeste' },
+            { label: 'Larghezza 100%', value: '100' },
+            { label: 'Larghezza 75%', value: '75' },
+            { label: 'Larghezza 50%', value: '50' },
           ],
         },
       ],
+    },
+    { type: 'row', fields: campiSfondo() },
+    {
+      // Nome corto per il limite di 63 caratteri dei nomi dei vincoli di Postgres
+      name: 'schede',
+      label: 'Colore delle schede',
+      type: 'relationship',
+      relationTo: 'colori',
+      admin: { description: 'Colore dietro le immagini. Vuoto: grigio scuro (#36353A).' },
     },
     {
       name: 'voci',

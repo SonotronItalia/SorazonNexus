@@ -2,6 +2,7 @@ import * as migration_20261018_220039_iniziale from './20261018_220039_iniziale'
 import * as migration_20261018_222650_regione_select from './20261018_222650_regione_select';
 import * as migration_20261018_232004_galleria_risultati from './20261018_232004_galleria_risultati';
 import * as migration_20261019_101838_galleria_sottotitolo_mappa from './20261019_101838_galleria_sottotitolo_mappa';
+import * as migration_20261019_104831_colori_sito from './20261019_104831_colori_sito';
 
 export const migrations = [
   {
@@ -22,6 +23,11 @@ export const migrations = [
   {
     up: migration_20261019_101838_galleria_sottotitolo_mappa.up,
     down: migration_20261019_101838_galleria_sottotitolo_mappa.down,
-    name: '20261019_101838_galleria_sottotitolo_mappa'
+    name: '20261019_101838_galleria_sottotitolo_mappa',
+  },
+  {
+    up: migration_20261019_104831_colori_sito.up,
+    down: migration_20261019_104831_colori_sito.down,
+    name: '20261019_104831_colori_sito'
   },
 ];

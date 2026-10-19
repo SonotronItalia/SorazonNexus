@@ -168,6 +168,17 @@ log('media pronti')
 
 await seedCentri()
 
+// Tavolozza dei colori (dati/colori.csv): aggiornata per nome, così i codici si correggono dal file
+const idColori = new Map<string, number | string>()
+for (const { nome, codice } of leggiTabella('colori.csv')) {
+  const { docs } = await payload.find({ collection: 'colori', where: { nome: { equals: nome } }, limit: 1 })
+  const colore = docs[0]
+    ? await payload.update({ collection: 'colori', id: docs[0].id, data: { codice }, context })
+    : await payload.create({ collection: 'colori', data: { nome, codice }, context })
+  idColori.set(nome, colore.id)
+}
+log(`colori pronti (${idColori.size})`)
+
 // Pagine: prima quelle senza collegamenti, poi quelle che puntano a pagine già create
 const idPagine = new Map<string, number | string>()
 const { docs: pagineEsistenti } = await payload.find({ collection: 'pages', pagination: false, depth: 0, draft: true })
@@ -178,6 +189,11 @@ const risolutori = {
   media: (file: string) => {
     const id = idMedia.get(file)
     if (id == null) throw new Error(`immagine "${file}" non elencata in dati/media.csv`)
+    return id
+  },
+  colore: (nome: string) => {
+    const id = idColori.get(nome)
+    if (id == null) throw new Error(`colore "${nome}" non elencato in dati/colori.csv`)
     return id
   },
   pagina: (slug: string) => {

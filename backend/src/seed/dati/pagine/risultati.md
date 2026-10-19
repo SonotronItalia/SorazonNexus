@@ -13,7 +13,10 @@ layout:
   - blockType: content
   - blockType: galleriaRisultati
     colonne: '2'
-    sfondo: celeste
+    larghezza: '100'
+    sfondo: colore
+    colore: colore:Celeste Sorazon
+    schede: colore:Grigio schede
     voci:
       - immagine: media:calcificazione.jpg
         etichetta: Calcificazione

@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     centri: Centri;
+    colori: Colori;
     media: Media;
     categories: Category;
     users: User;
@@ -93,6 +94,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     centri: CentriSelect<false> | CentriSelect<true>;
+    colori: ColoriSelect<false> | ColoriSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -502,9 +504,33 @@ export interface CallToActionBlock {
         id?: string | null;
       }[]
     | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
+}
+/**
+ * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori".
+ */
+export interface Colori {
+  id: number;
+  /**
+   * Es. Celeste Sorazon
+   */
+  nome: string;
+  /**
+   * Codice esadecimale a 6 cifre, es. #0095AC
+   */
+  codice: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -813,8 +839,12 @@ export interface SchedaProdottoBlock {
   descrizione?: string | null;
   immagine: number | Media;
   posizioneImmagine?: ('sinistra' | 'destra') | null;
-  sfondo?: ('nessuno' | 'tenue' | 'scuro') | null;
   colonneComponenti?: ('2' | '3') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
   /**
    * Ad esempio: Dati tecnici, Dimensioni, Omologazione
    */
@@ -855,7 +885,16 @@ export interface GalleriaRisultatiBlock {
   titolo?: string | null;
   introduzione?: string | null;
   colonne?: ('2' | '3') | null;
-  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'celeste') | null;
+  larghezza?: ('100' | '75' | '50') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  /**
+   * Colore dietro le immagini. Vuoto: grigio scuro (#36353A).
+   */
+  schede?: (number | null) | Colori;
   voci: {
     immagine: number | Media;
     /**
@@ -1136,6 +1175,10 @@ export interface PayloadLockedDocument {
         value: number | Centri;
       } | null)
     | ({
+        relationTo: 'colori';
+        value: number | Colori;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1287,6 +1330,8 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  sfondo?: T;
+  colore?: T;
   id?: T;
   blockName?: T;
 }
@@ -1371,8 +1416,9 @@ export interface SchedaProdottoBlockSelect<T extends boolean = true> {
   descrizione?: T;
   immagine?: T;
   posizioneImmagine?: T;
-  sfondo?: T;
   colonneComponenti?: T;
+  sfondo?: T;
+  colore?: T;
   gruppi?:
     | T
     | {
@@ -1409,7 +1455,10 @@ export interface GalleriaRisultatiBlockSelect<T extends boolean = true> {
   titolo?: T;
   introduzione?: T;
   colonne?: T;
+  larghezza?: T;
   sfondo?: T;
+  colore?: T;
+  schede?: T;
   voci?:
     | T
     | {
@@ -1479,6 +1528,16 @@ export interface CentriSelect<T extends boolean = true> {
   sito?: T;
   professionisti?: T;
   coordinate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori_select".
+ */
+export interface ColoriSelect<T extends boolean = true> {
+  nome?: T;
+  codice?: T;
   updatedAt?: T;
   createdAt?: T;
 }
