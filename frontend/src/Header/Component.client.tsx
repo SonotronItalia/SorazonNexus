@@ -3,7 +3,7 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useState, useSyncExternalStore } from 'react'
+import React, { useState } from 'react'
 
 import type { Header } from '@/payload-types'
 
@@ -16,22 +16,11 @@ interface HeaderClientProps {
   data: Header
 }
 
-// Vale false sul server e durante l'idratazione, true subito dopo
-const nessunaIscrizione = () => () => {}
-const useIdratato = () =>
-  useSyncExternalStore(
-    nessunaIscrizione,
-    () => true,
-    () => false,
-  )
-
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
-  /* Storing the value in a useState to avoid hydration errors */
-  const [theme, setTheme] = useState<string | null>(null)
   const [menuAperto, setMenuAperto] = useState(false)
-  const { headerTheme, setHeaderTheme } = useHeaderTheme()
+  // Tema imposto da un hero che sta sotto l'header; null = segue il tema del sito
+  const { headerTheme } = useHeaderTheme()
   const pathname = usePathname()
-  const idratato = useIdratato()
 
   // Chiude il menu quando si cambia pagina (aggiornamento durante il render, senza effetto)
   const [paginaPrecedente, setPaginaPrecedente] = useState(pathname)
@@ -40,16 +29,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     setMenuAperto(false)
   }
 
-  useEffect(() => {
-    setHeaderTheme(null)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
-
-  // Segue l'ultimo tema non nullo chiesto dalla pagina, ma solo dopo l'idratazione
-  if (idratato && headerTheme && headerTheme !== theme) setTheme(headerTheme)
-
   return (
-    <header className="container relative z-20" {...(theme ? { 'data-theme': theme } : {})}>
+    <header className="container relative z-20" {...(headerTheme ? { 'data-theme': headerTheme } : {})}>
       <div className="flex items-center justify-between py-6 md:py-8">
         <Link href="/">
           <Logo loading="eager" priority="high" />

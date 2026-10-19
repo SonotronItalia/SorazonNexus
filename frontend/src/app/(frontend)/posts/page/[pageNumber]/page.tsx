@@ -6,7 +6,6 @@ import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
 import { SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
-import PageClient from './page.client'
 import { notFound } from 'next/navigation'
 
 type Args = {
@@ -26,7 +25,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div className="pt-24 pb-24">
-      <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
           <h1>Notizie</h1>

@@ -3,7 +3,6 @@ import type { Metadata } from 'next/types'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import React from 'react'
 import { Search } from '@/search/Component'
-import PageClient from './page.client'
 import { CardPostData } from '@/components/Card'
 import { searchPosts } from '@/lib/content'
 import { SITE_NAME } from '@/utilities/mergeOpenGraph'
@@ -19,7 +18,6 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
 
   return (
     <div className="pt-24 pb-24">
-      <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none text-center">
           <h1 className="mb-8 lg:mb-16">Cerca</h1>

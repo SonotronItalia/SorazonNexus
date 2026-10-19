@@ -1,14 +1,10 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
-import React, { useEffect } from 'react'
+import { useHeaderScuro } from '@/providers/HeaderTheme'
+import React from 'react'
 
+// L'immagine dell'articolo sta sotto l'header: header scuro finché si resta qui
 const PageClient: React.FC = () => {
-  /* Force the header to be dark mode while we have an image behind it */
-  const { setHeaderTheme } = useHeaderTheme()
-
-  useEffect(() => {
-    setHeaderTheme('dark')
-  }, [setHeaderTheme])
+  useHeaderScuro()
   return <React.Fragment />
 }
 

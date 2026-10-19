@@ -6,7 +6,6 @@ import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
 import { SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
-import PageClient from './page.client'
 
 // Rotta statica: senza questa opzione verrebbe generata in build, quando il backend può mancare.
 // La pagina si disegna a ogni richiesta, ma i dati restano in cache (tag "posts").
@@ -17,7 +16,6 @@ export default async function Page() {
 
   return (
     <div className="pt-24 pb-24">
-      <PageClient />
       <div className="container mb-16">
         <div className="prose dark:prose-invert max-w-none">
           <h1>Notizie</h1>

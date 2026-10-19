@@ -1,6 +1,6 @@
 'use client'
-import { useHeaderTheme } from '@/providers/HeaderTheme'
-import React, { useEffect } from 'react'
+import { useHeaderScuro } from '@/providers/HeaderTheme'
+import React from 'react'
 
 import type { Page } from '@/payload-types'
 
@@ -16,12 +16,9 @@ import { cn } from '@/utilities/ui'
  */
 export const HighImpactHero: React.FC<Page['hero']> = (props) => {
   const { links, richText } = props
-  const { setHeaderTheme } = useHeaderTheme()
   const pos = posizioneTitolo(props.posizioneTitolo, 'centro-centro')
 
-  useEffect(() => {
-    setHeaderTheme('dark')
-  })
+  useHeaderScuro()
 
   return (
     <div
