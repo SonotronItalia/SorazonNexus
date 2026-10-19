@@ -1,9 +1,9 @@
-
 'use client'
 
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import React, { createContext, useCallback, useContext, useSyncExternalStore } from 'react'
 
 const STORAGE_KEY = 'sorazon-effetti'
+const CHANGE_EVENT = 'sorazon-effetti-cambiati'
 
 type EffectsContextType = { enabled: boolean; toggle: () => void }
 
@@ -11,27 +11,41 @@ const EffectsContext = createContext<EffectsContextType>({ enabled: false, toggl
 
 export const useEffects = () => useContext(EffectsContext)
 
-export const EffectsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Parte spento: lo stato reale si legge solo nel browser, dopo l'idratazione
-  const [enabled, setEnabled] = useState(false)
+// Copia in memoria della scelta, per quando localStorage non è disponibile
+let sceltaInMemoria: string | null = null
 
-  useEffect(() => {
-    let saved: string | null = null
-    try {
-      saved = localStorage.getItem(STORAGE_KEY)
-    } catch {}
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    setEnabled(saved ? saved === 'on' : !reduced)
-  }, [])
+const leggiScelta = (): string | null => {
+  try {
+    return localStorage.getItem(STORAGE_KEY) ?? sceltaInMemoria
+  } catch {
+    return sceltaInMemoria
+  }
+}
+
+// Senza una scelta salvata, gli effetti seguono "riduci movimento" del sistema
+const getSnapshot = () => {
+  const saved = leggiScelta()
+  return saved ? saved === 'on' : !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+// Sul server (e durante l'idratazione) gli effetti partono spenti
+const getServerSnapshot = () => false
+
+const subscribe = (callback: () => void) => {
+  window.addEventListener(CHANGE_EVENT, callback)
+  return () => window.removeEventListener(CHANGE_EVENT, callback)
+}
+
+export const EffectsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const enabled = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const toggle = useCallback(() => {
-    setEnabled((prev) => {
-      const next = !prev
-      try {
-        localStorage.setItem(STORAGE_KEY, next ? 'on' : 'off')
-      } catch {}
-      return next
-    })
+    const next = getSnapshot() ? 'off' : 'on'
+    sceltaInMemoria = next
+    try {
+      localStorage.setItem(STORAGE_KEY, next)
+    } catch {}
+    window.dispatchEvent(new Event(CHANGE_EVENT))
   }, [])
 
   return <EffectsContext.Provider value={{ enabled, toggle }}>{children}</EffectsContext.Provider>

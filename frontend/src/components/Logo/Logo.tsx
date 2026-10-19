@@ -1,14 +1,12 @@
-import clsx from 'clsx'
 import React from 'react'
 
 interface Props {
-  className?: string
   loading?: 'lazy' | 'eager'
   priority?: 'auto' | 'high' | 'low'
 }
 
 export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
+  const { loading: loadingFromProps, priority: priorityFromProps } = props
 
   const loading = loadingFromProps || 'lazy'
   const priority = priorityFromProps || 'low'
@@ -23,7 +21,7 @@ export const Logo = (props: Props) => {
       fetchPriority={priority}
       decoding="async"
       style={{ filter: 'none !important', mixBlendMode: 'normal' }}
-      className={clsx('max-w-[21rem] w-full h-[76px] object-contain [filter:none!important]')}
+      className="max-w-[21rem] w-full h-[76px] object-contain [filter:none!important]"
       src="/logo_sorazon.svg"
     />
   )

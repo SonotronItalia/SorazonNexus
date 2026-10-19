@@ -83,7 +83,7 @@ seed: migrate ## Contenuti di partenza (admin, Home, Centri, Dispositivo, centri
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build
 
-stack-proxy: ## Come stack, più il proxy Caddy (simula la produzione)
+stack-proxy: ## Come stack, più il proxy nginx con HTTPS (simula la produzione)
 	@$(FX) run "Costruisco e avvio i container con il proxy" $(COMPOSE) --profile proxy up -d --build
 
 backup: db-running ## Salva il database in backup/

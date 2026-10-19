@@ -66,9 +66,10 @@ Gli indirizzi interni in Docker sono costanti nel compose (`http://backend:3000`
 ```
 SorazonNexus/
 ├── Makefile                 # comandi del progetto (ricette con TAB!)
-├── docker-compose.yml       # db, migrate (job), backend, frontend, caddy (profilo "proxy")
+├── docker-compose.yml       # db, migrate (job), backend, frontend, nginx + certbot (profilo "proxy")
 ├── docker-compose.dev.yml   # solo sviluppo: porta 5432 del db sul Mac (make db); mai con lo stack
-├── Caddyfile  .env.example  requisiti.txt  README.md
+├── nginx/                 # proxy: modello di configurazione, script dei certificati (certbot)
+├── .env.example  requisiti.txt  README.md
 ├── scripts/
 │   ├── fx.sh                # effetti da terminale (spinner, banner, conferme); EFFECTS=0 li disattiva
 │   ├── dev.sh               # backend + frontend insieme con output prefissato; Ctrl+C li ferma
@@ -112,7 +113,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 ## 6. Comandi del progetto (Makefile)
 
-`make help` · `make doctor` · `make db` · `make dev` (db + backend :3001 + frontend :3000) · `make dev-backend` · `make dev-frontend` · `make types` · `make migrate-create NAME=...` · `make stack` (tre container) · `make stack-proxy` (con Caddy, simula la produzione) · `make backup` · `make backup-media` · `make restore FILE=...` · `make reset-db` · `make stop` · `make down` · `make logs SERVICE=...` · `make ps`.
+`make help` · `make doctor` · `make db` · `make dev` (db + backend :3001 + frontend :3000) · `make dev-backend` · `make dev-frontend` · `make types` · `make migrate-create NAME=...` · `make stack` (tre container) · `make stack-proxy` (con nginx, simula la produzione) · `make backup` · `make backup-media` · `make restore FILE=...` · `make reset-db` · `make stop` · `make down` · `make logs SERVICE=...` · `make ps`.
 
 Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le animazioni da terminale.
 
