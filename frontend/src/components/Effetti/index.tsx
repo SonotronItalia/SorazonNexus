@@ -10,6 +10,7 @@ import { codiceColore } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
 
 import { Particelle } from './Particelle'
+import { Personalizzato } from './Personalizzato'
 
 type Riga = { effetto?: number | Effetto | null; attivo?: boolean | null; id?: string | null }
 
@@ -25,6 +26,7 @@ const COLORE_TIPICO = {
   particelle: '#a5f3fc',
   onde: '#22d3ee',
   bagliore: '#ffffff',
+  personalizzato: '#ffffff',
 } as const
 
 const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
@@ -102,6 +104,15 @@ const UnEffetto: React.FC<{ e: Effetto }> = ({ e }) => {
             }}
           />
         </div>
+      )
+    case 'personalizzato':
+      // Codice della sezione "Tipi di effetto", isolato in un iframe sandbox
+      if (!e.tipoPersonalizzato || typeof e.tipoPersonalizzato !== 'object') return null
+      return (
+        <Personalizzato
+          tipo={e.tipoPersonalizzato}
+          parametri={{ colore, intensita, velocita: 1 / ritmo, puntoX: x }}
+        />
       )
     default:
       return null

@@ -55,7 +55,22 @@ export const Effetti: CollectionConfig = {
         { label: 'Particelle luminose', value: 'particelle' },
         { label: 'Onde concentriche', value: 'onde' },
         { label: 'Bagliore in movimento', value: 'bagliore' },
+        { label: 'Personalizzato (dalla sezione "Tipi di effetto")', value: 'personalizzato' },
       ],
+    },
+    {
+      name: 'tipoPersonalizzato',
+      label: 'Tipo personalizzato',
+      type: 'relationship',
+      relationTo: 'tipi-effetto',
+      admin: {
+        condition: (_, s = {}) => s.tipo === 'personalizzato',
+        description: 'Il codice dell\'animazione, scritto nella sezione "Tipi di effetto".',
+      },
+      validate: (valore: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+        siblingData?.tipo !== 'personalizzato' ||
+        Boolean(valore) ||
+        'Scegli un tipo personalizzato',
     },
     {
       type: 'row',
@@ -94,7 +109,8 @@ export const Effetti: CollectionConfig = {
           type: 'select',
           defaultValue: 'destra',
           admin: {
-            condition: (_, s = {}) => ['scarica', 'onde', 'pulsazione'].includes(s.tipo),
+            condition: (_, s = {}) =>
+              ['scarica', 'onde', 'pulsazione', 'personalizzato'].includes(s.tipo),
           },
           options: [
             { label: 'Sinistra', value: 'sinistra' },

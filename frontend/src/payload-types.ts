@@ -85,6 +85,7 @@ export interface Config {
     centri: Centri;
     colori: Colori;
     effetti: Effetti;
+    'tipi-effetto': TipiEffetto;
     media: Media;
     categories: Category;
     users: User;
@@ -110,6 +111,7 @@ export interface Config {
     centri: CentriSelect<false> | CentriSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
     effetti: EffettiSelect<false> | EffettiSelect<true>;
+    'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -612,7 +614,11 @@ export interface Effetti {
    * Spento: l'effetto non si vede in nessuna pagina
    */
   attivo?: boolean | null;
-  tipo: 'pulsazione' | 'scarica' | 'particelle' | 'onde' | 'bagliore';
+  tipo: 'pulsazione' | 'scarica' | 'particelle' | 'onde' | 'bagliore' | 'personalizzato';
+  /**
+   * Il codice dell'animazione, scritto nella sezione "Tipi di effetto".
+   */
+  tipoPersonalizzato?: (number | null) | TipiEffetto;
   /**
    * Dalla tavolozza. Vuoto: il colore tipico dell'effetto.
    */
@@ -620,6 +626,34 @@ export interface Effetti {
   intensita?: ('bassa' | 'media' | 'alta') | null;
   velocita?: ('lenta' | 'normale' | 'veloce') | null;
   posizione?: ('sinistra' | 'centro' | 'destra') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Nuovi tipi di animazione scritti in CSS e JavaScript. Si usano dalla sezione "Effetti" scegliendo il tipo "Personalizzato".
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto".
+ */
+export interface TipiEffetto {
+  id: number;
+  /**
+   * Es. Stelle
+   */
+  nome: string;
+  descrizione?: string | null;
+  /**
+   * Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX. Niente rete, niente accesso alla pagina: il codice gira isolato.
+   */
+  javascript?: string | null;
+  /**
+   * Facoltativo: stili e animazioni dentro il riquadro dell'effetto (es. @keyframes). Lo sfondo resta trasparente.
+   */
+  css?: string | null;
+  /**
+   * Obbligatorio: i lampeggi possono provocare crisi in persone fotosensibili. Il sito non può controllarlo da solo.
+   */
+  verificato: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -1420,6 +1454,10 @@ export interface PayloadLockedDocument {
         value: number | Effetti;
       } | null)
     | ({
+        relationTo: 'tipi-effetto';
+        value: number | TipiEffetto;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -1622,10 +1660,24 @@ export interface EffettiSelect<T extends boolean = true> {
   nome?: T;
   attivo?: T;
   tipo?: T;
+  tipoPersonalizzato?: T;
   colore?: T;
   intensita?: T;
   velocita?: T;
   posizione?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto_select".
+ */
+export interface TipiEffettoSelect<T extends boolean = true> {
+  nome?: T;
+  descrizione?: T;
+  javascript?: T;
+  css?: T;
+  verificato?: T;
   updatedAt?: T;
   createdAt?: T;
 }
