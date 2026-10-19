@@ -4,6 +4,7 @@ import * as migration_20261018_232004_galleria_risultati from './20261018_232004
 import * as migration_20261019_101838_galleria_sottotitolo_mappa from './20261019_101838_galleria_sottotitolo_mappa';
 import * as migration_20261019_104831_colori_sito from './20261019_104831_colori_sito';
 import * as migration_20261019_110639_contenitore_larghezze from './20261019_110639_contenitore_larghezze';
+import * as migration_20261019_123340_hero_banner from './20261019_123340_hero_banner';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20261019_110639_contenitore_larghezze.up,
     down: migration_20261019_110639_contenitore_larghezze.down,
-    name: '20261019_110639_contenitore_larghezze'
+    name: '20261019_110639_contenitore_larghezze',
+  },
+  {
+    up: migration_20261019_123340_hero_banner.up,
+    down: migration_20261019_123340_hero_banner.down,
+    name: '20261019_123340_hero_banner'
   },
 ];

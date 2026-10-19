@@ -229,7 +229,7 @@ export interface Page {
   id: number;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'sorazon';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'sorazon' | 'banner';
     richText?: {
       root: {
         type: string;

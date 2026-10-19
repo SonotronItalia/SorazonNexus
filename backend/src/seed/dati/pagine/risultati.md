@@ -7,8 +7,9 @@ title: Risultati
 slug: risultati
 bozza: true
 hero:
-  type: lowImpact
+  type: banner
   richText: '# Risultati clinici in Italia dal 1992'
+  media: media:hero-risultati.webp
 layout:
   - blockType: content
   - blockType: galleriaRisultati

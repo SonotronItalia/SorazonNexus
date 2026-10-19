@@ -39,6 +39,11 @@ export const hero: Field = {
           label: 'Sorazon (Home)',
           value: 'sorazon',
         },
+        {
+          // Immagine intera a tutta larghezza (senza ritagli) con il titolo sovrapposto in alto
+          label: 'Banner (immagine intera con titolo)',
+          value: 'banner',
+        },
       ],
       required: true,
     },
@@ -67,7 +72,8 @@ export const hero: Field = {
       type: 'upload',
       admin: {
         // Aggiunto 'sorazon' per consentire il caricamento dell'immagine di sfondo/prodotto
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact', 'sorazon'].includes(type),
+        condition: (_, { type } = {}) =>
+          ['highImpact', 'mediumImpact', 'sorazon', 'banner'].includes(type),
       },
       relationTo: 'media',
       required: true,
