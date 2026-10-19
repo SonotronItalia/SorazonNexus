@@ -22,6 +22,7 @@ import {
   LinkFeature,
   ParagraphFeature,
   UnderlineFeature,
+  OrderedListFeature,
   UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
@@ -53,6 +54,7 @@ const editorMarkdown = await editorConfigFactory.fromFeatures({
     UnderlineFeature(),
     LinkFeature(),
     UnorderedListFeature(),
+    OrderedListFeature(),
   ],
 })
 const markdown = (testo: string) => convertMarkdownToLexical({ editorConfig: editorMarkdown, markdown: testo })

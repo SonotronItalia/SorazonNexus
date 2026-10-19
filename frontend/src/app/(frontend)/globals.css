@@ -93,6 +93,15 @@
   }
 }
 
+/* Dimensioni del testo scelte nell'editor ("Stile testo"): crescono con lo schermo */
+:root {
+  --testo-piccolo: 0.875rem;
+  --testo-grande: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --testo-molto-grande: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
+  --testo-enorme: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem);
+  --testo-sottotitolo: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+}
+
 /* Anche su una sola sezione (data-theme="light"), es. un blocco con un colore chiaro in tema scuro */
 :root,
 [data-theme='light'] {

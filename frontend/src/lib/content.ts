@@ -1,5 +1,5 @@
 // Funzioni di lettura dei contenuti. Sostituiscono le chiamate alla Local API di Payload.
-import type { Config, Footer, Header, Page, Post, Redirect, Search } from '@/payload-types'
+import type { Colori, Config, Footer, Header, Page, Post, Redirect, Search } from '@/payload-types'
 
 import { api, apiDraft } from './api'
 
@@ -27,6 +27,12 @@ const CARD_SELECT = {
 
 export const getHeader = () => api<Header>('/globals/header?depth=1', { tags: ['globals'] })
 export const getFooter = () => api<Footer>('/globals/footer?depth=1', { tags: ['globals'] })
+
+// Tavolozza "Colori del sito": il layout la scrive come variabili CSS (--colore-ID)
+export const getColori = async () => {
+  const { docs } = await api<List<Colori>>('/colori?limit=200&depth=0', { tags: ['globals'] })
+  return docs
+}
 
 // --- Pagine ---
 

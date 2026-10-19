@@ -21,6 +21,7 @@ import type {
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { cn } from '@/utilities/ui'
+import { stileTesto } from '@/utilities/stileTesto'
 
 type NodeTypes =
   | DefaultNodeTypes
@@ -38,6 +39,13 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
+  // Testo con "Stile testo" dell'editor (dimensione, colore della tavolozza): solo stili ammessi
+  text: (args) => {
+    const testo =
+      typeof defaultConverters.text === 'function' ? defaultConverters.text(args) : args.node.text
+    const stile = stileTesto(args.node.style)
+    return stile ? <span style={stile}>{testo}</span> : testo
+  },
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
     mediaBlock: ({ node }) => (

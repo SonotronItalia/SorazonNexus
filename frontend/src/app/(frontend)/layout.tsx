@@ -17,17 +17,28 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { getColori } from '@/lib/content'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // ID di Google letti a runtime (una sola immagine per ogni ambiente); vuoti = niente tag
   const gaId = process.env.GA_MEASUREMENT_ID || undefined
   const adsId = process.env.GOOGLE_ADS_ID || undefined
 
+  // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
+  // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non
+  // risponde restano i valori di riserva salvati nel testo.
+  const colori = await getColori().catch(() => [])
+  const variabiliColori = colori
+    .filter((c) => /^#[0-9a-fA-F]{6}$/.test(c.codice))
+    .map((c) => `--colore-${c.id}:${c.codice};`)
+    .join('')
+
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="it" suppressHydrationWarning>
       <head>
         <InitTheme />
         {(gaId || adsId) && <ConsentModeScript />}
+        {variabiliColori && <style>{`:root{${variabiliColori}}`}</style>}
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>

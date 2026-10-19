@@ -18,7 +18,7 @@ export const Colori: CollectionConfig = {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'codice'],
     description:
-      "Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).",
+      "Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo (\"Stile testo\" nell'editor).",
   },
   access: {
     read: () => true,
