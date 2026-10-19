@@ -12,6 +12,7 @@ import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import { Centri } from './collections/Centri'
 import { Colori } from './collections/Colori'
+import { BLOCCHI_PAGINA } from './blocks/blocchiPagina'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -89,6 +90,8 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
+  // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
+  blocks: BLOCCHI_PAGINA,
   collections: [Pages, Posts, Centri, Colori, Media, Categories, Users],
   globals: [Header, Footer],
   plugins,

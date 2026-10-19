@@ -2,23 +2,16 @@ import React from 'react'
 
 import type { GalleriaRisultatiBlock as GalleriaRisultatiProps } from '@/payload-types'
 import { Media } from '@/components/Media'
+import { classeLarghezza } from '@/utilities/larghezza'
 import { codiceColore, sfondo as stileSfondo } from '@/utilities/sfondo'
 import { cn } from '@/utilities/ui'
-
-// Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo.
-// Larghezza rispetto ai contenuti della pagina, sempre centrata; sui telefoni sempre 100%.
-const LARGHEZZE = {
-  '100': '',
-  '75': 'md:w-3/4',
-  '50': 'md:w-3/4 lg:w-1/2',
-} as const
 
 // Schede dietro le immagini: grigio scuro del vecchio sito se non si sceglie un colore
 const SCHEDE_PREDEFINITE = '#36353a'
 
 const COLONNE = {
-  '2': 'sm:grid-cols-2',
-  '3': 'sm:grid-cols-2 lg:grid-cols-3',
+  '2': '@xl:grid-cols-2',
+  '3': '@xl:grid-cols-2 @4xl:grid-cols-3',
 } as const
 
 /**
@@ -42,11 +35,10 @@ export const GalleriaRisultatiBlock: React.FC<GalleriaRisultatiProps> = ({
   const coloreSchede = codiceColore(schede) ?? SCHEDE_PREDEFINITE
 
   return (
-    <div className="container">
+    <div className="container @container">
       <section
         className={cn(
-          'mx-auto w-full',
-          LARGHEZZE[larghezza ?? '100'],
+          classeLarghezza(larghezza),
           // Con uno sfondo il blocco diventa un riquadro con margine interno
           conSfondo && 'rounded-lg px-6 py-10 md:px-10 md:py-12',
           classeSfondo,

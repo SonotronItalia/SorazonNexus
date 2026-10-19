@@ -87,7 +87,7 @@ Nel backend: `src/{access,collections,fields,hooks,plugins,search,Header,Footer,
 
 Nel frontend: `src/{app,blocks,components,heros,Header,Footer,providers,lib,utilities}`; i blocchi hanno solo `Component.tsx`.
 
-**Contratto tra le due metà**: il campo `layout` delle pagine è un array di blocchi con `blockType`; il frontend li disegna in `RenderBlocks.tsx` con una mappa `slug → componente`. Ogni nuovo blocco richiede: `config.ts` nel backend + registrazione nell'array `blocks` di `collections/Pages/index.ts` + `Component.tsx` nel frontend + voce in `RenderBlocks.tsx` + `make types`.
+**Contratto tra le due metà**: il campo `layout` delle pagine è un array di blocchi con `blockType`; il frontend li disegna in `RenderBlocks.tsx` con una mappa `slug → componente`. Ogni nuovo blocco richiede: `config.ts` nel backend + registrazione in `backend/src/blocks/blocchiPagina.ts` (finisce in `config.blocks`, le pagine lo usano per nome) e in `BLOCCHI_INTERNI` del Contenitore + migrazione + `Component.tsx` nel frontend + voce in `RenderBlocks.tsx` + `make types`. La disposizione interna di un blocco (colonne, affiancamenti) usa le **container query** (`@container` sul `.container` del blocco, varianti `@xl:`/`@2xl:`/`@4xl:` al posto di `sm:`/`md:`/`lg:`), così il blocco si adatta anche dentro una colonna del Contenitore.
 
 I tipi si generano nel backend e si copiano nel frontend: `make types`.
 
@@ -104,6 +104,8 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 - `CentriList` ("Elenco centri"): legge `getCentri()` da `lib/content.ts`, raggruppa per regione, indice delle regioni, 2 o 3 colonne. Titoli: il blocco usa `h2` (l'`h1` lo dà l'hero).
 - `GalleriaRisultati`: griglia di immagini (radiografie) con etichetta in sovraimpressione e descrizione facoltativa; opzioni colonne / sfondo. Pagina Risultati non ancora popolata: mancano le immagini e i testi clinici vanno rivisti.
 - `SchedaProdotto`: titolo, descrizione, immagine, gruppi di caratteristiche con voci, componenti con foto e parti; opzioni posizione immagine / sfondo / colonne. Il campo annidato `composto_da` ha `dbName: 'parti'` per non superare i **63 caratteri** degli identificatori Postgres (con il nome lungo erano 68 e venivano troncati in silenzio).
+
+**Contenitore** (`contenitore`, `contenitore2`, `contenitore3`): colonne (1-4, larghezza automatica o 25/33/50/66/75%) con dentro qualsiasi blocco, spazio tra le colonne e sopra/sotto, allineamento verticale, larghezza 30-100% centrata, sfondo dalla tavolozza. Annidabile su **3 livelli**: Payload 3 va in ciclo infinito con un blocco che contiene se stesso, quindi ogni livello è un blocco a sé (stesso componente nel frontend). Dentro una colonna la classe `.container` dei blocchi perde margini e larghezza massima (`globals.css`).
 
 **Hero "Sorazon"** (tipo `sorazon` in `heros/config.ts`): `SorazonHero` con due effetti attivabili singolarmente dall'admin, `effetto_pulsazione` (alone ciano/blu) e `effetto_scarica` (canvas con fulmini **viola**, componente `TeslaDischarge`). Regola: un effetto si vede se è attivo nel CMS **e** il visitatore non li ha disattivati **e** non ha "riduci movimento" nel sistema. Scelta del visitatore in `localStorage` (chiave `sorazon-effetti`) tramite `EffectsProvider` / `EffectsToggle` (pulsante a fulmine in header). Vincoli di sicurezza (fotosensibilità): le scariche sfumano in 0,3-0,5 s, al massimo una ogni 0,7-2 s, nessun lampeggio; l'animazione si ferma fuori schermo. L'hero resta sempre scuro in entrambi i temi.
 

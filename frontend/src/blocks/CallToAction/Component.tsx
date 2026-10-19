@@ -13,10 +13,10 @@ export const CallToActionBlock: React.FC<CTABlockProps> = ({ links, richText, sf
   const conSfondo = Boolean(classeSfondo || attributiSfondo.style)
 
   return (
-    <div className="container">
+    <div className="container @container">
       <div
         className={cn(
-          'rounded p-4 flex flex-col gap-8 md:flex-row md:justify-between md:items-center',
+          'rounded p-4 flex flex-col gap-8 @2xl:flex-row @2xl:justify-between @2xl:items-center',
           conSfondo ? classeSfondo : 'bg-card border-border border',
         )}
         {...attributiSfondo}

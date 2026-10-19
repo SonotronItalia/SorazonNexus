@@ -1,21 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import type { BlockSlug, CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Archive } from '../../blocks/ArchiveBlock/config'
-import { CallToAction } from '../../blocks/CallToAction/config'
-import { CentriList } from '../../blocks/CentriList/config'
-import { Content } from '../../blocks/Content/config'
-import { FormBlock } from '../../blocks/Form/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { BLOCCHI_PAGINA } from '@/blocks/blocchiPagina'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
-import { SchedaProdotto } from '@/blocks/SchedaProdotto/config'
-import { GalleriaRisultati } from '@/blocks/GalleriaRisultati/config'
-import { Mappa } from '@/blocks/Mappa/config'
 import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
 import {
@@ -79,17 +71,13 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [
-                CallToAction,
-                Content,
-                MediaBlock,
-                Archive,
-                FormBlock,
-                CentriList,
-                SchedaProdotto,
-                GalleriaRisultati,
-                Mappa,
-              ],
+              // Riferimenti per nome ai blocchi di config.blocks (payload.config.ts): gli stessi
+              // che si possono mettere dentro il Contenitore
+              blocks: [],
+              // (nella pagina solo il Contenitore di 1° livello: gli altri stanno al suo interno)
+              blockReferences: BLOCCHI_PAGINA.map((b) => b.slug as BlockSlug).filter(
+                (slug) => !/^contenitore\d$/.test(slug),
+              ),
               required: true,
               admin: {
                 initCollapsed: true,

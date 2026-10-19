@@ -7,8 +7,8 @@ import { cn } from '@/utilities/ui'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
 const COLONNE = {
-  '2': 'md:grid-cols-2',
-  '3': 'md:grid-cols-2 lg:grid-cols-3',
+  '2': '@2xl:grid-cols-2',
+  '3': '@2xl:grid-cols-2 @4xl:grid-cols-3',
 } as const
 
 export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
@@ -26,9 +26,9 @@ export const SchedaProdottoBlock: React.FC<SchedaProdottoProps> = ({
 
   return (
     <section className={cn('py-16', classeSfondo)} {...attributiSfondo}>
-      <div className="container">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className={posizioneImmagine === 'destra' ? 'lg:order-2' : ''}>
+      <div className="container @container">
+        <div className="grid items-center gap-10 @4xl:grid-cols-2">
+          <div className={posizioneImmagine === 'destra' ? '@4xl:order-2' : ''}>
             {immagine && typeof immagine === 'object' && (
               <Media resource={immagine} imgClassName="rounded-lg" />
             )}

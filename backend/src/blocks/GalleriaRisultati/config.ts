@@ -1,5 +1,6 @@
 import type { Block } from 'payload'
 
+import { campoLarghezza } from '@/fields/larghezza'
 import { campiSfondo } from '@/fields/sfondo'
 
 // Griglia di immagini (es. radiografie) con etichetta e sottotitolo, come la vecchia pagina Risultati:
@@ -24,17 +25,7 @@ export const GalleriaRisultati: Block = {
             { label: '3 colonne', value: '3' },
           ],
         },
-        {
-          // Rispetto alla larghezza dei contenuti della pagina, sempre centrata (sui telefoni 100%)
-          name: 'larghezza',
-          type: 'select',
-          defaultValue: '100',
-          options: [
-            { label: 'Larghezza 100%', value: '100' },
-            { label: 'Larghezza 75%', value: '75' },
-            { label: 'Larghezza 50%', value: '50' },
-          ],
-        },
+        campoLarghezza(),
       ],
     },
     { type: 'row', fields: campiSfondo() },

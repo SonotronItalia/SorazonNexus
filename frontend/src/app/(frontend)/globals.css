@@ -84,6 +84,13 @@
       max-width: var(--breakpoint-2xl);
     }
   }
+
+  /* Dentro una colonna del Contenitore i blocchi occupano la colonna: niente margini laterali
+     né larghezza massima di pagina (il selettore discendente vince sulle regole sopra) */
+  .colonna-contenitore .container {
+    max-width: none;
+    padding-inline: 0;
+  }
 }
 
 /* Anche su una sola sezione (data-theme="light"), es. un blocco con un colore chiaro in tema scuro */

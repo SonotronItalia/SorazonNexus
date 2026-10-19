@@ -15,8 +15,8 @@ const toUrl = (s: string) => (/^https?:\/\//i.test(s) ? s : `https://${s}`)
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
 const GRIGLIA = {
-  '2': 'md:grid-cols-2',
-  '3': 'md:grid-cols-2 lg:grid-cols-3',
+  '2': '@2xl:grid-cols-2',
+  '3': '@2xl:grid-cols-2 @4xl:grid-cols-3',
 } as const
 
 export const CentriListBlock: React.FC<CentriListProps> = async ({
@@ -35,7 +35,7 @@ export const CentriListBlock: React.FC<CentriListProps> = async ({
   const regioni = [...perRegione.keys()].sort((a, b) => a.localeCompare(b, 'it'))
 
   return (
-    <section className="container my-16">
+    <section className="container my-16 @container">
       {titolo && <h2 className="text-3xl font-semibold">{titolo}</h2>}
       {introduzione && (
         <p className="mt-4 max-w-3xl whitespace-pre-line text-muted-foreground">{introduzione}</p>

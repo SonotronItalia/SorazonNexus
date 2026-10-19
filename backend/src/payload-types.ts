@@ -65,7 +65,20 @@ export interface Config {
   auth: {
     users: UserAuthOperations;
   };
-  blocks: {};
+  blocks: {
+    cta: CallToActionBlock;
+    content: ContentBlock;
+    mediaBlock: MediaBlock;
+    archive: ArchiveBlock;
+    formBlock: FormBlock;
+    centriList: CentriListBlock;
+    schedaProdotto: SchedaProdottoBlock;
+    galleriaRisultati: GalleriaRisultatiBlock;
+    mappa: MappaBlock;
+    contenitore: ContenitoreBlock;
+    contenitore2: Contenitore2Block;
+    contenitore3: Contenitore3Block;
+  };
   collections: {
     pages: Page;
     posts: Post;
@@ -157,6 +170,59 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
@@ -217,6 +283,7 @@ export interface Page {
     | SchedaProdottoBlock
     | GalleriaRisultatiBlock
     | MappaBlock
+    | ContenitoreBlock
   )[];
   meta?: {
     title?: string | null;
@@ -459,78 +526,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock".
- */
-export interface CallToActionBlock {
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  links?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
-  /**
-   * Si aggiunge o si modifica in "Colori del sito".
-   */
-  colore?: (number | null) | Colori;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta';
-}
-/**
- * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "colori".
- */
-export interface Colori {
-  id: number;
-  /**
-   * Es. Celeste Sorazon
-   */
-  nome: string;
-  /**
-   * Codice esadecimale a 6 cifre, es. #0095AC
-   */
-  codice: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -878,6 +873,25 @@ export interface SchedaProdottoBlock {
   blockType: 'schedaProdotto';
 }
 /**
+ * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori".
+ */
+export interface Colori {
+  id: number;
+  /**
+   * Es. Celeste Sorazon
+   */
+  nome: string;
+  /**
+   * Codice esadecimale a 6 cifre, es. #0095AC
+   */
+  codice: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "GalleriaRisultatiBlock".
  */
@@ -885,7 +899,7 @@ export interface GalleriaRisultatiBlock {
   titolo?: string | null;
   introduzione?: string | null;
   colonne?: ('2' | '3') | null;
-  larghezza?: ('100' | '75' | '50') | null;
+  larghezza?: ('100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
   sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
   /**
    * Si aggiunge o si modifica in "Colori del sito".
@@ -926,6 +940,122 @@ export interface MappaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mappa';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContenitoreBlock".
+ */
+export interface ContenitoreBlock {
+  larghezza?: ('100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
+  allineamento?: ('inizio' | 'centro' | 'fine') | null;
+  spazioColonne?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  spazioVerticale?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  /**
+   * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
+   */
+  colonne: {
+    larghezza?: ('auto' | '25' | '33' | '50' | '66' | '75') | null;
+    blocchi?:
+      | (
+          | CallToActionBlock
+          | ContentBlock
+          | MediaBlock
+          | ArchiveBlock
+          | FormBlock
+          | CentriListBlock
+          | SchedaProdottoBlock
+          | GalleriaRisultatiBlock
+          | MappaBlock
+          | Contenitore2Block
+        )[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contenitore';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Contenitore2Block".
+ */
+export interface Contenitore2Block {
+  larghezza?: ('100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
+  allineamento?: ('inizio' | 'centro' | 'fine') | null;
+  spazioColonne?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  spazioVerticale?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  /**
+   * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
+   */
+  colonne: {
+    larghezza?: ('auto' | '25' | '33' | '50' | '66' | '75') | null;
+    blocchi?:
+      | (
+          | CallToActionBlock
+          | ContentBlock
+          | MediaBlock
+          | ArchiveBlock
+          | FormBlock
+          | CentriListBlock
+          | SchedaProdottoBlock
+          | GalleriaRisultatiBlock
+          | MappaBlock
+          | Contenitore3Block
+        )[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contenitore2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Contenitore3Block".
+ */
+export interface Contenitore3Block {
+  larghezza?: ('100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
+  allineamento?: ('inizio' | 'centro' | 'fine') | null;
+  spazioColonne?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  spazioVerticale?: ('nessuno' | 'piccolo' | 'medio' | 'grande') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
+  /**
+   * Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  /**
+   * Da 1 a 4 colonne affiancate; sui telefoni vanno una sotto l'altra.
+   */
+  colonne: {
+    larghezza?: ('auto' | '25' | '33' | '50' | '66' | '75') | null;
+    blocchi?:
+      | (
+          | CallToActionBlock
+          | ContentBlock
+          | MediaBlock
+          | ArchiveBlock
+          | FormBlock
+          | CentriListBlock
+          | SchedaProdottoBlock
+          | GalleriaRisultatiBlock
+          | MappaBlock
+        )[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contenitore3';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1282,19 +1412,7 @@ export interface PagesSelect<T extends boolean = true> {
         effetto_pulsazione?: T;
         effetto_scarica?: T;
       };
-  layout?:
-    | T
-    | {
-        cta?: T | CallToActionBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
-        archive?: T | ArchiveBlockSelect<T>;
-        formBlock?: T | FormBlockSelect<T>;
-        centriList?: T | CentriListBlockSelect<T>;
-        schedaProdotto?: T | SchedaProdottoBlockSelect<T>;
-        galleriaRisultati?: T | GalleriaRisultatiBlockSelect<T>;
-        mappa?: T | MappaBlockSelect<T>;
-      };
+  layout?: T | {};
   meta?:
     | T
     | {
@@ -1308,179 +1426,6 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CallToActionBlock_select".
- */
-export interface CallToActionBlockSelect<T extends boolean = true> {
-  richText?: T;
-  links?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              appearance?: T;
-            };
-        id?: T;
-      };
-  sfondo?: T;
-  colore?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock_select".
- */
-export interface ContentBlockSelect<T extends boolean = true> {
-  columns?:
-    | T
-    | {
-        size?: T;
-        richText?: T;
-        enableLink?: T;
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-              appearance?: T;
-            };
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MediaBlock_select".
- */
-export interface MediaBlockSelect<T extends boolean = true> {
-  media?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock_select".
- */
-export interface ArchiveBlockSelect<T extends boolean = true> {
-  introContent?: T;
-  populateBy?: T;
-  relationTo?: T;
-  categories?: T;
-  limit?: T;
-  selectedDocs?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlock_select".
- */
-export interface FormBlockSelect<T extends boolean = true> {
-  form?: T;
-  enableIntro?: T;
-  introContent?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CentriListBlock_select".
- */
-export interface CentriListBlockSelect<T extends boolean = true> {
-  titolo?: T;
-  introduzione?: T;
-  mostraIndice?: T;
-  colonne?: T;
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SchedaProdottoBlock_select".
- */
-export interface SchedaProdottoBlockSelect<T extends boolean = true> {
-  titolo?: T;
-  descrizione?: T;
-  immagine?: T;
-  posizioneImmagine?: T;
-  colonneComponenti?: T;
-  sfondo?: T;
-  colore?: T;
-  gruppi?:
-    | T
-    | {
-        titolo?: T;
-        voci?:
-          | T
-          | {
-              testo?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  componenti?:
-    | T
-    | {
-        nome?: T;
-        foto?: T;
-        composto_da?:
-          | T
-          | {
-              testo?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "GalleriaRisultatiBlock_select".
- */
-export interface GalleriaRisultatiBlockSelect<T extends boolean = true> {
-  titolo?: T;
-  introduzione?: T;
-  colonne?: T;
-  larghezza?: T;
-  sfondo?: T;
-  colore?: T;
-  schede?: T;
-  voci?:
-    | T
-    | {
-        immagine?: T;
-        etichetta?: T;
-        sottotitolo?: T;
-        descrizione?: T;
-        id?: T;
-      };
-  id?: T;
-  blockName?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MappaBlock_select".
- */
-export interface MappaBlockSelect<T extends boolean = true> {
-  titolo?: T;
-  indirizzo?: T;
-  altezza?: T;
-  id?: T;
-  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
