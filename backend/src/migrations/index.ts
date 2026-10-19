@@ -5,6 +5,7 @@ import * as migration_20261019_101838_galleria_sottotitolo_mappa from './2026101
 import * as migration_20261019_104831_colori_sito from './20261019_104831_colori_sito';
 import * as migration_20261019_110639_contenitore_larghezze from './20261019_110639_contenitore_larghezze';
 import * as migration_20261019_123340_hero_banner from './20261019_123340_hero_banner';
+import * as migration_20261019_133414_hero_video_overlay from './20261019_133414_hero_video_overlay';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261019_123340_hero_banner.up,
     down: migration_20261019_123340_hero_banner.down,
-    name: '20261019_123340_hero_banner'
+    name: '20261019_123340_hero_banner',
+  },
+  {
+    up: migration_20261019_133414_hero_video_overlay.up,
+    down: migration_20261019_133414_hero_video_overlay.down,
+    name: '20261019_133414_hero_video_overlay'
   },
 ];

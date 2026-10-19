@@ -269,7 +269,47 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Con un video fa da anteprima: si vede prima del caricamento, con "riduci movimento" e senza consenso a YouTube.
+     */
     media?: (number | null) | Media;
+    sfondoMedia?: ('immagine' | 'video') | null;
+    /**
+     * Vuoto: in alto al centro (Banner), al centro (High Impact).
+     */
+    posizioneTitolo?:
+      | (
+          | 'alto-sinistra'
+          | 'alto-centro'
+          | 'alto-destra'
+          | 'centro-sinistra'
+          | 'centro-centro'
+          | 'centro-destra'
+          | 'basso-sinistra'
+          | 'basso-centro'
+          | 'basso-destra'
+        )
+      | null;
+    /**
+     * Vuoto: come l'immagine (16:9 con un video).
+     */
+    proporzione?: ('16-9' | '21-9' | '3-1') | null;
+    /**
+     * Il video parte muto e in loop; il visitatore può metterlo in pausa.
+     */
+    video?: {
+      sorgente?: ('file' | 'youtube' | 'url') | null;
+      file?: (number | null) | Media;
+      /**
+       * YouTube: il link del video. URL: indirizzo di un file .mp4 o .webm.
+       */
+      url?: string | null;
+    };
+    overlay?: ('nessuna' | 'leggera' | 'media' | 'forte') | null;
+    /**
+     * Vuoto: nero.
+     */
+    coloreOverlay?: (number | null) | Colori;
     effetto_pulsazione?: boolean | null;
     effetto_scarica?: boolean | null;
   };
@@ -526,6 +566,25 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori".
+ */
+export interface Colori {
+  id: number;
+  /**
+   * Es. Celeste Sorazon
+   */
+  nome: string;
+  /**
+   * Codice esadecimale a 6 cifre, es. #0095AC
+   */
+  codice: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -871,25 +930,6 @@ export interface SchedaProdottoBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'schedaProdotto';
-}
-/**
- * Colori disponibili per gli sfondi dei blocchi (Galleria, Scheda prodotto, Invito all'azione).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "colori".
- */
-export interface Colori {
-  id: number;
-  /**
-   * Es. Celeste Sorazon
-   */
-  nome: string;
-  /**
-   * Codice esadecimale a 6 cifre, es. #0095AC
-   */
-  codice: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1409,6 +1449,18 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        sfondoMedia?: T;
+        posizioneTitolo?: T;
+        proporzione?: T;
+        video?:
+          | T
+          | {
+              sorgente?: T;
+              file?: T;
+              url?: T;
+            };
+        overlay?: T;
+        coloreOverlay?: T;
         effetto_pulsazione?: T;
         effetto_scarica?: T;
       };
