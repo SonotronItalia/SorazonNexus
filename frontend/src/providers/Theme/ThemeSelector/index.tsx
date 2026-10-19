@@ -7,31 +7,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import React, { useState } from 'react'
+import React, { useSyncExternalStore } from 'react'
 
 import type { Theme } from './types'
 
 import { useTheme } from '..'
-import { themeLocalStorageKey } from './types'
+import { getThemePreference, subscribeTheme } from '../shared'
+
+// Sul server la scelta non si conosce: il selettore resta vuoto fino all'idratazione
+const getServerPreference = () => ''
 
 export const ThemeSelector: React.FC = () => {
   const { setTheme } = useTheme()
-  const [value, setValue] = useState('')
+  // Letto da localStorage; setTheme avvisa del cambio e il valore si aggiorna da solo
+  const value = useSyncExternalStore(subscribeTheme, getThemePreference, getServerPreference)
 
   const onThemeChange = (themeToSet: Theme & 'auto') => {
-    if (themeToSet === 'auto') {
-      setTheme(null)
-      setValue('auto')
-    } else {
-      setTheme(themeToSet)
-      setValue(themeToSet)
-    }
+    setTheme(themeToSet === 'auto' ? null : themeToSet)
   }
-
-  React.useEffect(() => {
-    const preference = window.localStorage.getItem(themeLocalStorageKey)
-    setValue(preference ?? 'auto')
-  }, [])
 
   return (
     <Select onValueChange={onThemeChange} value={value}>

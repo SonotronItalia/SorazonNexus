@@ -46,10 +46,7 @@ jobs:
           cache-dependency-path: ${{ matrix.app }}/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc --noEmit
-      # Il lint mostra i problemi ma per ora non blocca: nel frontend restano errori
-      # delle nuove regole react-hooks (in buona parte dal template) da correggere a parte.
       - run: pnpm lint
-        continue-on-error: true
       - run: pnpm build
 
   # Le migrazioni si applicano su un database vuoto e coprono tutta la configurazione

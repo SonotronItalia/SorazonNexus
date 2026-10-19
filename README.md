@@ -37,7 +37,7 @@ password generata nello stesso file.
 | `make migrate` | Applica le migrazioni |
 | `make seed` | Contenuti di partenza (ripetibile, non cancella nulla) |
 | `make stack` | I tre container come in produzione |
-| `make stack-proxy` | Come `stack`, più il proxy Caddy con HTTPS locale |
+| `make stack-proxy` | Come `stack`, più il proxy nginx con HTTPS (in locale certificato autofirmato) |
 | `make backup` / `make restore FILE=...` | Salva o ripristina il database |
 | `make reset-db` | ⚠ Svuota il database (chiede conferma e fa prima un backup) |
 

@@ -10,8 +10,8 @@ networks:
 volumes:
   pgdata:
   media:
-  caddy_data:
-  caddy_config:
+  certbot_conf:   # certificati HTTPS (Let's Encrypt o provvisori)
+  certbot_www:    # file della verifica di Let's Encrypt
 
 services:
   # ---------- 1. DATABASE ----------
@@ -106,9 +106,9 @@ services:
     networks: [net_app]
 
   # ---------- Proxy (solo con --profile proxy) ----------
-  caddy:
+  nginx:
     <<: *restart
-    image: caddy:2
+    image: nginx:1.28-alpine
     profiles: ["proxy"]
     environment:
       FRONTEND_HOST: ${FRONTEND_HOST}
@@ -117,8 +117,25 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on: [frontend, backend]
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./nginx/attendi-certificati.sh:/docker-entrypoint.d/40-attendi-certificati.sh:ro
+      - certbot_conf:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on: [frontend, backend, certbot]
+    networks: [net_app]
+
+  # Certificati HTTPS: provvisori all'avvio, poi Let's Encrypt e rinnovo (vedi nginx/certbot.sh)
+  certbot:
+    <<: *restart
+    image: certbot/certbot:v5.1.0
+    profiles: ["proxy"]
+    entrypoint: ["/bin/sh", "/certbot.sh"]
+    environment:
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      BACKEND_HOST: ${BACKEND_HOST}
+      CERTBOT_EMAIL: ${CERTBOT_EMAIL:-}
+    volumes:
+      - ./nginx/certbot.sh:/certbot.sh:ro
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
     networks: [net_app]
