@@ -25,6 +25,25 @@ export const Footer: GlobalConfig = {
         },
       },
     },
+    {
+      // Dati obbligatori sul sito di un'azienda (partita IVA ecc.): in fondo a ogni pagina
+      name: 'datiLegali',
+      label: 'Dati legali della società',
+      type: 'group',
+      fields: [
+        { name: 'ragioneSociale', label: 'Ragione sociale', type: 'text' },
+        { name: 'indirizzo', label: 'Sede legale', type: 'text' },
+        {
+          type: 'row',
+          fields: [
+            { name: 'partitaIva', label: 'Partita IVA', type: 'text' },
+            { name: 'codiceFiscale', label: 'Codice fiscale', type: 'text' },
+            { name: 'rea', label: 'REA', type: 'text' },
+          ],
+        },
+        { name: 'pec', label: 'PEC', type: 'email' },
+      ],
+    },
   ],
   hooks: {
     afterChange: [notifyFrontend('globals')],

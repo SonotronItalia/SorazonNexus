@@ -16,6 +16,20 @@ export async function Footer() {
   })
 
   const navItems = footerData?.navItems || []
+  const legali = footerData?.datiLegali
+
+  // Riga dei dati legali (obbligatori per un'azienda): solo le voci compilate nell'admin
+  const datiLegali = [
+    legali?.ragioneSociale,
+    legali?.indirizzo,
+    legali?.partitaIva &&
+      (legali.codiceFiscale === legali.partitaIva
+        ? `P.IVA e C.F. ${legali.partitaIva}`
+        : `P.IVA ${legali.partitaIva}`),
+    legali?.codiceFiscale && legali.codiceFiscale !== legali.partitaIva && `C.F. ${legali.codiceFiscale}`,
+    legali?.rea && `REA ${legali.rea}`,
+    legali?.pec && `PEC ${legali.pec}`,
+  ].filter(Boolean)
 
   return (
     <footer className="mt-auto border-t border-border bg-black dark:bg-card text-white">
@@ -41,6 +55,13 @@ export async function Footer() {
           </nav>
         </div>
       </div>
+      {datiLegali.length > 0 && (
+        <div className="border-t border-white/15">
+          <p className="container py-4 text-xs text-white/70">
+            © {new Date().getFullYear()} {datiLegali.join(' · ')}
+          </p>
+        </div>
+      )}
     </footer>
   )
 }

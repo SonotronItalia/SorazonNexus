@@ -1,0 +1,26 @@
+---
+title: Distribuzione
+slug: distribuzione
+hero:
+  type: lowImpact
+  richText: '# Distribuzione'
+layout:
+  - blockType: content
+  - blockType: cta
+    richText: |
+      ### Acquisto e informazioni commerciali
+
+      Preventivi, condizioni di vendita e assistenza sono curati da Sonotron Italia.
+    links:
+      - link:
+          type: custom
+          url: http://www.sonotronitalia.com
+          newTab: true
+          label: Vai al sito di Sonotron Italia
+          appearance: default
+---
+## Produzione e distribuzione
+
+I dispositivi Sorazon (Sorazon Studio e Sorazon Maxi) sono prodotti e distribuiti da **Sonotron Italia S.R.L.S.**, con sede a Fano (PU).
+
+Per l'acquisto del dispositivo e per diventare centro di riferimento abilitato alla terapia puoi rivolgerti direttamente al produttore: telefono [0721 808759](tel:+390721808759), email [info@sonotronitalia.com](mailto:info@sonotronitalia.com).

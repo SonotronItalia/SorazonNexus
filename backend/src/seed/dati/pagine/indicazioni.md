@@ -1,9 +1,9 @@
 ---
-# Testo del vecchio sito riportato alla lettera. Contiene affermazioni sanitarie:
-# resta in bozza finché non lo rivede chi è competente in azienda.
+# Testo del vecchio sito riportato alla lettera. Testi sanitari rivisti e approvati
+# dall'azienda (19/10/2026).
 title: Indicazioni
 slug: indicazioni
-bozza: true
+bozza: false
 hero:
   type: lowImpact
   richText: '# Indicazioni terapeutiche'

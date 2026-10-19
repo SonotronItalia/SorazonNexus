@@ -1,11 +1,10 @@
 ---
 # Testo e immagini del vecchio sito (pagina Risultati), riportati alla lettera
 # (sottotitoli compresi; corretto solo il refuso "protusiva").
-# Contiene dati clinici e affermazioni di efficacia: resta in bozza finché non lo rivede
-# chi è competente in azienda.
+# Testi sanitari rivisti e approvati dall'azienda (19/10/2026).
 title: Risultati
 slug: risultati
-bozza: true
+bozza: false
 hero:
   type: banner
   richText: '# Risultati clinici in Italia dal 1992'

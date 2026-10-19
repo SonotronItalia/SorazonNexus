@@ -1,36 +1,38 @@
 ---
-# STRUTTURA DA COMPLETARE: il testo legale va scritto o rivisto da un consulente privacy
-# prima della pubblicazione.
+# Informativa approvata dall'azienda per la messa online (19/10/2026). Da far rivedere a un
+# consulente privacy quando possibile, e da aggiornare se si aggiungono moduli o servizi.
 title: Privacy
 slug: privacy-policy
-bozza: true
 hero:
   type: lowImpact
   richText: '# Informativa sulla privacy'
 ---
-**[DA COMPLETARE CON IL CONSULENTE PRIVACY]**
+Informativa ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR) per chi visita questo sito.
 
 ## Titolare del trattamento
 
-[Ragione sociale, sede legale (Fano, PU), partita IVA, contatti]
+**SONOTRON ITALIA S.R.L.S.**, Strada Nazionale Adriatica Sud 44, 61032 Fano (PS). Partita IVA e codice fiscale 02654710413, REA 199122. PEC: [sonotron@legalmail.it](mailto:sonotron@legalmail.it), email: [info@sonotronitalia.com](mailto:info@sonotronitalia.com).
 
-## Dati raccolti
+## Quali dati trattiamo
 
-- Dati inviati con i moduli del sito (es. richiesta di contatto)
-- Dati di navigazione e cookie: vedi la [cookie policy](/cookie-policy)
+- **Dati di navigazione**: i sistemi che fanno funzionare il sito registrano, come avviene per ogni sito, dati tecnici come l'indirizzo IP, il browser usato e le pagine richieste. Servono solo a garantire il funzionamento e la sicurezza del sito.
+- **Dati che ci invii**: se ci scrivi via email o con un modulo del sito, trattiamo i dati che ci fornisci (ad esempio nome, email, telefono, contenuto del messaggio) per risponderti.
+- **Cookie e strumenti simili**: vedi la [cookie policy](/cookie-policy).
 
-## Finalità e base giuridica
+## Perché li trattiamo e su quale base
 
-[DA COMPLETARE]
+- Far funzionare il sito e proteggerlo: legittimo interesse del titolare (art. 6.1.f GDPR).
+- Rispondere alle tue richieste: esecuzione di misure richieste da te (art. 6.1.b GDPR).
+- Statistiche di visita (Google Analytics) e misura delle campagne pubblicitarie (Google Ads): solo con il tuo consenso (art. 6.1.a GDPR), che puoi revocare in ogni momento da "Preferenze cookie" in fondo alla pagina.
 
-## Conservazione
+## Per quanto tempo
 
-[DA COMPLETARE]
+I dati di navigazione per il tempo necessario alla sicurezza del sito e comunque non oltre 12 mesi. I dati delle richieste per il tempo necessario a gestirle e comunque non oltre 24 mesi, salvo obblighi di legge. Le scelte sui cookie per 6 mesi.
 
-## Diritti dell'interessato
+## A chi li comunichiamo
 
-[Accesso, rettifica, cancellazione, limitazione, portabilità, opposizione, reclamo al Garante]
+Ai fornitori che ci aiutano a gestire il sito, nominati responsabili del trattamento (ad esempio il fornitore del server, in Italia). Con il tuo consenso, a Google (Google Ireland Ltd) per statistiche e pubblicità: Google può trasferire dati negli Stati Uniti, sulla base del Data Privacy Framework UE-USA. I dati non sono diffusi.
 
-## Contatti
+## I tuoi diritti
 
-[Indirizzo email per le richieste sulla privacy]
+Puoi chiedere l'accesso ai tuoi dati, la rettifica, la cancellazione, la limitazione del trattamento, la portabilità e opporti al trattamento (articoli 15-22 GDPR), scrivendo ai contatti del titolare. Puoi anche presentare reclamo al [Garante per la protezione dei dati personali](https://www.garanteprivacy.it).

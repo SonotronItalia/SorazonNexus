@@ -2153,6 +2153,14 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
+  datiLegali?: {
+    ragioneSociale?: string | null;
+    indirizzo?: string | null;
+    partitaIva?: string | null;
+    codiceFiscale?: string | null;
+    rea?: string | null;
+    pec?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2197,6 +2205,16 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
             };
         id?: T;
+      };
+  datiLegali?:
+    | T
+    | {
+        ragioneSociale?: T;
+        indirizzo?: T;
+        partitaIva?: T;
+        codiceFiscale?: T;
+        rea?: T;
+        pec?: T;
       };
   updatedAt?: T;
   createdAt?: T;

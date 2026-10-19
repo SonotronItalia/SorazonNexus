@@ -26,6 +26,7 @@ import {
   UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
+import { parse } from 'yaml'
 
 import type { Centri, Media, Page } from '@/payload-types'
 import { revalidateFrontend } from '@/hooks/notifyFrontend'
@@ -263,6 +264,14 @@ await payload.updateGlobal({
   context,
 })
 log("menu dell'header aggiornato")
+
+// Footer: dati legali della società (dati/footer.yml)
+await payload.updateGlobal({
+  slug: 'footer',
+  data: parse(fs.readFileSync(dati('footer.yml'), 'utf8')),
+  context,
+})
+log('footer aggiornato')
 
 // Durante il seed gli avvisi al frontend sono spenti: uno solo alla fine, con tutti i tag
 await revalidateFrontend(

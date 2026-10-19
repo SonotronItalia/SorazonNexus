@@ -21,8 +21,13 @@ import { getColori } from '@/lib/content'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // ID di Google letti a runtime (una sola immagine per ogni ambiente); vuoti = niente tag
-  const gaId = process.env.GA_MEASUREMENT_ID || undefined
-  const adsId = process.env.GOOGLE_ADS_ID || undefined
+  // Solo ID validi: il segnaposto G-XXXXXXXXXX di .env.example non attiva nulla
+  const idValido = (valore: string | undefined, prefisso: 'G' | 'AW') =>
+    valore && new RegExp(`^${prefisso}-[A-Z0-9]{4,}$`).test(valore) && !valore.includes('XXXX')
+      ? valore
+      : undefined
+  const gaId = idValido(process.env.GA_MEASUREMENT_ID, 'G')
+  const adsId = idValido(process.env.GOOGLE_ADS_ID, 'AW')
 
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non

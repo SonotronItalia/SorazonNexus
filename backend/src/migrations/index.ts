@@ -8,6 +8,7 @@ import * as migration_20261019_123340_hero_banner from './20261019_123340_hero_b
 import * as migration_20261019_133414_hero_video_overlay from './20261019_133414_hero_video_overlay';
 import * as migration_20261019_151942_effetti from './20261019_151942_effetti';
 import * as migration_20261019_154352_tipi_effetto from './20261019_154352_tipi_effetto';
+import * as migration_20261019_175101_footer_dati_legali from './20261019_175101_footer_dati_legali';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20261019_154352_tipi_effetto.up,
     down: migration_20261019_154352_tipi_effetto.down,
-    name: '20261019_154352_tipi_effetto'
+    name: '20261019_154352_tipi_effetto',
+  },
+  {
+    up: migration_20261019_175101_footer_dati_legali.up,
+    down: migration_20261019_175101_footer_dati_legali.down,
+    name: '20261019_175101_footer_dati_legali'
   },
 ];

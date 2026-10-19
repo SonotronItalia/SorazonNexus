@@ -17,9 +17,9 @@ hero:
     - link:
         type: reference
         reference: pagina:dispositivo
-        label: Il dispositivo
+        label: I dispositivi
         appearance: outline
-  media: media:dispositivo-sorazon.jpg
+  media: media:sorazon-maxi.webp
   # Effetti della sezione "Effetti" (dati/effetti.csv); "attivo: false" lo lascia ma spento
   effetti:
     - effetto: effetto:Pulsazione
