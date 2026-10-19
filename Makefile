@@ -10,7 +10,7 @@ DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
 .PHONY: help setup doctor db db-wait db-running stop down ps logs dev dev-backend dev-frontend types migrate-create migrate seed \
-        stack stack-proxy backup backup-media restore reset-db
+        stack stack-proxy tunnel backup backup-media restore reset-db
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
@@ -91,6 +91,9 @@ stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 
 stack-proxy: ## Come stack, più il proxy nginx con HTTPS (simula la produzione)
 	@$(FX) run "Costruisco e avvio i container con il proxy" $(COMPOSE) --profile proxy up -d --build
+
+tunnel: ## Rende visibile da internet lo stack acceso (Cloudflare, gratis, indirizzi nuovi a ogni avvio)
+	@bash scripts/tunnel.sh
 
 backup: db-running ## Salva il database in backup/
 	@mkdir -p $(BACKUP)
