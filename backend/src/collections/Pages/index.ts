@@ -15,6 +15,7 @@ import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { SchedaProdotto } from '@/blocks/SchedaProdotto/config'
 import { GalleriaRisultati } from '@/blocks/GalleriaRisultati/config'
+import { Mappa } from '@/blocks/Mappa/config'
 import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
 import {
@@ -87,6 +88,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 CentriList,
                 SchedaProdotto,
                 GalleriaRisultati,
+                Mappa,
               ],
               required: true,
               admin: {

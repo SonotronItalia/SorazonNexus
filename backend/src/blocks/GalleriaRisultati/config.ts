@@ -1,6 +1,7 @@
 import type { Block } from 'payload'
 
-// Griglia di immagini (es. radiografie) con un'etichetta ciascuna, come la vecchia pagina Risultati.
+// Griglia di immagini (es. radiografie) con etichetta e sottotitolo, come la vecchia pagina Risultati:
+// al passaggio del mouse l'immagine si illumina e compare il sottotitolo.
 // I testi clinici vanno rivisti da chi è competente in azienda prima della pubblicazione.
 export const GalleriaRisultati: Block = {
   slug: 'galleriaRisultati',
@@ -29,6 +30,8 @@ export const GalleriaRisultati: Block = {
             { label: 'Nessuno', value: 'nessuno' },
             { label: 'Tenue', value: 'tenue' },
             { label: 'Scuro', value: 'scuro' },
+            // Il celeste del marchio con le schede scure, come nel vecchio sito
+            { label: 'Celeste', value: 'celeste' },
           ],
         },
       ],
@@ -46,6 +49,11 @@ export const GalleriaRisultati: Block = {
           type: 'text',
           required: true,
           admin: { description: 'Ad esempio: Coxartrosi, Epicondilite' },
+        },
+        {
+          name: 'sottotitolo',
+          type: 'text',
+          admin: { description: "Compare sotto l'etichetta al passaggio del mouse. Ad esempio: Artrosi" },
         },
         { name: 'descrizione', type: 'textarea' },
       ],

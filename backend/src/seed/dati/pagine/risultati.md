@@ -1,5 +1,6 @@
 ---
-# Testo e immagini del vecchio sito (pagina Risultati), riportati alla lettera.
+# Testo e immagini del vecchio sito (pagina Risultati), riportati alla lettera
+# (sottotitoli compresi; corretto solo il refuso "protusiva").
 # Contiene dati clinici e affermazioni di efficacia: resta in bozza finché non lo rivede
 # chi è competente in azienda.
 title: Risultati
@@ -12,7 +13,7 @@ layout:
   - blockType: content
   - blockType: galleriaRisultati
     colonne: '2'
-    sfondo: scuro
+    sfondo: celeste
     voci:
       - immagine: media:calcificazione.jpg
         etichetta: Calcificazione
@@ -20,14 +21,17 @@ layout:
         etichetta: Coxartrosi
       - immagine: media:artrosi_colonna_cervicale.jpg
         etichetta: Colonna cervicale
+        sottotitolo: Artrosi
       - immagine: media:colonna_vertebrale.jpg
         etichetta: Colonna vertebrale
+        sottotitolo: Stabilizzazione
       - immagine: media:gonartrosi.jpg
         etichetta: Gonartrosi
       - immagine: media:piede_artrosico.jpg
         etichetta: Piede artrosico
       - immagine: media:colonna_lombare.jpg
         etichetta: Colonna lombare
+        sottotitolo: Discopatia protrusiva
       - immagine: media:epicondilite.jpg
         etichetta: Epicondilite
 ---

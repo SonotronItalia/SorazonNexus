@@ -10,6 +10,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { CentriListBlock } from '@/blocks/CentriList/Component'
 import { SchedaProdottoBlock } from '@/blocks/SchedaProdotto/Component'
 import { GalleriaRisultatiBlock } from '@/blocks/GalleriaRisultati/Component'
+import { MappaBlock } from '@/blocks/Mappa/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -20,6 +21,7 @@ const blockComponents = {
   centriList: CentriListBlock,
   schedaProdotto: SchedaProdottoBlock,
   galleriaRisultati: GalleriaRisultatiBlock,
+  mappa: MappaBlock,
 }
 
 export const RenderBlocks: React.FC<{

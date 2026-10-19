@@ -214,6 +214,7 @@ export interface Page {
     | CentriListBlock
     | SchedaProdottoBlock
     | GalleriaRisultatiBlock
+    | MappaBlock
   )[];
   meta?: {
     title?: string | null;
@@ -854,19 +855,38 @@ export interface GalleriaRisultatiBlock {
   titolo?: string | null;
   introduzione?: string | null;
   colonne?: ('2' | '3') | null;
-  sfondo?: ('nessuno' | 'tenue' | 'scuro') | null;
+  sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'celeste') | null;
   voci: {
     immagine: number | Media;
     /**
      * Ad esempio: Coxartrosi, Epicondilite
      */
     etichetta: string;
+    /**
+     * Compare sotto l'etichetta al passaggio del mouse. Ad esempio: Artrosi
+     */
+    sottotitolo?: string | null;
     descrizione?: string | null;
     id?: string | null;
   }[];
   id?: string | null;
   blockName?: string | null;
   blockType: 'galleriaRisultati';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MappaBlock".
+ */
+export interface MappaBlock {
+  titolo?: string | null;
+  /**
+   * Indirizzo da cercare su Google Maps, es. Strada Nazionale Adriatica Sud 44, 61032 Fano PU
+   */
+  indirizzo: string;
+  altezza?: ('bassa' | 'media' | 'alta') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mappa';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1230,6 +1250,7 @@ export interface PagesSelect<T extends boolean = true> {
         centriList?: T | CentriListBlockSelect<T>;
         schedaProdotto?: T | SchedaProdottoBlockSelect<T>;
         galleriaRisultati?: T | GalleriaRisultatiBlockSelect<T>;
+        mappa?: T | MappaBlockSelect<T>;
       };
   meta?:
     | T
@@ -1394,9 +1415,21 @@ export interface GalleriaRisultatiBlockSelect<T extends boolean = true> {
     | {
         immagine?: T;
         etichetta?: T;
+        sottotitolo?: T;
         descrizione?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MappaBlock_select".
+ */
+export interface MappaBlockSelect<T extends boolean = true> {
+  titolo?: T;
+  indirizzo?: T;
+  altezza?: T;
   id?: T;
   blockName?: T;
 }

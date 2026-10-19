@@ -132,7 +132,7 @@ Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le an
 
 ## 8. Contesto non tecnico utile
 
-- Sede legale: Fano (PU). Email (deciso il 2026-10-19): `info@sonotronitalia.com` per tutto ciò che riguarda il pubblico, `it@sonotronitalia.com` per le questioni IT. Il vecchio `info@sorazon.it` non si usa più nel nuovo sito.
+- Sede legale: Fano (PU). Email (deciso il 2026-10-19, aggiornato lo stesso giorno): per il pubblico **entrambe**, `info@sorazon.it` per la terapia Sorazon e `info@sonotronitalia.com` per il produttore e distributore del dispositivo (pagina Contatti); `info@sonotronitalia.com` resta il destinatario dei moduli del sito (`EMAIL_INFO`); `it@sonotronitalia.com` per le questioni IT.
 - Il sito attuale ha un frammento di codice visibile nella pagina Contatti (residuo del plugin anti-spam di Joomla) che nel nuovo sito sparisce.
 - Pagine del vecchio sito: Home, Dispositivo, Terapia, Indicazioni, Risultati, Notizie, Contatti, Distribuzione. Redirect 301 dai vecchi indirizzi (plugin redirects) per non perdere posizionamento.
 - Elenco centri attuale per regione: Marche, Piemonte, Liguria, Lombardia, Emilia-Romagna, Lazio, Puglia, Campania, Basilicata, Abruzzo. I dati, estratti dal PDF del vecchio sito (`contatti.pdf`), stanno in `backend/src/seed/dati/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel); `make seed` li importa e li aggiorna senza creare doppioni (chiave: città + indirizzo, o città + nome).
