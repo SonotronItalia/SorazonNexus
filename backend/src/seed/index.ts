@@ -65,8 +65,10 @@ const markdown = (testo: string) => convertMarkdownToLexical({ editorConfig: edi
 async function seedAdmin() {
   const email = process.env.SEED_ADMIN_EMAIL
   const password = process.env.SEED_ADMIN_PASSWORD
-  if (!email || !password || password === 'cambiami') {
-    throw new Error('Imposta SEED_ADMIN_EMAIL e SEED_ADMIN_PASSWORD in backend/.env (scripts/env.sh li genera)')
+  // In produzione l'admin si crea dal pannello (primo accesso): senza variabili si salta
+  if (!email || !password) return log('utente admin non creato: SEED_ADMIN_EMAIL/PASSWORD non impostati')
+  if (password === 'cambiami') {
+    throw new Error('SEED_ADMIN_PASSWORD è ancora "cambiami": scripts/env.sh ne genera una sicura')
   }
   const { docs } = await payload.find({ collection: 'users', where: { email: { equals: email } }, limit: 1 })
   if (docs[0]) return log(`utente ${email} già presente`)

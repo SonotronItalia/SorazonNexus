@@ -48,6 +48,37 @@ services:
     restart: "no"
     networks: [net_data]
 
+  # ---------- Contenuti di partenza nello stack (make seed con lo stack acceso) ----------
+  # Gira nell'immagine di build (sorgenti + dati del seed) e scrive i media nello STESSO volume
+  # del backend: così le immagini caricate dal seed si vedono nel sito servito da Docker.
+  seed:
+    build:
+      context: ./backend
+      target: build
+    profiles: ["strumenti"]
+    command: ["pnpm", "payload", "run", "src/seed/index.ts"]
+    # Solo per l'admin di sviluppo (SEED_ADMIN_*): sul server il file non c'è e il seed lo salta
+    env_file:
+      - path: ./backend/.env
+        required: false
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      MEDIA_DIR: /data/media
+      FRONTEND_INTERNAL_URL: http://frontend:3000
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      BACKEND_PUBLIC_URL: ${BACKEND_PUBLIC_URL}
+      FRONTEND_PUBLIC_URL: ${FRONTEND_PUBLIC_URL}
+    volumes:
+      - media:/data/media
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: "no"
+    networks: [net_data, net_app]
+
   # ---------- 2. BACKEND (solo Payload) ----------
   backend:
     <<: *restart

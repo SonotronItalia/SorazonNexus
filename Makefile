@@ -77,8 +77,14 @@ migrate-create: db ## Crea una migrazione: make migrate-create NAME=iniziale
 migrate: db ## Applica le migrazioni non ancora eseguite
 	@pnpm -C backend payload migrate
 
-seed: migrate ## Contenuti di partenza (admin, Home, Centri, Dispositivo, centri). Ripetibile, non cancella
-	@pnpm -C backend payload run src/seed/index.ts
+# Con lo stack Docker acceso il seed gira in un container e salva i media nel volume del backend;
+# altrimenti (make dev) gira sul Mac e li salva in backend/public/media, dove li legge il backend locale.
+seed: ## Contenuti di partenza (pagine, centri, media, menu). Ripetibile, non cancella
+	@if $(COMPOSE) ps --status running -q backend 2>/dev/null | grep -q .; then \
+	  $(FX) run "Contenuti di partenza nello stack Docker" $(COMPOSE) --profile strumenti run --rm --build seed; \
+	else \
+	  $(MAKE) --no-print-directory migrate && pnpm -C backend payload run src/seed/index.ts; \
+	fi
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build
