@@ -10,7 +10,7 @@ DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
 .PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed \
-        stack stack-proxy tunnel backup backup-media restore reset-db test test-int test-e2e audit
+        stack stack-proxy tunnel backup backup-media restore reset-db test test-int test-e2e test-api audit
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
@@ -110,6 +110,13 @@ test-e2e: ## Test del sito nel browser, desktop e telefono. Es.: make test-e2e B
 	@pnpm -C frontend exec playwright install chromium >/dev/null
 	@pnpm -C frontend -s test:e2e
 	@echo "  Rapporto dettagliato: pnpm -C frontend exec playwright show-report"
+
+# Il CMS deve essere acceso: il backend locale (predefinito) o un altro indirizzo con BACKEND_URL.
+# Con E2E_EMAIL ed E2E_PASSWORD di un utente DI PROVA anche cookie, CSRF e blocco del login.
+test-api: ## Test delle API REST del CMS via HTTP. Es.: make test-api BACKEND_URL=https://cms...
+	@curl -sk -o /dev/null --max-time 10 "$${BACKEND_URL:-http://127.0.0.1:3001}/api/users/me" || \
+	  { echo "Il CMS non risponde su $${BACKEND_URL:-http://127.0.0.1:3001}: avvia make stack o make dev"; exit 1; }
+	@pnpm -C frontend -s test:api
 
 audit: ## Vulnerabilità note nelle dipendenze di produzione (backend e frontend)
 	@for d in backend frontend; do echo "== $$d"; pnpm -C $$d audit --prod || true; done

@@ -13,7 +13,8 @@
     "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm pnpm-lock.yaml && pnpm --ignore-workspace install",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "cross-env NODE_OPTIONS=--no-deprecation vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=desktop --project=telefono",
+    "test:api": "playwright test --project=api"
   },
   "dependencies": {
     "@payloadcms/live-preview-react": "3.91.0",

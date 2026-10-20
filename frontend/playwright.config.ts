@@ -6,9 +6,11 @@ import { defineConfig, devices } from '@playwright/test'
  *   make test-e2e                                   -> http://127.0.0.1:3000
  *   BASE_URL=https://www.sorazon.it make test-e2e   -> il sito online (sola lettura)
  * I test che scrivono dati (invio di un modulo) partono solo con E2E_SCRITTURA=1.
+ *
+ * Progetto "api": le API REST del CMS chiamate via HTTP (tests/api), su BACKEND_URL
+ * (predefinito il backend locale su :3001). Variabili facoltative in tests/api/comune.ts.
  */
 export default defineConfig({
-  testDir: './tests/e2e',
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
@@ -23,7 +25,12 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-    { name: 'telefono', use: { ...devices['Pixel 7'] } },
+    { name: 'desktop', testDir: './tests/e2e', use: { ...devices['Desktop Chrome'] } },
+    { name: 'telefono', testDir: './tests/e2e', use: { ...devices['Pixel 7'] } },
+    {
+      name: 'api',
+      testDir: './tests/api',
+      use: { baseURL: process.env.BACKEND_URL || 'http://127.0.0.1:3001' },
+    },
   ],
 })
