@@ -10,7 +10,7 @@ DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
 .PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed \
-        stack stack-proxy tunnel backup backup-media restore reset-db
+        stack stack-proxy tunnel backup backup-media restore reset-db test test-int test-e2e audit
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
@@ -94,6 +94,25 @@ seed: ## Contenuti di partenza (pagine, centri, media, menu). Ripetibile, non ca
 
 allinea-media: ## Copia le immagini mancanti tra il Mac (make dev) e lo stack Docker, nei due sensi
 	@bash scripts/allinea-media.sh
+
+test: ## Test unitari di backend e frontend (nessun servizio acceso, pochi secondi)
+	@pnpm -C backend -s test
+	@pnpm -C frontend -s test
+
+test-int: ## Test di integrazione del backend su un database usa e getta (serve Docker)
+	@bash scripts/test-int.sh
+
+# Il sito deve essere acceso: lo stack locale (predefinito) o un altro indirizzo con BASE_URL.
+# Con E2E_SCRITTURA=1 prova anche l'invio vero del modulo contatti (scrive nel database).
+test-e2e: ## Test del sito nel browser, desktop e telefono. Es.: make test-e2e BASE_URL=https://...
+	@curl -sk -o /dev/null --max-time 10 "$${BASE_URL:-http://127.0.0.1:3000}" || \
+	  { echo "Il sito non risponde su $${BASE_URL:-http://127.0.0.1:3000}: avvia make stack"; exit 1; }
+	@pnpm -C frontend exec playwright install chromium >/dev/null
+	@pnpm -C frontend -s test:e2e
+	@echo "  Rapporto dettagliato: pnpm -C frontend exec playwright show-report"
+
+audit: ## Vulnerabilità note nelle dipendenze di produzione (backend e frontend)
+	@for d in backend frontend; do echo "== $$d"; pnpm -C $$d audit --prod || true; done
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build

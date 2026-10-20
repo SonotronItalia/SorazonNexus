@@ -4,6 +4,8 @@ import type { NextConfig } from 'next'
 const INTERNAL = process.env.PAYLOAD_INTERNAL_URL || 'http://localhost:3001'
 
 const nextConfig: NextConfig = {
+  // Niente "X-Powered-By: Next.js": non dire a chi attacca che tecnologia usiamo
+  poweredByHeader: false,
   output: 'standalone',
   images: {
     // /media/** arriva dal backend con ?updatedAt per rinnovare la cache; gli altri file locali senza query

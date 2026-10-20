@@ -3,6 +3,11 @@ name: sorazon
 x-restart: &restart
   restart: unless-stopped
 
+# Backend e frontend (Node, utente non root): nessun privilegio Linux e nessun modo di ottenerne
+x-limitato: &limitato
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+
 networks:
   net_data:   # db <-> backend. Il frontend NON è qui: non può raggiungere il database
   net_app:    # frontend <-> backend (e proxy)
@@ -81,7 +86,7 @@ services:
 
   # ---------- 2. BACKEND (solo Payload) ----------
   backend:
-    <<: *restart
+    <<: [*restart, *limitato]
     build:
       context: ./backend
       target: run
@@ -118,7 +123,7 @@ services:
 
   # ---------- 3. FRONTEND (solo Next.js) ----------
   frontend:
-    <<: *restart
+    <<: [*restart, *limitato]
     build:
       context: ./frontend
       args:

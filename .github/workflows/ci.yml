@@ -47,6 +47,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc --noEmit
       - run: pnpm lint
+      - name: Test unitari
+        run: pnpm test
+      # Vulnerabilità gravi nelle dipendenze di produzione: la CI si ferma ("braces" non ha ancora
+      # una correzione e serve solo alla compilazione: escluso finché non esce)
+      - name: Vulnerabilità note (alte e critiche)
+        run: pnpm audit --prod --audit-level high --ignore-unfixable
       - run: pnpm build
 
   # Le migrazioni si applicano su un database vuoto e coprono tutta la configurazione
@@ -84,6 +90,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Applica tutte le migrazioni
         run: pnpm payload migrate
+      # Permessi e controlli dei moduli su Payload vero (database del servizio, usa e getta)
+      - name: Test di integrazione
+        run: pnpm test:int
+        env:
+          TEST_DATABASE_URL: postgres://ci:ci@localhost:5432/ci
       - name: Nessuna migrazione dimenticata
         run: |
           pnpm payload migrate:create controllo-ci --skip-empty

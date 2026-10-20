@@ -24,6 +24,17 @@ import { defaultLexical } from '@/fields/defaultLexical'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// In produzione (non durante la build) il CMS non parte con segreti mancanti, corti o di esempio:
+// con PAYLOAD_SECRET noto chiunque potrebbe firmare un accesso all'admin
+if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
+  for (const nome of ['PAYLOAD_SECRET', 'REVALIDATE_SECRET', 'PREVIEW_SECRET']) {
+    const valore = process.env[nome] ?? ''
+    if (valore.length < 32 || /cambiami|changeme|secret/i.test(valore)) {
+      throw new Error(`${nome} mancante o debole: generalo con scripts/env.sh (almeno 32 caratteri casuali)`)
+    }
+  }
+}
+
 // Indirizzi pubblici (quelli che vede il browser), letti a runtime dall'ambiente
 const origins = [process.env.FRONTEND_PUBLIC_URL, process.env.BACKEND_PUBLIC_URL].filter(
   Boolean,
@@ -85,6 +96,8 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+  // GraphQL non serve (il sito usa le API REST): spento, meno superficie esposta
+  graphQL: { disable: true },
   db: postgresAdapter({
     // Niente sincronizzazione automatica dello schema neanche in sviluppo:
     // lo schema cambia solo con le migrazioni (make migrate-create, make migrate)

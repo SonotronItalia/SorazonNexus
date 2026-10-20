@@ -17,6 +17,20 @@ proxy_set_header X-Forwarded-Host $host;
 # Next.js manda intestazioni lunghe (preload): con i buffer di base nginx risponde 502
 proxy_buffer_size 16k;
 proxy_buffers 8 16k;
+proxy_hide_header X-Powered-By;
+
+# TLS moderno: solo 1.2 e 1.3
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers off;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 1d;
+ssl_session_tickets off;
+
+# Limiti di frequenza per indirizzo IP (oltre: risposta 429). Login dell'admin contro chi prova
+# password, invio dei moduli contro lo spam.
+limit_req_zone $binary_remote_addr zone=accesso:10m rate=5r/m;
+limit_req_zone $binary_remote_addr zone=moduli:10m rate=6r/m;
+limit_req_status 429;
 
 # Host non previsti (accesso per IP, domini sconosciuti): connessione chiusa
 server {
@@ -46,6 +60,23 @@ server {
     ssl_certificate     /etc/letsencrypt/live/${FRONTEND_HOST}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${FRONTEND_HOST}/privkey.pem;
 
+    # Intestazioni di sicurezza (valgono per tutte le location: nessuna ha add_header proprio).
+    # Il sito può stare in un riquadro solo dentro sé stesso e l'admin (anteprima dal vivo).
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()" always;
+    add_header Content-Security-Policy "frame-ancestors 'self' https://${BACKEND_HOST}; base-uri 'self'; object-src 'none'; form-action 'self'" always;
+
+    # Chiamata solo dal backend sulla rete interna (frontend:3000), mai da internet
+    location = /api/revalidate {
+        return 404;
+    }
+    # Invio dei moduli: passa dal frontend al backend, con limite di frequenza
+    location = /api/form-submissions {
+        limit_req zone=moduli burst=3 nodelay;
+        proxy_pass http://frontend:3000;
+    }
     location / {
         proxy_pass http://frontend:3000;
     }
@@ -58,6 +89,25 @@ server {
     ssl_certificate     /etc/letsencrypt/live/${BACKEND_HOST}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${BACKEND_HOST}/privkey.pem;
 
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Content-Security-Policy "frame-ancestors 'self'; base-uri 'self'; object-src 'none'" always;
+
+    # Bozze per l'anteprima: le legge solo il frontend sulla rete interna (backend:3000)
+    location ~ ^/api/(pages|posts)/anteprima/ {
+        return 404;
+    }
+    # Accesso all'admin e recupero password: limite contro i tentativi a raffica
+    location ~ ^/api/users/(login|forgot-password|reset-password|unlock)$ {
+        limit_req zone=accesso burst=5 nodelay;
+        proxy_pass http://backend:3000;
+    }
+    location = /api/form-submissions {
+        limit_req zone=moduli burst=3 nodelay;
+        proxy_pass http://backend:3000;
+    }
     location / {
         proxy_pass http://backend:3000;
     }

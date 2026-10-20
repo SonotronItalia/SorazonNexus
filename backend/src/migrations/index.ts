@@ -14,6 +14,7 @@ import * as migration_20261019_185812_voci_visibili from './20261019_185812_voci
 import * as migration_20261019_221311_effetti_posizione_bordo from './20261019_221311_effetti_posizione_bordo';
 import * as migration_20261019_223200_torna_su from './20261019_223200_torna_su';
 import * as migration_20261019_225236_footer_contatti from './20261019_225236_footer_contatti';
+import * as migration_20261020_135644_sicurezza_utenti from './20261020_135644_sicurezza_utenti';
 
 export const migrations = [
   {
@@ -94,6 +95,11 @@ export const migrations = [
   {
     up: migration_20261019_225236_footer_contatti.up,
     down: migration_20261019_225236_footer_contatti.down,
-    name: '20261019_225236_footer_contatti'
+    name: '20261019_225236_footer_contatti',
+  },
+  {
+    up: migration_20261020_135644_sicurezza_utenti.up,
+    down: migration_20261020_135644_sicurezza_utenti.down,
+    name: '20261020_135644_sicurezza_utenti'
   },
 ];

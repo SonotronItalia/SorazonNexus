@@ -28,8 +28,8 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 ```
 
 - `db`: `postgis/postgis:16-3.4` (serve per il campo `point` della collezione Centri; su Mac arm64 gira in emulazione).
-- `backend/`: Payload **3.91.0** dentro un'app **Next 16.3.3** minimale (Payload 3 non gira senza Next). Porta 3001 in sviluppo, 3000 nel container. Solo configurazioni (collezioni, blocchi come campi, hero come campi, globali, plugin, hook). Nessun componente del sito.
-- `frontend/`: **Next 16.3.3**, React 19.2, Tailwind 4, shadcn/ui. Solo rendering. Legge i dati **esclusivamente** tramite `frontend/src/lib/api.ts` e `lib/content.ts`.
+- `backend/`: Payload **3.91.0** dentro un'app **Next 16.3.8** minimale (Payload 3 non gira senza Next). Porta 3001 in sviluppo, 3000 nel container. Solo configurazioni (collezioni, blocchi come campi, hero come campi, globali, plugin, hook). Nessun componente del sito.
+- `frontend/`: **Next 16.3.8**, React 19.2, Tailwind 4, shadcn/ui. Solo rendering. Legge i dati **esclusivamente** tramite `frontend/src/lib/api.ts` e `lib/content.ts`.
 - Il **frontend NON deve poter raggiungere il database** (reti Docker separate: lo verifica `docker compose exec frontend nc -zv db 5432`, che deve fallire).
 - Il frontend non importa mai `getPayload`, `@payload-config` né le collezioni.
 - Il pacchetto `payload` resta nel frontend **solo per i tipi** e per il convertitore del rich text (`@payloadcms/richtext-lexical`): accoppiamento sul contratto dei dati, non sul runtime.
@@ -134,6 +134,10 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 `make help` · `make doctor` · `make db` · `make dev` (db + backend :3001 + frontend :3000) · `make dev-backend` · `make dev-frontend` · `make types` · `make migrate-create NAME=...` · `make stack` (tre container) · `make stack-proxy` (con nginx, simula la produzione) · `make tunnel` (stack acceso visibile da internet con Cloudflare quick tunnel, indirizzi nuovi a ogni avvio; Ctrl+C rimette quelli locali) · `make backup` · `make backup-media` · `make restore FILE=...` · `make reset-db` · `make stop` · `make down` · `make logs SERVICE=...` · `make ps`.
 
 Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le animazioni da terminale.
+
+**Test** (girano anche nella CI): `make test` (unitari Vitest di backend e frontend, nessun servizio: `backend/tests/unit`, `frontend/tests/unit`) · `make test-int` (Payload vero su un PostGIS usa e getta in memoria, `scripts/test-int.sh`: permessi, caricamenti, moduli; `vitest.setup.ts` rifiuta di partire senza `TEST_DATABASE_URL` e non carica mai `backend/.env`) · `make test-e2e` (Playwright, desktop e telefono, sul sito acceso: `BASE_URL=...` per un altro indirizzo, anche quello online; `E2E_SCRITTURA=1` per inviare davvero il modulo; `frontend/tests/e2e`) · `make audit` (vulnerabilità delle dipendenze). Nuove funzioni: aggiungere il test accanto.
+
+**Sicurezza** (non indebolire): caricamenti solo immagini/PDF/video (`Media.upload.mimeTypes`, niente SVG o HTML); login bloccato dopo 5 tentativi, cookie `secure` in HTTPS, niente chiavi API; GraphQL spento; il backend in produzione non parte con segreti deboli (`payload.config.ts`); nginx con HSTS, CSP `frame-ancestors`, limiti di frequenza su login e moduli, `/api/revalidate` e l'endpoint delle bozze bloccati da fuori; container Node con `cap_drop: ALL` e `no-new-privileges`; redirect del CMS in `frontend/src/proxy.ts` (una sola risposta 308). Override di sicurezza delle dipendenze in `pnpm-workspace.yaml`.
 
 ## 7. Regole di lavoro (importanti)
 

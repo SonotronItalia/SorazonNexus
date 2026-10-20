@@ -40,6 +40,18 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
+    // Solo immagini, PDF e video: niente SVG, HTML o altri file che il browser potrebbe eseguire
+    // (i media si aprono dal dominio del sito: un file HTML caricato diventerebbe una pagina)
+    mimeTypes: [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/avif',
+      'image/gif',
+      'application/pdf',
+      'video/mp4',
+      'video/webm',
+    ],
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: process.env.MEDIA_DIR || path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
