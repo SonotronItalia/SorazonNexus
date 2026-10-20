@@ -3,9 +3,10 @@ import React from 'react'
 import { CONSENSO } from '@/providers/Consenso/costanti'
 
 /**
- * Google Consent Mode v2 (modalità base): nell'<head>, prima di qualsiasi tag Google, tutto
- * parte "negato"; se il visitatore ha già scelto, lo stato si aggiorna subito. I tag veri
- * (gtag.js) si caricano solo dopo il consenso, in GoogleTag.
+ * Google Consent Mode v2: nell'<head>, prima di qualsiasi tag Google, tutto parte "negato"; se
+ * il visitatore ha già scelto, lo stato si aggiorna subito. I tag veri (Tag Manager o gtag.js)
+ * li carica GoogleTag, prima o dopo il consenso secondo la modalità scelta nelle Impostazioni.
+ * Con il consenso negato gli identificativi pubblicitari restano oscurati (ads_data_redaction).
  * Script normale e non next/script, come InitTheme (next/script qui dava un avviso).
  */
 export const ConsentModeScript: React.FC = () => (
@@ -20,6 +21,7 @@ export const ConsentModeScript: React.FC = () => (
       ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
       analytics_storage: 'denied', wait_for_update: 500
     });
+    gtag('set', 'ads_data_redaction', true);
     try {
       var s = JSON.parse(localStorage.getItem('${CONSENSO.CHIAVE}') || 'null');
       if (s && s.versione === ${CONSENSO.VERSIONE} && Date.now() - Date.parse(s.data) <= ${CONSENSO.DURATA_MS}) {

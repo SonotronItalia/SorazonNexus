@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { NESSUNA_SCELTA, type Scelte, useConsenso } from '@/providers/Consenso'
+import { categorieGoogle, type ConfigGoogle } from '@/utilities/google'
 
 type Categoria = { chiave: keyof Scelte; titolo: string; descrizione: string }
 
@@ -15,29 +16,34 @@ type Categoria = { chiave: keyof Scelte; titolo: string; descrizione: string }
  * cookie tecnici). Compare finché non c'è una scelta valida o quando si riaprono le preferenze.
  * Le categorie di Google compaiono solo se il relativo ID è configurato.
  */
-export const CookieBanner: React.FC<{ gaId?: string; adsId?: string }> = ({ gaId, adsId }) => {
+export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => {
+  const { statistiche, marketing } = categorieGoogle(google)
   const { stato, scelte, salva, preferenzeAperte, chiudiPreferenze } = useConsenso()
   const [dettaglio, setDettaglio] = useState(false)
   const [bozza, setBozza] = useState<Scelte>(NESSUNA_SCELTA)
 
   const categorie: Categoria[] = [
-    ...(gaId
+    ...(statistiche
       ? [
           {
             chiave: 'statistiche' as const,
             titolo: 'Statistiche',
             descrizione:
-              'Google Analytics: conteggio anonimo delle visite e delle pagine viste, per migliorare il sito.',
+              google.gtmId
+                ? 'Strumenti di misura di Google (Analytics, tramite Google Tag Manager): conteggio delle visite e delle pagine viste, per migliorare il sito.'
+                : 'Google Analytics: conteggio anonimo delle visite e delle pagine viste, per migliorare il sito.',
           },
         ]
       : []),
-    ...(adsId
+    ...(marketing
       ? [
           {
             chiave: 'marketing' as const,
             titolo: 'Marketing',
             descrizione:
-              'Google Ads: misura dei risultati delle campagne pubblicitarie e annunci personalizzati.',
+              google.gtmId
+                ? 'Strumenti pubblicitari di Google (tramite Google Tag Manager): misura delle campagne e annunci personalizzati.'
+                : 'Google Ads: misura dei risultati delle campagne pubblicitarie e annunci personalizzati.',
           },
         ]
       : []),

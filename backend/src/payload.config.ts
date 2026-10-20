@@ -3,6 +3,8 @@ import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig } from 'payload'
+import { en } from '@payloadcms/translations/languages/en'
+import { it } from '@payloadcms/translations/languages/it'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
@@ -16,6 +18,7 @@ import { Effetti } from './collections/Effetti'
 import { TipiEffetto } from './collections/TipiEffetto'
 import { BLOCCHI_PAGINA } from './blocks/blocchiPagina'
 import { TornaSu } from './TornaSu/config'
+import { Impostazioni } from './Impostazioni/config'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -96,6 +99,11 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
+  // Admin in italiano; ogni utente può passare all'inglese dal proprio account
+  i18n: {
+    supportedLanguages: { it, en },
+    fallbackLanguage: 'it',
+  },
   // GraphQL non serve (il sito usa le API REST): spento, meno superficie esposta
   graphQL: { disable: true },
   db: postgresAdapter({
@@ -109,7 +117,7 @@ export default buildConfig({
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
   collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users],
-  globals: [Header, Footer, TornaSu],
+  globals: [Impostazioni, Header, Footer, TornaSu],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

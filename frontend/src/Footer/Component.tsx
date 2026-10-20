@@ -1,5 +1,5 @@
 import type { Footer as FooterType } from '@/payload-types'
-import { getFooter } from '@/lib/content'
+import { getFooter, getImpostazioni } from '@/lib/content'
 import Link from 'next/link'
 import React from 'react'
 
@@ -15,6 +15,9 @@ export async function Footer() {
     console.error('Footer non disponibile:', e)
     return { id: 0, navItems: [] }
   })
+
+  // Profili social: Impostazioni del sito > Social
+  const impostazioni = await getImpostazioni()
 
   const navItems = footerData?.navItems || []
   const legali = footerData?.datiLegali
@@ -39,7 +42,7 @@ export async function Footer() {
           <Link className="flex items-center" href="/">
             <Logo />
           </Link>
-          <Social profili={footerData?.social} />
+          <Social profili={impostazioni?.social} />
         </div>
 
         <div className="flex flex-col-reverse items-start md:flex-row gap-4 md:items-center">

@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { DatiStrutturati } from '@/components/DatiStrutturati'
-import type { Footer, Post } from '@/payload-types'
+import type { Footer, Impostazioni, Post } from '@/payload-types'
 import { briciole, datiAziendaESito, datiNotizia } from '@/utilities/datiStrutturati'
 
 // Oggetti JSON-LD letti nei test (struttura libera)
@@ -19,14 +19,20 @@ const FOOTER = {
     telefono: '+39 0721 808759',
     email: 'info@sonotronitalia.com',
   },
-  social: [{ piattaforma: 'facebook', url: 'https://facebook.com/sorazon' }],
 } as unknown as Footer
+
+const IMPOSTAZIONI = {
+  id: 1,
+  nomeSito: 'Sorazon',
+  descrizioneSito: 'Descrizione dal CMS',
+  social: [{ piattaforma: 'facebook', url: 'https://facebook.com/sorazon' }],
+} as unknown as Impostazioni
 
 describe('dati strutturati (schema.org)', () => {
   it('azienda: dati legali, indirizzo scomposto, contatti e social', () => {
     const {
       '@graph': [azienda, sito],
-    } = datiAziendaESito(FOOTER) as { '@graph': Json[] }
+    } = datiAziendaESito(FOOTER, IMPOSTAZIONI) as { '@graph': Json[] }
     expect(azienda['@type']).toBe('Organization')
     expect(azienda.vatID).toBe('IT02654710413')
     expect(azienda.address).toMatchObject({
@@ -42,6 +48,7 @@ describe('dati strutturati (schema.org)', () => {
     })
     expect(azienda.sameAs).toEqual(['https://facebook.com/sorazon'])
     expect(sito.url).toBe('https://www.sorazon.it/')
+    expect(sito.description).toBe('Descrizione dal CMS')
   })
 
   it('funziona anche senza Footer (backend non raggiungibile)', () => {

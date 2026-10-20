@@ -46,3 +46,15 @@ test('il pulsante "torna su" compare scorrendo e riporta in cima', async ({ page
   await torna.click()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
 })
+
+test("l'avviso in cima al sito si chiude e resta chiuso", async ({ page }) => {
+  await page.goto('/')
+  const avviso = page.getByRole('region', { name: 'Avviso' })
+  if (!(await avviso.count())) test.skip(true, 'nessun avviso attivo nelle Impostazioni del sito')
+  const chiudi = avviso.getByRole('button', { name: "Chiudi l'avviso" })
+  if (!(await chiudi.count())) test.skip(true, 'avviso non chiudibile')
+  await chiudi.click()
+  await expect(avviso).toBeHidden()
+  await page.reload()
+  await expect(page.getByRole('region', { name: 'Avviso' })).toBeHidden()
+})

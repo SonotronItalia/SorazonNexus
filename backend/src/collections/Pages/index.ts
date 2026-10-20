@@ -20,6 +20,7 @@ import {
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
+  labels: { singular: 'Pagina', plural: 'Pagine' },
   // Bozze per l'anteprima del frontend (GET /api/pages/anteprima/:slug)
   endpoints: [anteprimaEndpoint('pages')],
   access: {
@@ -36,6 +37,7 @@ export const Pages: CollectionConfig<'pages'> = {
     slug: true,
   },
   admin: {
+    group: 'Contenuti',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>

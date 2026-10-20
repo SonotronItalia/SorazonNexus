@@ -1,4 +1,4 @@
-import type { Footer, Media, Post } from '@/payload-types'
+import type { Footer, Impostazioni, Media, Post } from '@/payload-types'
 
 import { mediaSrc } from '@/lib/api'
 import { getServerSideURL } from './getURL'
@@ -32,15 +32,16 @@ const indirizzoPostale = (testo: string | null | undefined) => {
   }
 }
 
-// Azienda (dati legali e social dal Footer) e sito: in ogni pagina
-export function datiAziendaESito(footer: Footer | null) {
+// Azienda (dati legali dal Piè di pagina, social dalle Impostazioni) e sito: in ogni pagina
+export function datiAziendaESito(footer: Footer | null, impostazioni: Impostazioni | null = null) {
   const d = footer?.datiLegali
-  const social = (footer?.social ?? []).map((s) => s.url).filter(Boolean)
+  const social = (impostazioni?.social ?? []).map((s) => s.url).filter(Boolean)
+  const nomeSito = impostazioni?.nomeSito?.trim() || SITE_NAME
   const azienda = {
     '@type': 'Organization',
     '@id': ID_AZIENDA(),
     name: d?.ragioneSociale || 'SONOTRON ITALIA S.R.L.S.',
-    brand: { '@type': 'Brand', name: SITE_NAME },
+    brand: { '@type': 'Brand', name: nomeSito },
     url: `${sito()}/`,
     logo: `${sito()}/logo_sorazon.svg`,
     ...(d?.partitaIva ? { vatID: `IT${d.partitaIva}`, taxID: d.codiceFiscale || d.partitaIva } : {}),
@@ -62,8 +63,8 @@ export function datiAziendaESito(footer: Footer | null) {
     '@type': 'WebSite',
     '@id': ID_SITO(),
     url: `${sito()}/`,
-    name: SITE_NAME,
-    description: DESCRIZIONE_SITO,
+    name: nomeSito,
+    description: impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO,
     inLanguage: 'it-IT',
     publisher: { '@id': ID_AZIENDA() },
     potentialAction: {

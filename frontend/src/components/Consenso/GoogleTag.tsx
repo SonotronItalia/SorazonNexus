@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { useEffect } from 'react'
 
 import { useConsenso } from '@/providers/Consenso'
+import type { ConfigGoogle } from '@/utilities/google'
 
 type Gtag = (...args: unknown[]) => void
 
@@ -21,14 +22,20 @@ const cancellaCookieAnalytics = () => {
 }
 
 /**
- * Carica gtag.js solo con il consenso (statistiche per Google Analytics, marketing per Google
- * Ads) e aggiorna il Consent Mode quando il visitatore cambia idea. Gli ID arrivano dal server
- * (variabili GA_MEASUREMENT_ID e GOOGLE_ADS_ID, lette a runtime); senza ID non fa nulla.
+ * Tag di Google con il Consent Mode v2 (ID e modalità dalle Impostazioni del sito, vedi
+ * utilities/google.ts). Lo stato del consenso parte "negato" nell'<head> (ConsentModeScript) e
+ * si aggiorna qui quando il visitatore sceglie.
+ * - Modalità base: Tag Manager o gtag.js si caricano solo dopo il consenso.
+ * - Modalità avanzata: si caricano subito; finché il consenso è negato Google riceve solo
+ *   segnali anonimi senza cookie.
+ * Con Tag Manager, Analytics e Ads si configurano dentro Tag Manager: gtag.js non si carica
+ * (altrimenti ogni visita verrebbe contata due volte).
  */
-export const GoogleTag: React.FC<{ gaId?: string; adsId?: string }> = ({ gaId, adsId }) => {
+export const GoogleTag: React.FC<{ google: ConfigGoogle }> = ({ google }) => {
+  const { gtmId, gaId, adsId, modalita } = google
   const { stato, scelte } = useConsenso()
-  const statistiche = Boolean(gaId) && scelte.statistiche
-  const marketing = Boolean(adsId) && scelte.marketing
+  const statistiche = Boolean(gtmId || gaId) && scelte.statistiche
+  const marketing = Boolean(gtmId || adsId) && scelte.marketing
 
   useEffect(() => {
     const gtag = (window as unknown as { gtag?: Gtag }).gtag
@@ -43,9 +50,23 @@ export const GoogleTag: React.FC<{ gaId?: string; adsId?: string }> = ({ gaId, a
     if (!statistiche) cancellaCookieAnalytics()
   }, [stato, statistiche, marketing])
 
-  if (!statistiche && !marketing) return null
+  const avanzata = modalita === 'avanzata'
 
-  const idPrincipale = (statistiche ? gaId : adsId) as string
+  if (gtmId) {
+    if (!avanzata && !statistiche && !marketing) return null
+    return (
+      <Script id="gtm-js" strategy="afterInteractive">
+        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});`}
+      </Script>
+    )
+  }
+
+  // Senza Tag Manager: gtag.js diretto per Analytics e/o Ads
+  const conGa = Boolean(gaId) && (avanzata || statistiche)
+  const conAds = Boolean(adsId) && (avanzata || marketing)
+  if (!conGa && !conAds) return null
+
+  const idPrincipale = (conGa ? gaId : adsId) as string
   return (
     <>
       <Script
@@ -54,8 +75,8 @@ export const GoogleTag: React.FC<{ gaId?: string; adsId?: string }> = ({ gaId, a
         strategy="afterInteractive"
       />
       <Script id="gtag-config" strategy="afterInteractive">
-        {`gtag('js', new Date());${statistiche ? `gtag('config', ${JSON.stringify(gaId)});` : ''}${
-          marketing ? `gtag('config', ${JSON.stringify(adsId)});` : ''
+        {`gtag('js', new Date());${conGa ? `gtag('config', ${JSON.stringify(gaId)});` : ''}${
+          conAds ? `gtag('config', ${JSON.stringify(adsId)});` : ''
         }`}
       </Script>
     </>

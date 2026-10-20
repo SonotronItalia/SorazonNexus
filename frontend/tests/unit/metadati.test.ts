@@ -1,4 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+// Niente CMS nei test unitari: le Impostazioni del sito mancano (valori di riserva del codice)
+vi.mock('@/lib/content', () => ({ getImpostazioni: async () => null }))
 
 import { generateMeta } from '@/utilities/generateMeta'
 import { DESCRIZIONE_SITO } from '@/utilities/mergeOpenGraph'

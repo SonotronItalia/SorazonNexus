@@ -13,10 +13,10 @@ import {
   type SimpleIcon,
 } from 'simple-icons'
 
-import type { Footer } from '@/payload-types'
+import type { Impostazioni } from '@/payload-types'
 import { cn } from '@/utilities/ui'
 
-type Profilo = NonNullable<Footer['social']>[number]
+type Profilo = NonNullable<Impostazioni['social']>[number]
 
 // Loghi ufficiali dei marchi (Simple Icons, licenza CC0). LinkedIn non è in Simple Icons
 // (rimosso su richiesta del marchio): si usa l'icona di lucide-react.
@@ -59,7 +59,7 @@ const Logo: React.FC<{ piattaforma: Profilo['piattaforma'] }> = ({ piattaforma }
  * Profili social con il logo della piattaforma, nel colore del testo (monocromatico, come
  * ammesso dalle linee guida dei marchi). Si aprono in una nuova scheda.
  */
-export const Social: React.FC<{ profili?: Footer['social']; className?: string }> = ({
+export const Social: React.FC<{ profili?: Impostazioni['social']; className?: string }> = ({
   profili,
   className,
 }) => {

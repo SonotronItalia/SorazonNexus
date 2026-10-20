@@ -83,15 +83,15 @@ export interface Config {
     pages: Page;
     posts: Post;
     centri: Centri;
+    media: Media;
+    forms: Form;
+    'form-submissions': FormSubmission;
     colori: Colori;
     effetti: Effetti;
     'tipi-effetto': TipiEffetto;
-    media: Media;
     categories: Category;
     users: User;
     redirects: Redirect;
-    forms: Form;
-    'form-submissions': FormSubmission;
     search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
@@ -109,15 +109,15 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     centri: CentriSelect<false> | CentriSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
     effetti: EffettiSelect<false> | EffettiSelect<true>;
     'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -131,14 +131,16 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'torna-su': TornaSu;
+    impostazioni: Impostazioni;
     header: Header;
     footer: Footer;
-    'torna-su': TornaSu;
   };
   globalsSelect: {
+    'torna-su': TornaSuSelect<false> | TornaSuSelect<true>;
+    impostazioni: ImpostazioniSelect<false> | ImpostazioniSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
-    'torna-su': TornaSuSelect<false> | TornaSuSelect<true>;
   };
   locale: null;
   widgets: {
@@ -561,6 +563,10 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Redattore: contenuti, contatti, aspetto e impostazioni generali. Amministratore: anche utenti, reindirizzamenti, tipi di effetto e la scheda "Analisi e pubblicità".
+   */
+  ruolo: 'amministratore' | 'redattore';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1266,13 +1272,34 @@ export interface Centri {
   createdAt: string;
 }
 /**
+ * Messaggi inviati dai visitatori con i moduli del sito.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
   id: number;
   /**
-   * You will need to rebuild the website when changing this field.
+   * Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.
    */
   from: string;
   to?: {
@@ -1292,24 +1319,7 @@ export interface Redirect {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This is a collection of automatically created search results. These results are used by the global site search and will be updated automatically as documents in the CMS are created or updated.
+ * Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "search".
@@ -1468,6 +1478,18 @@ export interface PayloadLockedDocument {
         value: number | Centri;
       } | null)
     | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
+      } | null)
+    | ({
         relationTo: 'colori';
         value: number | Colori;
       } | null)
@@ -1480,10 +1502,6 @@ export interface PayloadLockedDocument {
         value: number | TipiEffetto;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
         relationTo: 'categories';
         value: number | Category;
       } | null)
@@ -1494,14 +1512,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: number | Redirect;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'search';
@@ -1667,45 +1677,6 @@ export interface CentriSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "colori_select".
- */
-export interface ColoriSelect<T extends boolean = true> {
-  nome?: T;
-  codice?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "effetti_select".
- */
-export interface EffettiSelect<T extends boolean = true> {
-  nome?: T;
-  attivo?: T;
-  tipo?: T;
-  tipoPersonalizzato?: T;
-  colore?: T;
-  intensita?: T;
-  velocita?: T;
-  posizione?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tipi-effetto_select".
- */
-export interface TipiEffettoSelect<T extends boolean = true> {
-  nome?: T;
-  descrizione?: T;
-  javascript?: T;
-  css?: T;
-  verificato?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -1797,66 +1768,6 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  parent?: T;
-  breadcrumbs?:
-    | T
-    | {
-        doc?: T;
-        url?: T;
-        label?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2009,6 +1920,106 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori_select".
+ */
+export interface ColoriSelect<T extends boolean = true> {
+  nome?: T;
+  codice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effetti_select".
+ */
+export interface EffettiSelect<T extends boolean = true> {
+  nome?: T;
+  attivo?: T;
+  tipo?: T;
+  tipoPersonalizzato?: T;
+  colore?: T;
+  intensita?: T;
+  velocita?: T;
+  posizione?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto_select".
+ */
+export interface TipiEffettoSelect<T extends boolean = true> {
+  nome?: T;
+  descrizione?: T;
+  javascript?: T;
+  css?: T;
+  verificato?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  ruolo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "search_select".
  */
 export interface SearchSelect<T extends boolean = true> {
@@ -2118,6 +2129,132 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * Il pulsante che compare scorrendo la pagina e riporta in cima.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "torna-su".
+ */
+export interface TornaSu {
+  id: number;
+  /**
+   * Spento: il pulsante non compare in nessuna pagina
+   */
+  attivo?: boolean | null;
+  /**
+   * Spento: solo su schermi larghi (tablet e computer)
+   */
+  telefono?: boolean | null;
+  icona?: ('freccia' | 'punta' | 'doppia' | 'riga') | null;
+  posizione?: ('destra' | 'sinistra' | 'centro') | null;
+  forma?: ('cerchio' | 'quadrato') | null;
+  dimensione?: ('piccola' | 'media' | 'grande') | null;
+  comparsa?: ('breve' | 'mezzo' | 'schermo') | null;
+  /**
+   * Vuoto: il colore principale del sito (scuro nel tema chiaro, chiaro nel tema scuro). Si aggiunge o si modifica in "Colori del sito".
+   */
+  colore?: (number | null) | Colori;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Le impostazioni generali valgono per tutte le pagine del sito.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "impostazioni".
+ */
+export interface Impostazioni {
+  id: number;
+  /**
+   * Compare nel titolo delle pagine su Google e nelle condivisioni sui social.
+   */
+  nomeSito: string;
+  /**
+   * Frase usata da Google e dalle condivisioni quando una pagina non ha una descrizione propria. Ideale: 120-160 caratteri.
+   */
+  descrizioneSito?: string | null;
+  analisi: {
+    /**
+     * Avanzata stima anche le visite di chi rifiuta i cookie, ma il browser contatta Google subito: deciderla con il consulente privacy e indicarla nella cookie policy.
+     */
+    modalitaConsenso: 'base' | 'avanzata';
+    /**
+     * Con Tag Manager, Analytics e Ads si configurano dentro Tag Manager e i due campi sotto non servono. Attenzione: chi gestisce Tag Manager può aggiungere script al sito. Esempio: GTM-ABC1234. Vuoto: non si usa.
+     */
+    googleTagManagerId?: string | null;
+    /**
+     * Si trova in Analytics > Amministrazione > Stream di dati. Esempio: G-ABC123XYZ9. Vuoto: non si usa.
+     */
+    googleAnalyticsId?: string | null;
+    /**
+     * Per misurare le conversioni delle campagne. Si trova in Google Ads > Strumenti > Conversioni. Esempio: AW-123456789. Vuoto: non si usa.
+     */
+    googleAdsId?: string | null;
+  };
+  avviso?: {
+    attivo?: boolean | null;
+    /**
+     * Chiuso, non ricompare finché non si cambia il testo.
+     */
+    chiudibile?: boolean | null;
+    /**
+     * Breve, una riga. Es. "Chiusi per ferie dal 10 al 24 agosto".
+     */
+    testo?: string | null;
+    stile?: ('informazione' | 'importante' | 'promozione') | null;
+    /**
+     * Vuoto: da subito.
+     */
+    inizio?: string | null;
+    /**
+     * Vuoto: finché non lo spegni.
+     */
+    fine?: string | null;
+    conLink?: boolean | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: number | Page;
+          } | null)
+        | ({
+            relationTo: 'posts';
+            value: number | Post;
+          } | null);
+      url?: string | null;
+      label: string;
+    };
+  };
+  /**
+   * Il logo della piattaforma compare in fondo a ogni pagina e apre il profilo in una nuova scheda.
+   */
+  social?:
+    | {
+        piattaforma:
+          | 'facebook'
+          | 'instagram'
+          | 'linkedin'
+          | 'youtube'
+          | 'x'
+          | 'tiktok'
+          | 'whatsapp'
+          | 'threads'
+          | 'telegram'
+          | 'pinterest';
+        /**
+         * Es. https://www.facebook.com/sorazon (WhatsApp: https://wa.me/39...)
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Voci del menu in cima a ogni pagina. Le pagine in bozza si vedono solo dopo la pubblicazione.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
@@ -2172,29 +2309,6 @@ export interface Footer {
         id?: string | null;
       }[]
     | null;
-  /**
-   * Il logo della piattaforma compare in fondo a ogni pagina e apre il profilo in una nuova scheda.
-   */
-  social?:
-    | {
-        piattaforma:
-          | 'facebook'
-          | 'instagram'
-          | 'linkedin'
-          | 'youtube'
-          | 'x'
-          | 'tiktok'
-          | 'whatsapp'
-          | 'threads'
-          | 'telegram'
-          | 'pinterest';
-        /**
-         * Es. https://www.facebook.com/sorazon (WhatsApp: https://wa.me/39...)
-         */
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
   datiLegali?: {
     ragioneSociale?: string | null;
     indirizzo?: string | null;
@@ -2212,32 +2326,67 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Il pulsante che compare scorrendo la pagina e riporta in cima.
- *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "torna-su".
+ * via the `definition` "torna-su_select".
  */
-export interface TornaSu {
-  id: number;
-  /**
-   * Spento: il pulsante non compare in nessuna pagina
-   */
-  attivo?: boolean | null;
-  /**
-   * Spento: solo su schermi larghi (tablet e computer)
-   */
-  telefono?: boolean | null;
-  icona?: ('freccia' | 'punta' | 'doppia' | 'riga') | null;
-  posizione?: ('destra' | 'sinistra' | 'centro') | null;
-  forma?: ('cerchio' | 'quadrato') | null;
-  dimensione?: ('piccola' | 'media' | 'grande') | null;
-  comparsa?: ('breve' | 'mezzo' | 'schermo') | null;
-  /**
-   * Vuoto: il colore principale del sito (scuro nel tema chiaro, chiaro nel tema scuro). Si aggiunge o si modifica in "Colori del sito".
-   */
-  colore?: (number | null) | Colori;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+export interface TornaSuSelect<T extends boolean = true> {
+  attivo?: T;
+  telefono?: T;
+  icona?: T;
+  posizione?: T;
+  forma?: T;
+  dimensione?: T;
+  comparsa?: T;
+  colore?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "impostazioni_select".
+ */
+export interface ImpostazioniSelect<T extends boolean = true> {
+  nomeSito?: T;
+  descrizioneSito?: T;
+  analisi?:
+    | T
+    | {
+        modalitaConsenso?: T;
+        googleTagManagerId?: T;
+        googleAnalyticsId?: T;
+        googleAdsId?: T;
+      };
+  avviso?:
+    | T
+    | {
+        attivo?: T;
+        chiudibile?: T;
+        testo?: T;
+        stile?: T;
+        inizio?: T;
+        fine?: T;
+        conLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+      };
+  social?:
+    | T
+    | {
+        piattaforma?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2281,13 +2430,6 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
-  social?:
-    | T
-    | {
-        piattaforma?: T;
-        url?: T;
-        id?: T;
-      };
   datiLegali?:
     | T
     | {
@@ -2300,23 +2442,6 @@ export interface FooterSelect<T extends boolean = true> {
         telefono?: T;
         email?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "torna-su_select".
- */
-export interface TornaSuSelect<T extends boolean = true> {
-  attivo?: T;
-  telefono?: T;
-  icona?: T;
-  posizione?: T;
-  forma?: T;
-  dimensione?: T;
-  comparsa?: T;
-  colore?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

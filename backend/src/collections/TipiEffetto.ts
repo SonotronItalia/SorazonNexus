@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { authenticated } from '../access/authenticated'
+import { nascostoAiRedattori, soloAmministratori } from '../access/ruoli'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
 // Esempio proposto a ogni nuovo tipo: stelle che si accendono e spengono lentamente
@@ -55,15 +55,17 @@ export const TipiEffetto: CollectionConfig = {
   admin: {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'updatedAt'],
-    group: 'Aspetto del sito',
+    // Si scrive codice: solo amministratori (i redattori usano gli effetti già pronti)
+    group: 'Avanzate',
+    hidden: nascostoAiRedattori,
     description:
       'Nuovi tipi di animazione scritti in CSS e JavaScript. Si usano dalla sezione "Effetti" scegliendo il tipo "Personalizzato".',
   },
   access: {
     read: () => true,
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    create: soloAmministratori,
+    update: soloAmministratori,
+    delete: soloAmministratori,
   },
   fields: [
     {

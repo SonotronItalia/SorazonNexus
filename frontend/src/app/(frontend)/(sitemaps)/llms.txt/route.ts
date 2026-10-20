@@ -1,4 +1,4 @@
-import { getCentri, getFooter, getPagineSommario, getPosts } from '@/lib/content'
+import { getCentri, getFooter, getImpostazioni, getPagineSommario, getPosts } from '@/lib/content'
 import { getServerSideURL } from '@/utilities/getURL'
 import { DESCRIZIONE_SITO, SITE_NAME } from '@/utilities/mergeOpenGraph'
 
@@ -11,11 +11,12 @@ const ORDINE = ['home', 'dispositivo', 'terapia', 'indicazioni', 'risultati', 'c
 
 export async function GET() {
   const SITE = getServerSideURL()
-  const [pagine, notizie, centri, footer] = await Promise.all([
+  const [pagine, notizie, centri, footer, impostazioni] = await Promise.all([
     getPagineSommario().catch(() => []),
     getPosts(1, 100).catch(() => ({ docs: [] })),
     getCentri().catch(() => []),
     getFooter().catch(() => null),
+    getImpostazioni(),
   ])
 
   const url = (slug: string) => (slug === 'home' ? `${SITE}/` : `${SITE}/${slug}`)
@@ -35,9 +36,9 @@ export async function GET() {
 
   const d = footer?.datiLegali
   const righe = [
-    `# ${SITE_NAME}`,
+    `# ${impostazioni?.nomeSito?.trim() || SITE_NAME}`,
     '',
-    `> ${DESCRIZIONE_SITO}`,
+    `> ${impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO}`,
     '',
     d?.ragioneSociale
       ? `Produttore: ${d.ragioneSociale}${d.indirizzo ? `, ${d.indirizzo}` : ''}${d.partitaIva ? `, P.IVA ${d.partitaIva}` : ''}.` +

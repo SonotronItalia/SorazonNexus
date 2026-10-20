@@ -4,7 +4,7 @@ import type { Elenco } from './comune'
 
 // Quello che il sito legge senza login: deve rispondere, e solo con contenuti pubblicati
 test.describe('API pubbliche', () => {
-  for (const globale of ['header', 'footer', 'torna-su']) {
+  for (const globale of ['impostazioni', 'header', 'footer', 'torna-su']) {
     test(`globale ${globale}: leggibile senza login`, async ({ request }) => {
       const r = await request.get(`/api/globals/${globale}`)
       expect(r.status()).toBe(200)

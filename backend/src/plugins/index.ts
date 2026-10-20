@@ -6,6 +6,8 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { controllaModulo } from '@/hooks/controllaModulo'
+import { nascostoAiRedattori, soloAmministratori } from '@/access/ruoli'
+import { ordineMenu } from './ordineMenu'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
@@ -31,6 +33,18 @@ export const plugins: Plugin[] = [
   redirectsPlugin({
     collections: ['pages', 'posts'],
     overrides: {
+      labels: { singular: 'Reindirizzamento', plural: 'Reindirizzamenti' },
+      admin: {
+        group: 'Avanzate',
+        hidden: nascostoAiRedattori,
+        description: 'Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).',
+      },
+      access: {
+        read: () => true,
+        create: soloAmministratori,
+        update: soloAmministratori,
+        delete: soloAmministratori,
+      },
       // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
@@ -38,7 +52,7 @@ export const plugins: Plugin[] = [
             return {
               ...field,
               admin: {
-                description: 'You will need to rebuild the website when changing this field.',
+                description: 'Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.',
               },
             }
           }
@@ -68,9 +82,13 @@ export const plugins: Plugin[] = [
     beforeEmail: (emails) => emails.map((e) => ({ ...e, from: e.from || EMAIL_INFO })),
     // Controlli sugli invii (anti-spam, obbligatori, email valide): vedi hooks/controllaModulo.ts
     formSubmissionOverrides: {
+      labels: { singular: 'Richiesta ricevuta', plural: 'Richieste ricevute' },
+      admin: { group: 'Contatti', description: 'Messaggi inviati dai visitatori con i moduli del sito.' },
       hooks: { beforeValidate: [controllaModulo] },
     },
     formOverrides: {
+      labels: { singular: 'Modulo', plural: 'Moduli' },
+      admin: { group: 'Contatti' },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           // Mittente predefinito di ogni email del modulo: l'indirizzo info
@@ -107,9 +125,23 @@ export const plugins: Plugin[] = [
     collections: ['posts'],
     beforeSync: beforeSyncWithSearch,
     searchOverrides: {
+      labels: { singular: 'Voce di ricerca', plural: 'Indice di ricerca' },
+      admin: {
+        group: 'Avanzate',
+        hidden: nascostoAiRedattori,
+        description: 'Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.',
+      },
+      access: {
+        read: () => true,
+        create: soloAmministratori,
+        update: soloAmministratori,
+        delete: soloAmministratori,
+      },
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
       },
     },
   }),
+  // Per ultimo: ordina i gruppi della barra laterale dell'admin
+  ordineMenu,
 ]

@@ -34,6 +34,7 @@ test.describe('API riservate (senza login)', () => {
       ['delete', '/api/pages/1'],
       ['post', '/api/globals/header', { navItems: [] }],
       ['post', '/api/globals/torna-su', { attivo: false }],
+      ['post', '/api/globals/impostazioni', { analisi: { googleTagManagerId: 'GTM-INTRUSO1' } }],
     ]
     for (const [metodo, percorso, dati] of prove) {
       const r = await request.fetch(percorso, { method: metodo.toUpperCase(), data: dati })

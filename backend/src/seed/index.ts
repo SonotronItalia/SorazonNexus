@@ -72,7 +72,7 @@ async function seedAdmin() {
   }
   const { docs } = await payload.find({ collection: 'users', where: { email: { equals: email } }, limit: 1 })
   if (docs[0]) return log(`utente ${email} già presente`)
-  await payload.create({ collection: 'users', data: { email, password, name: 'Admin sviluppo' }, context })
+  await payload.create({ collection: 'users', data: { email, password, name: 'Admin sviluppo', ruolo: 'amministratore' }, context })
   log(`creato utente ${email} (password in backend/.env)`)
 }
 
@@ -348,6 +348,18 @@ await payload.updateGlobal({
   context,
 })
 log('footer aggiornato')
+
+// Impostazioni del sito (dati/impostazioni.yml): solo i valori ancora vuoti nel CMS, così non si
+// sovrascrive mai quello che è stato cambiato dall'admin
+const impostazioniAttuali = (await payload.findGlobal({ slug: 'impostazioni', depth: 0 })) as unknown as Record<string, unknown>
+const impostazioniSeed = parse(fs.readFileSync(dati('impostazioni.yml'), 'utf8')) as Record<string, string>
+const mancanti = Object.fromEntries(
+  Object.entries(impostazioniSeed).filter(([k]) => !String(impostazioniAttuali[k] ?? '').trim()),
+)
+if (Object.keys(mancanti).length) {
+  await payload.updateGlobal({ slug: 'impostazioni', data: mancanti, context })
+  log(`impostazioni del sito: impostati ${Object.keys(mancanti).join(', ')}`)
+} else log('impostazioni del sito già compilate: non toccate')
 
 // Durante il seed gli avvisi al frontend sono spenti: uno solo alla fine, con tutti i tag
 await revalidateFrontend(

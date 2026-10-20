@@ -5,6 +5,7 @@ import type { Media, Page, Post, Config } from '../payload-types'
 import { mediaSrc } from '@/lib/api'
 import { DESCRIZIONE_SITO, immagineOg, mergeOpenGraph, SITE_NAME } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
+import { getImpostazioni } from '@/lib/content'
 
 // Immagine SEO solo se abbastanza grande per le anteprime dei social (es. non le copertine da 200 px)
 const LARGHEZZA_MINIMA = 600
@@ -25,11 +26,15 @@ export const generateMeta = async (args: {
   tipo?: 'website' | 'article'
 }): Promise<Metadata> => {
   const { doc, percorso, tipo = 'website' } = args
+  // Nome e descrizione del sito dalle Impostazioni (con i valori nel codice come riserva)
+  const impostazioni = await getImpostazioni()
+  const nomeSito = impostazioni?.nomeSito?.trim() || SITE_NAME
+  const descrizioneSito = impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO
 
   const nome = doc?.meta?.title || (doc?.slug === 'home' ? undefined : doc?.title)
   // Il nome del sito in coda, se il titolo non lo contiene già
-  const title = !nome ? SITE_NAME : nome.includes(SITE_NAME) ? nome : `${nome} | ${SITE_NAME}`
-  const description = doc?.meta?.description || DESCRIZIONE_SITO
+  const title = !nome ? nomeSito : nome.includes(nomeSito) ? nome : `${nome} | ${nomeSito}`
+  const description = doc?.meta?.description || descrizioneSito
   const caricata = getImageURL(doc?.meta?.image)
   const immagine = caricata ?? immagineOg(nome ?? undefined)
   const post = tipo === 'article' ? (doc as Partial<Post>) : null
@@ -44,7 +49,8 @@ export const generateMeta = async (args: {
       description,
       url: percorso,
       // Le misure si dichiarano solo per l'immagine generata (le altre possono variare)
-      images: [caricata ? { url: immagine } : { url: immagine, width: 1200, height: 630, alt: nome ?? SITE_NAME }],
+      siteName: nomeSito,
+      images: [caricata ? { url: immagine } : { url: immagine, width: 1200, height: 630, alt: nome ?? nomeSito }],
       ...(post?.publishedAt ? { publishedTime: post.publishedAt } : {}),
       ...(post?.updatedAt ? { modifiedTime: post.updatedAt } : {}),
     }),

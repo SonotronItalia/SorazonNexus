@@ -29,6 +29,7 @@ export const Centri: CollectionConfig = {
   slug: 'centri',
   labels: { singular: 'Centro', plural: 'Centri' },
   admin: {
+    group: 'Contenuti',
     useAsTitle: 'nome_struttura', // Il nome che comparirà nella lista dell'admin
   },
   access: {
