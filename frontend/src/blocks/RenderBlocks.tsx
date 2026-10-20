@@ -18,6 +18,7 @@ import { CaroselloBlock } from '@/blocks/Carosello/Component'
 import { ProdottoScorrimentoBlock } from '@/blocks/ProdottoScorrimento/Component'
 import { BarraProdottoBlock } from '@/blocks/BarraProdotto/Component'
 import { SchedeBlock } from '@/blocks/Schede/Component'
+import { conSfondo } from '@/components/SezioneSfondo'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -62,7 +63,8 @@ export const RenderBlocks: React.FC<{
   if (hasBlocks) {
     const contenuto = blocks.map((block, index) => {
       const { blockType } = block
-      const classe = annidato ? undefined : 'my-16'
+      // Blocchi con uno sfondo proprio (fascia a tutta larghezza): niente margini attorno
+      const classe = annidato || conSfondo(block) ? undefined : 'my-16'
 
       if (blockType && CONTENITORI.has(blockType)) {
         return (

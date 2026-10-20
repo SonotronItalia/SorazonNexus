@@ -24,7 +24,7 @@ layout:
         richText: |
           ### [info@sonotronitalia.com](mailto:info@sonotronitalia.com)
   - blockType: schede
-    sfondo: tenue
+    sfondo: chiaro
     colonne: '2'
     schede:
       - titolo: Sede legale ed amministrativa
@@ -37,8 +37,10 @@ layout:
           Segreteria: [+39 333/9129395](tel:+393339129395)
 
           Commerciale: [+39 324/9082505](tel:+393249082505)
+  # Modulo e mappa sulla stessa fascia grigio chiaro
   - blockType: formBlock
     form: modulo:Contatti
+    sfondo: tenue
     enableIntro: true
     introContent: |
       ## Scrivici
@@ -48,4 +50,5 @@ layout:
     titolo: Dove siamo
     indirizzo: Strada Nazionale Adriatica Sud 44/16, 61032 Fano PU
     altezza: media
+    sfondo: tenue
 ---

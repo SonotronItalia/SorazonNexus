@@ -926,6 +926,10 @@ export interface FormBlock {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('nessuno' | 'scuro' | 'chiaro' | 'tenue') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -1209,6 +1213,10 @@ export interface MappaBlock {
    */
   indirizzo: string;
   altezza?: ('bassa' | 'media' | 'alta') | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('nessuno' | 'scuro' | 'chiaro' | 'tenue') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mappa';

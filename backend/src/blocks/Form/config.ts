@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { sfondoSezione } from '@/fields/sfondoSezione'
+
 import {
   FixedToolbarFeature,
   HeadingFeature,
@@ -41,6 +43,7 @@ export const FormBlock: Block = {
       }),
       label: 'Testo sopra il modulo',
     },
+    sfondoSezione('nessuno'),
   ],
   graphQL: {
     singularName: 'FormBlock',

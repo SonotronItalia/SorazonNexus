@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { sfondoSezione } from '@/fields/sfondoSezione'
+
 // Mappa di Google Maps per un indirizzo. Per la privacy la mappa si carica solo quando il
 // visitatore la chiede (Google imposta cookie): prima si vede un riquadro con l'indirizzo.
 export const Mappa: Block = {
@@ -26,5 +28,6 @@ export const Mappa: Block = {
         { label: 'Alta', value: 'alta' },
       ],
     },
+    sfondoSezione('nessuno'),
   ],
 }

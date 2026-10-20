@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider, type FieldValues } from 'react-hook-form'
 import RichText from '@/components/RichText'
+import { SezioneSfondo } from '@/components/SezioneSfondo'
 import { Button } from '@/components/ui/button'
 import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 
@@ -21,6 +22,7 @@ export type FormBlockType = {
   enableIntro: boolean
   form: FormType
   introContent?: DefaultTypedEditorState
+  sfondo?: 'nessuno' | 'scuro' | 'chiaro' | 'tenue' | null
 }
 
 export const FormBlock: React.FC<
@@ -33,6 +35,7 @@ export const FormBlock: React.FC<
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
     introContent,
+    sfondo,
   } = props
 
   // Valori predefiniti per nome del campo (il blocco "message" non ha nome né valore)
@@ -127,75 +130,84 @@ export const FormBlock: React.FC<
   )
 
   return (
-    <div className="container lg:max-w-[48rem]">
-      {enableIntro && introContent && !hasSubmitted && (
-        <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
-      )}
-      <div className="relative p-4 lg:p-6 border border-border rounded-[0.8rem]">
-        <FormProvider {...formMethods}>
-          {!isLoading && hasSubmitted && confirmationType === 'message' && (
-            confirmationMessage && <RichText data={confirmationMessage} />
-          )}
-          {isLoading && !hasSubmitted && <p>Invio in corso...</p>}
-          {error && (
-            <p role="alert" className="mb-4 text-sm text-red-500">
-              {error.message}
-            </p>
-          )}
-          {!hasSubmitted && (
-            <form id={formDomID} onSubmit={handleSubmit(onSubmit)} noValidate>
-              <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-                <label htmlFor={`${formDomID}-${CAMPO_TRAPPOLA}`}>Non compilare questo campo</label>
-                <input
-                  id={`${formDomID}-${CAMPO_TRAPPOLA}`}
-                  type="text"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  {...register(CAMPO_TRAPPOLA)}
-                />
-              </div>
-              {/* Campi affiancati secondo la larghezza scelta nel CMS (es. 50%) quando il modulo è
+    <SezioneSfondo sfondo={sfondo}>
+      <div className="container lg:max-w-[48rem]">
+        {enableIntro && introContent && !hasSubmitted && (
+          <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
+        )}
+        <div className="relative rounded-[28px] border border-border bg-background p-6 lg:p-10">
+          <FormProvider {...formMethods}>
+            {!isLoading &&
+              hasSubmitted &&
+              confirmationType === 'message' &&
+              confirmationMessage && <RichText data={confirmationMessage} />}
+            {isLoading && !hasSubmitted && <p>Invio in corso...</p>}
+            {error && (
+              <p role="alert" className="mb-4 text-sm text-red-500">
+                {error.message}
+              </p>
+            )}
+            {!hasSubmitted && (
+              <form id={formDomID} onSubmit={handleSubmit(onSubmit)} noValidate>
+                <div
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-px w-px overflow-hidden"
+                >
+                  <label htmlFor={`${formDomID}-${CAMPO_TRAPPOLA}`}>
+                    Non compilare questo campo
+                  </label>
+                  <input
+                    id={`${formDomID}-${CAMPO_TRAPPOLA}`}
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    {...register(CAMPO_TRAPPOLA)}
+                  />
+                </div>
+                {/* Campi affiancati secondo la larghezza scelta nel CMS (es. 50%) quando il modulo è
                   abbastanza largo; più stretto (telefono, colonna) ognuno occupa tutta la riga */}
-              <div className="@container mb-8 flex flex-wrap gap-x-4 gap-y-6">
-                {formFromProps &&
-                  formFromProps.fields &&
-                  formFromProps.fields?.map((field, index) => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
-                    if (Field) {
-                      const larghezza = 'width' in field && field.width ? Number(field.width) : 100
-                      return (
-                        <div
-                          className="w-full @lg:w-(--larghezza)"
-                          style={
-                            {
-                              '--larghezza': `calc(${larghezza}% - ${(1 - larghezza / 100).toFixed(2)}rem)`,
-                            } as React.CSSProperties
-                          }
-                          key={index}
-                        >
-                          <Field
-                            form={formFromProps}
-                            {...field}
-                            {...formMethods}
-                            control={control}
-                            errors={errors}
-                            register={register}
-                          />
-                        </div>
-                      )
-                    }
-                    return null
-                  })}
-              </div>
+                <div className="@container mb-8 flex flex-wrap gap-x-4 gap-y-6">
+                  {formFromProps &&
+                    formFromProps.fields &&
+                    formFromProps.fields?.map((field, index) => {
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
+                      if (Field) {
+                        const larghezza =
+                          'width' in field && field.width ? Number(field.width) : 100
+                        return (
+                          <div
+                            className="w-full @lg:w-(--larghezza)"
+                            style={
+                              {
+                                '--larghezza': `calc(${larghezza}% - ${(1 - larghezza / 100).toFixed(2)}rem)`,
+                              } as React.CSSProperties
+                            }
+                            key={index}
+                          >
+                            <Field
+                              form={formFromProps}
+                              {...field}
+                              {...formMethods}
+                              control={control}
+                              errors={errors}
+                              register={register}
+                            />
+                          </div>
+                        )
+                      }
+                      return null
+                    })}
+                </div>
 
-              <Button form={formDomID} type="submit" variant="default" disabled={isLoading}>
-                {submitButtonLabel}
-              </Button>
-            </form>
-          )}
-        </FormProvider>
+                <Button form={formDomID} type="submit" variant="default" disabled={isLoading}>
+                  {submitButtonLabel}
+                </Button>
+              </form>
+            )}
+          </FormProvider>
+        </div>
       </div>
-    </div>
+    </SezioneSfondo>
   )
 }

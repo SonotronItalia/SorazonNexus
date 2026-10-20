@@ -21,6 +21,7 @@ import * as migration_20261020_190439_blocchi_prodotto from './20261020_190439_b
 import * as migration_20261020_210554_schede_occhiello from './20261020_210554_schede_occhiello';
 import * as migration_20261020_222742_ruoli_personalizzati from './20261020_222742_ruoli_personalizzati';
 import * as migration_20261020_222806_togli_ruolo_fisso from './20261020_222806_togli_ruolo_fisso';
+import * as migration_20261020_230101_sfondo_modulo_mappa from './20261020_230101_sfondo_modulo_mappa';
 
 export const migrations = [
   {
@@ -136,6 +137,11 @@ export const migrations = [
   {
     up: migration_20261020_222806_togli_ruolo_fisso.up,
     down: migration_20261020_222806_togli_ruolo_fisso.down,
-    name: '20261020_222806_togli_ruolo_fisso'
+    name: '20261020_222806_togli_ruolo_fisso',
+  },
+  {
+    up: migration_20261020_230101_sfondo_modulo_mappa.up,
+    down: migration_20261020_230101_sfondo_modulo_mappa.down,
+    name: '20261020_230101_sfondo_modulo_mappa'
   },
 ];
