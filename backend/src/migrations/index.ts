@@ -18,6 +18,7 @@ import * as migration_20261020_135644_sicurezza_utenti from './20261020_135644_s
 import * as migration_20261020_154951_impostazioni_ruoli from './20261020_154951_impostazioni_ruoli';
 import * as migration_20261020_155104_social_in_impostazioni from './20261020_155104_social_in_impostazioni';
 import * as migration_20261020_190439_blocchi_prodotto from './20261020_190439_blocchi_prodotto';
+import * as migration_20261020_210554_schede_occhiello from './20261020_210554_schede_occhiello';
 
 export const migrations = [
   {
@@ -118,6 +119,11 @@ export const migrations = [
   {
     up: migration_20261020_190439_blocchi_prodotto.up,
     down: migration_20261020_190439_blocchi_prodotto.down,
-    name: '20261020_190439_blocchi_prodotto'
+    name: '20261020_190439_blocchi_prodotto',
+  },
+  {
+    up: migration_20261020_210554_schede_occhiello.up,
+    down: migration_20261020_210554_schede_occhiello.down,
+    name: '20261020_210554_schede_occhiello'
   },
 ];

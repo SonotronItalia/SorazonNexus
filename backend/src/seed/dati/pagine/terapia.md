@@ -10,42 +10,54 @@ meta:
 bozza: false
 hero:
   type: lowImpact
-  richText: '# Terapia'
+  occhiello: Terapia
+  richText: |
+    # Terapia intensiva antinfiammatoria
+
+    Mirata > infiltrante > profonda. Non invasiva, non a contatto, non dolorosa.
+# Struttura a sezioni (stile pagina prodotto): stesse frasi del testo approvato, solo disposte
+# in schede. Il testo lungo sull'ozono resta sotto, in colonna di lettura.
+layout:
+  - blockType: schede
+    occhiello: Meccanismo d'azione
+    titolo: A tripla azione.
+    sfondo: scuro
+    colonne: '3'
+    schede:
+      - occhiello: '01'
+        titolo: Ad onde soniche pressorie
+        richText: |
+          Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.
+      - occhiello: '02'
+        titolo: A radiofrequenza con campo elettromagnetico ionizzante
+        richText: |
+          La RADIOFREQUENZA, nota anche con l'acronimo RF indica generalmente un segnale elettrico o un'onda elettromagnetica ad alta frequenza che si propaga nell'etere o in un cavo coassiale.
+
+          La radiofrequenza emettendo l'alta frequenza modulata nella camera di ionizzazione, crea un campo elettromagnetico ionizzante antinfiammatorio che a distanza va a polarizzare i tessuti aprendo i canali ionici.
+      - occhiello: '03'
+        titolo: Ad energia ossigenatoria di OZONO
+        richText: |
+          Un elevatore di tensione genera una scarica a corona che produce nella camera di ionizzazione un'energia ossigenatoria di ozono che si va ad incanalare nelle parti che stiamo trattando a livello transdermico, tramite i canali ionici.
+  - blockType: schede
+    titolo: Azione terapeutica
+    sfondo: chiaro
+    colonne: '3'
+    schede:
+      - titolo: Stato degenerativo articolare (artrosi)
+        richText: cartilagine articolare, liquido sinoviale
+      - titolo: Artrite
+        richText: Flogosi - inibizione delle prostaglandine
+      - titolo: Dolore
+        richText: Ossidazione (inattivazione) dei trasmettitori nervosi
+      - titolo: Traumi
+        richText: Contusivi - Distorsivi
+      - titolo: Si utilizza anche come terapia antinfiammatoria
+        richText: prima di un intervento chirurgico per ridurre il dolore e la flogosi; dopo l'intervento chirurgico quando il paziente avverte ancora dolore ed è limitato nei movimenti
+      - titolo: Seduta terapeutica
+        richText: 1 volta a settimana per 4/6 settimane.
+  - blockType: content
 ---
-## Terapia intensiva antinfiammatoria
-
-Mirata > infiltrante > profonda. Non invasiva, non a contatto, non dolorosa.
-
-**A tripla azione:**
-
-- Ad onde soniche pressorie
-- A radiofrequenza con campo elettromagnetico ionizzante
-- Ad energia ossigenatoria di OZONO
-
-## Azione terapeutica
-
-- **Stato degenerativo articolare** (artrosi): cartilagine articolare, liquido sinoviale
-- **Artrite** - Flogosi - inibizione delle prostaglandine
-- **Dolore** - Ossidazione (inattivazione) dei trasmettitori nervosi
-- **Traumi** - Contusivi - Distorsivi
-- **Si utilizza anche come terapia antinfiammatoria:** prima di un intervento chirurgico per ridurre il dolore e la flogosi; dopo l'intervento chirurgico quando il paziente avverte ancora dolore ed è limitato nei movimenti
-- **Seduta terapeutica:** 1 volta a settimana per 4/6 settimane.
-
-## Meccanismo d'azione
-
-### Onde soniche pressorie
-
-Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.
-
-### Radiofrequenza con campo elettromagnetico ionizzante
-
-La RADIOFREQUENZA, nota anche con l'acronimo RF indica generalmente un segnale elettrico o un'onda elettromagnetica ad alta frequenza che si propaga nell'etere o in un cavo coassiale.
-
-La radiofrequenza emettendo l'alta frequenza modulata nella camera di ionizzazione, crea un campo elettromagnetico ionizzante antinfiammatorio che a distanza va a polarizzare i tessuti aprendo i canali ionici.
-
-### Energia ossigenatoria di ozono
-
-Un elevatore di tensione genera una scarica a corona che produce nella camera di ionizzazione un'energia ossigenatoria di ozono che si va ad incanalare nelle parti che stiamo trattando a livello transdermico, tramite i canali ionici.
+## Energia ossigenatoria di ozono
 
 L'ozono per la formazione di perossidi ha effetto antibatterico, antivirale e germicida con proprietà ossidante; agisce come antinfiammatorio per inibizione delle prostaglandine, sostanze fondamentali nello sviluppo di un processo infiammatorio e come antidolorifico per ossidazione dei trasmettitori nervosi che determinano il dolore. Agisce sulla riduzione delle calcificazioni presenti nei tessuti e nelle articolazioni, possiede anche una significativa attività antalgica, riabilitativa nell'ambito del dolore muscolo scheletrico vertebrale, osteoarticolare, acuto - cronico riferito ad artrosi, periartriti, tendiniti, fasciti e borsiti.
 

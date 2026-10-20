@@ -18,6 +18,7 @@ const config = {
                 fontWeight: 600,
                 letterSpacing: '-0.02em',
                 lineHeight: '1.1',
+                marginTop: '1.6em',
               },
               h3: {
                 fontWeight: 600,
@@ -44,6 +45,9 @@ const config = {
         md: {
           css: [
             {
+              // Lettura editoriale: corpo più grande e arioso, titoli staccati dal testo prima
+              fontSize: '1.1875rem',
+              lineHeight: '1.7',
               h1: {
                 fontSize: 'var(--titolo-1)',
               },

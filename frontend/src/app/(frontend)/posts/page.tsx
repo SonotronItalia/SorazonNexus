@@ -1,6 +1,7 @@
 import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
+import { LowImpactHero } from '@/heros/LowImpact'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
@@ -15,12 +16,15 @@ export default async function Page() {
   const posts = await getPosts(1, 12)
 
   return (
-    <div className="pt-24 pb-24">
-      <div className="container mb-16">
-        <div className="prose dark:prose-invert max-w-none">
-          <h1>Notizie</h1>
-        </div>
-      </div>
+    <div className="pb-24">
+      <LowImpactHero>
+        <p className="mb-4 text-sm font-semibold tracking-wide text-cyan-600 uppercase md:text-base dark:text-cyan-400">
+          Newsroom
+        </p>
+        <h1 className="text-[length:var(--titolo-display)] leading-[0.95] font-semibold tracking-[-0.035em]">
+          Notizie
+        </h1>
+      </LowImpactHero>
 
       <div className="container mb-8">
         <PageRange

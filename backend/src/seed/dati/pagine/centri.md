@@ -7,8 +7,19 @@ meta:
   description: "Elenco degli ambulatori abilitati alla terapia Sorazon in Italia, per regione, con indirizzi e telefoni. Gli operatori sono formati presso la sede di Fano (PU)."
 hero:
   type: lowImpact
+  occhiello: La rete Sorazon
   richText: '# Centri di riferimento'
 layout:
+  # Numeri calcolati dalla collezione Centri: si aggiornano da soli
+  - blockType: numeriEvidenza
+    sfondo: tenue
+    voci:
+      - tipo: centri
+        conta: true
+        etichetta: centri di riferimento
+      - tipo: regioni
+        conta: true
+        etichetta: regioni italiane
   # L'elenco lo prende il sito dalla collezione Centri (dati in ../centri.csv)
   - blockType: centriList
     titolo: Elenco per regione

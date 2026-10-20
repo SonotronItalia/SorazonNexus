@@ -51,14 +51,20 @@ export const PostHero: React.FC<{
           {heroImage && typeof heroImage === 'object' && (
             <Media
               className="w-40 shrink-0 sm:w-48"
-              imgClassName="rounded-md border border-border shadow-md"
+              imgClassName="rounded-2xl shadow-xl"
               priority
               resource={heroImage}
             />
           )}
           <div>
-            {categorie && <div className="mb-4 text-sm uppercase text-muted-foreground">{categorie}</div>}
-            <h1 className="mb-6 text-3xl md:text-5xl">{title}</h1>
+            {categorie && (
+              <div className="mb-4 text-sm font-semibold tracking-wide text-cyan-600 uppercase dark:text-cyan-400">
+                {categorie}
+              </div>
+            )}
+            <h1 className="mb-6 text-[length:var(--titolo-1)] leading-[1.02] font-semibold tracking-tight">
+              {title}
+            </h1>
             <div className="text-muted-foreground">{dettagli}</div>
           </div>
         </div>

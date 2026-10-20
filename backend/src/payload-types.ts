@@ -79,6 +79,7 @@ export interface Config {
     carosello: CaroselloBlock;
     prodottoScorrimento: ProdottoScorrimentoBlock;
     barraProdotto: BarraProdottoBlock;
+    schede: SchedeBlock;
     contenitore: ContenitoreBlock;
     contenitore2: Contenitore2Block;
     contenitore3: Contenitore3Block;
@@ -242,6 +243,7 @@ export interface Page {
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'sorazon' | 'banner';
+    occhiello?: string | null;
     richText?: {
       root: {
         type: string;
@@ -351,6 +353,7 @@ export interface Page {
     | CaroselloBlock
     | ProdottoScorrimentoBlock
     | BarraProdottoBlock
+    | SchedeBlock
     | ContenitoreBlock
   )[];
   meta?: {
@@ -1218,6 +1221,45 @@ export interface BarraProdottoBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SchedeBlock".
+ */
+export interface SchedeBlock {
+  occhiello?: string | null;
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  colonne?: ('2' | '3') | null;
+  schede?:
+    | {
+        occhiello?: string | null;
+        titolo?: string | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        immagine?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'schede';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContenitoreBlock".
  */
 export interface ContenitoreBlock {
@@ -1258,6 +1300,7 @@ export interface ContenitoreBlock {
           | MappaBlock
           | NumeriEvidenzaBlock
           | CaroselloBlock
+          | SchedeBlock
           | Contenitore2Block
         )[]
       | null;
@@ -1309,6 +1352,7 @@ export interface Contenitore2Block {
           | MappaBlock
           | NumeriEvidenzaBlock
           | CaroselloBlock
+          | SchedeBlock
           | Contenitore3Block
         )[]
       | null;
@@ -1360,6 +1404,7 @@ export interface Contenitore3Block {
           | MappaBlock
           | NumeriEvidenzaBlock
           | CaroselloBlock
+          | SchedeBlock
         )[]
       | null;
     id?: string | null;
@@ -1816,6 +1861,7 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         type?: T;
+        occhiello?: T;
         richText?: T;
         links?:
           | T

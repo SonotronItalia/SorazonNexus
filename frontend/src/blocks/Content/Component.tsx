@@ -31,7 +31,14 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
                 className={cn('col-span-4', colsSpanClasses[size ?? 'full'])}
                 key={index}
               >
-                {richText && <RichText data={richText} enableGutter={false} />}
+                {richText && (
+                  <RichText
+                    data={richText}
+                    enableGutter={false}
+                    // Colonna intera: misura di lettura comoda, centrata (stile editoriale)
+                    className={(size ?? 'full') === 'full' ? 'max-w-[46rem]' : undefined}
+                  />
+                )}
 
                 {enableLink && <CMSLink {...link} />}
               </div>

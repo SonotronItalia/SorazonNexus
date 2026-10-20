@@ -55,6 +55,13 @@ export const hero: Field = {
       required: true,
     },
     {
+      // Riga piccola sopra il titolo (es. "Terapia"), negli hero semplici
+      name: 'occhiello',
+      label: 'Occhiello',
+      type: 'text',
+      admin: { condition: (_, { type } = {}) => type === 'lowImpact' },
+    },
+    {
       name: 'richText',
       type: 'richText',
       editor: lexicalEditor({

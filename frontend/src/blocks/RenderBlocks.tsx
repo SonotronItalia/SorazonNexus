@@ -17,6 +17,7 @@ import { NumeriEvidenzaBlock } from '@/blocks/NumeriEvidenza/Component'
 import { CaroselloBlock } from '@/blocks/Carosello/Component'
 import { ProdottoScorrimentoBlock } from '@/blocks/ProdottoScorrimento/Component'
 import { BarraProdottoBlock } from '@/blocks/BarraProdotto/Component'
+import { SchedeBlock } from '@/blocks/Schede/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -32,10 +33,17 @@ const blockComponents = {
   carosello: CaroselloBlock,
   prodottoScorrimento: ProdottoScorrimentoBlock,
   barraProdotto: BarraProdottoBlock,
+  schede: SchedeBlock,
 }
 
 // Blocchi con un'animazione propria (o fissi in alto): niente comparsa morbida attorno
-const ANIMATI = new Set(['numeriEvidenza', 'prodottoScorrimento', 'carosello', 'barraProdotto'])
+const ANIMATI = new Set([
+  'numeriEvidenza',
+  'prodottoScorrimento',
+  'carosello',
+  'barraProdotto',
+  'schede',
+])
 
 // Tutti i livelli del Contenitore (contenitore, contenitore2, contenitore3) usano lo stesso componente
 const CONTENITORI = new Set(['contenitore', 'contenitore2', 'contenitore3'])

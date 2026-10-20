@@ -7,6 +7,7 @@ meta:
   description: "Sorazon Studio e Maxi sono prodotti e distribuiti da Sonotron Italia di Fano: acquisto, preventivi, assistenza e informazioni per diventare centro di riferimento."
 hero:
   type: lowImpact
+  occhiello: Sonotron Italia
   richText: '# Distribuzione'
 layout:
   - blockType: content

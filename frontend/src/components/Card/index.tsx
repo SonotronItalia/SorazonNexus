@@ -2,14 +2,22 @@
 import { cn } from '@/utilities/ui'
 import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import type { Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 
-export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'>
+export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'> &
+  Partial<Pick<Post, 'publishedAt'>>
 
+const data = (iso: string) =>
+  new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+    new Date(iso),
+  )
+
+// Scheda di una notizia in stile "Newsroom": riquadro arrotondato, immagine grande, categoria e
+// data piccole, titolo in evidenza. Tutta la scheda è cliccabile
 export const Card: React.FC<{
   alignItems?: 'center'
   className?: string
@@ -21,61 +29,61 @@ export const Card: React.FC<{
   const { cardRef, linkRef } = useClickableCard<HTMLElement>({})
   const { className, doc, relationTo, showCategories, title: titleFromProps } = props
 
-  const { slug, categories, meta, title } = doc || {}
+  const { slug, categories, meta, title, publishedAt } = doc || {}
   const { description, image: metaImage } = meta || {}
 
-  const hasCategories = categories && Array.isArray(categories) && categories.length > 0
+  const categorie = showCategories
+    ? (categories ?? [])
+        .flatMap((c) => (typeof c === 'object' && c !== null ? [c.title || 'Senza categoria'] : []))
+        .join(', ')
+    : ''
   const titleToUse = titleFromProps || title
-  const sanitizedDescription = description?.replace(/\s/g, ' ') // replace non-breaking space with white space
+  const sanitizedDescription = description?.replace(/\s/g, ' ') // spazi non separabili -> spazi
   const href = `/${relationTo}/${slug}`
 
   return (
     <article
       className={cn(
-        'border border-border rounded-lg overflow-hidden bg-card hover:cursor-pointer',
+        'group flex flex-col overflow-hidden rounded-[28px] bg-[#f5f5f7] transition-shadow hover:cursor-pointer hover:shadow-xl dark:bg-white/[0.06]',
         className,
       )}
       ref={cardRef}
     >
       {/* Riquadro fisso: immagini orizzontali e copertine verticali restano intere e allineate */}
-      <div className="relative aspect-[4/3] w-full bg-muted">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-200/70 dark:bg-white/5">
         {metaImage && typeof metaImage !== 'string' && (
-          <Media fill imgClassName="object-contain" resource={metaImage} size="33vw" />
+          <Media
+            fill
+            imgClassName="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            resource={metaImage}
+            size="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          />
         )}
       </div>
-      <div className="p-4">
-        {showCategories && hasCategories && (
-          <div className="uppercase text-sm mb-4">
-            {categories?.map((category, index) => {
-              if (typeof category === 'object') {
-                const { title: titleFromCategory } = category
-
-                const categoryTitle = titleFromCategory || 'Senza categoria'
-
-                const isLast = index === categories.length - 1
-
-                return (
-                  <Fragment key={index}>
-                    {categoryTitle}
-                    {!isLast && <Fragment>, &nbsp;</Fragment>}
-                  </Fragment>
-                )
-              }
-
-              return null
-            })}
-          </div>
+      <div className="flex flex-1 flex-col p-7">
+        {(categorie || publishedAt) && (
+          <p className="mb-3 text-xs font-semibold tracking-wide uppercase">
+            {categorie && <span className="text-cyan-600 dark:text-cyan-400">{categorie}</span>}
+            {categorie && publishedAt && <span className="text-neutral-400"> · </span>}
+            {publishedAt && (
+              <time dateTime={publishedAt} className="text-neutral-500">
+                {data(publishedAt)}
+              </time>
+            )}
+          </p>
         )}
         {titleToUse && (
-          <div className="prose">
-            <h3>
-              <Link className="not-prose" href={href} ref={linkRef}>
-                {titleToUse}
-              </Link>
-            </h3>
-          </div>
+          <h3 className="text-xl leading-snug font-semibold tracking-tight md:text-2xl">
+            <Link href={href} ref={linkRef}>
+              {titleToUse}
+            </Link>
+          </h3>
         )}
-        {description && <div className="mt-2">{description && <p>{sanitizedDescription}</p>}</div>}
+        {description && (
+          <p className="mt-3 line-clamp-3 text-neutral-600 dark:text-neutral-400">
+            {sanitizedDescription}
+          </p>
+        )}
       </div>
     </article>
   )
