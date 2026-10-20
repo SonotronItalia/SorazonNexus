@@ -9,8 +9,19 @@ const config = {
               '--tw-prose-body': 'var(--text)',
               '--tw-prose-headings': 'var(--text)',
               h1: {
-                fontWeight: 'normal',
-                marginBottom: '0.25em',
+                fontWeight: 600,
+                letterSpacing: '-0.025em',
+                lineHeight: '1.05',
+                marginBottom: '0.3em',
+              },
+              h2: {
+                fontWeight: 600,
+                letterSpacing: '-0.02em',
+                lineHeight: '1.1',
+              },
+              h3: {
+                fontWeight: 600,
+                letterSpacing: '-0.01em',
               },
             },
           ],
@@ -19,11 +30,13 @@ const config = {
           css: [
             {
               h1: {
-                fontSize: '2.5rem',
+                fontSize: 'var(--titolo-1)',
               },
               h2: {
-                fontSize: '1.25rem',
-                fontWeight: 600,
+                fontSize: 'var(--titolo-2)',
+              },
+              h3: {
+                fontSize: 'var(--titolo-3)',
               },
             },
           ],
@@ -32,10 +45,13 @@ const config = {
           css: [
             {
               h1: {
-                fontSize: '3.5rem',
+                fontSize: 'var(--titolo-1)',
               },
               h2: {
-                fontSize: '1.5rem',
+                fontSize: 'var(--titolo-2)',
+              },
+              h3: {
+                fontSize: 'var(--titolo-3)',
               },
             },
           ],

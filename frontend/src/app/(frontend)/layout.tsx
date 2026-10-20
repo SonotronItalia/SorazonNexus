@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { cn } from '@/utilities/ui'
 import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
+import { Inter_Tight } from 'next/font/google'
 import React from 'react'
 
 import { Footer } from '@/Footer/Component'
@@ -23,6 +23,14 @@ import { configGoogle } from '@/utilities/google'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
 import { datiAziendaESito } from '@/utilities/datiStrutturati'
 import { TornaSu } from '@/components/TornaSu'
+
+// Carattere dei titoli e dei testi: Inter Tight, scaricato in build e servito dal nostro server
+// (nessuna richiesta a Google dal browser, quindi niente consenso)
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter-tight',
+})
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
@@ -49,7 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     .join('')
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="it" suppressHydrationWarning>
+    <html className={cn(interTight.variable, GeistMono.variable)} lang="it" suppressHydrationWarning>
       <head>
         <InitTheme />
         {conGoogle && <ConsentModeScript />}

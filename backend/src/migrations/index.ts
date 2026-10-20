@@ -17,6 +17,7 @@ import * as migration_20261019_225236_footer_contatti from './20261019_225236_fo
 import * as migration_20261020_135644_sicurezza_utenti from './20261020_135644_sicurezza_utenti';
 import * as migration_20261020_154951_impostazioni_ruoli from './20261020_154951_impostazioni_ruoli';
 import * as migration_20261020_155104_social_in_impostazioni from './20261020_155104_social_in_impostazioni';
+import * as migration_20261020_190439_blocchi_prodotto from './20261020_190439_blocchi_prodotto';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20261020_155104_social_in_impostazioni.up,
     down: migration_20261020_155104_social_in_impostazioni.down,
-    name: '20261020_155104_social_in_impostazioni'
+    name: '20261020_155104_social_in_impostazioni',
+  },
+  {
+    up: migration_20261020_190439_blocchi_prodotto.up,
+    down: migration_20261020_190439_blocchi_prodotto.down,
+    name: '20261020_190439_blocchi_prodotto'
   },
 ];

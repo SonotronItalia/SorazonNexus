@@ -12,6 +12,50 @@ hero:
   type: lowImpact
   richText: '# Dispositivi Sorazon'
 layout:
+  # Barra fissa sotto l'header, come nelle pagine prodotto (va per prima)
+  - blockType: barraProdotto
+    nome: Sorazon
+    sottotitolo: Studio · Maxi
+    link:
+      type: reference
+      reference: pagina:centri
+      label: Trova un centro
+  - blockType: numeriEvidenza
+    sfondo: chiaro
+    voci:
+      - tipo: manuale
+        valore: 7
+        conta: true
+        suffisso: '″'
+        etichetta: monitor a colori, su Studio e Maxi
+      - tipo: manuale
+        valore: 14
+        conta: true
+        suffisso: ' kg'
+        etichetta: Sorazon Maxi, portatile a valigia
+      - tipo: manuale
+        valore: 200
+        conta: true
+        suffisso: ' W'
+        etichetta: potenza assorbita
+  - blockType: prodottoScorrimento
+    occhiello: Sorazon Maxi
+    titolo: Tutta la terapia, in una valigia.
+    sfondo: scuro
+    tipo: immagini
+    passaggi:
+      - occhiello: Unità base a valigia
+        titolo: Chiusa, si porta ovunque.
+        testo: 'H 16 cm × L 45 cm × P 33 cm, 14 kg.'
+        immagine: media:sorazon-maxi-fronte.webp
+      - occhiello: Monitor 7" a colori
+        titolo: Aperta, è pronta.
+        testo: Generatore di radiofrequenza e generatore di onde soniche nell'unità base.
+        immagine: media:sorazon-maxi.webp
+      - occhiello: Manipolo trasduttore
+        titolo: Lo stesso manipolo della versione Studio.
+        testo: Camera di ionizzazione e generatore di ozono.
+        immagine: media:manipolo-trasduttore-bianco.webp
   - blockType: schedaProdotto
     titolo: Sorazon Studio
     descrizione: Apparecchio elettromedicale da studio, composto da unità base con monitor da 7" a colori e manipolo trasduttore.

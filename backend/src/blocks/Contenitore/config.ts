@@ -23,6 +23,10 @@ const BLOCCHI_INTERNI: BlockSlug[] = [
   'schedaProdotto',
   'galleriaRisultati',
   'mappa',
+  'numeriEvidenza',
+  'carosello',
+  // Non dentro le colonne: "prodottoScorrimento" (occupa tutto lo schermo) e "barraProdotto"
+  // (fissa sotto l'header, va come primo blocco della pagina)
 ]
 
 // Livelli di annidamento: Payload 3 non accetta un blocco che contiene se stesso (va in ciclo

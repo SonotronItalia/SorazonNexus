@@ -75,6 +75,10 @@ export interface Config {
     schedaProdotto: SchedaProdottoBlock;
     galleriaRisultati: GalleriaRisultatiBlock;
     mappa: MappaBlock;
+    numeriEvidenza: NumeriEvidenzaBlock;
+    carosello: CaroselloBlock;
+    prodottoScorrimento: ProdottoScorrimentoBlock;
+    barraProdotto: BarraProdottoBlock;
     contenitore: ContenitoreBlock;
     contenitore2: Contenitore2Block;
     contenitore3: Contenitore3Block;
@@ -343,6 +347,10 @@ export interface Page {
     | SchedaProdottoBlock
     | GalleriaRisultatiBlock
     | MappaBlock
+    | NumeriEvidenzaBlock
+    | CaroselloBlock
+    | ProdottoScorrimentoBlock
+    | BarraProdottoBlock
     | ContenitoreBlock
   )[];
   meta?: {
@@ -1082,6 +1090,134 @@ export interface MappaBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NumeriEvidenzaBlock".
+ */
+export interface NumeriEvidenzaBlock {
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  voci?:
+    | {
+        tipo?: ('manuale' | 'centri' | 'regioni') | null;
+        valore?: number | null;
+        /**
+         * Spento per gli anni (es. 1992).
+         */
+        conta?: boolean | null;
+        prefisso?: string | null;
+        suffisso?: string | null;
+        etichetta: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'numeriEvidenza';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaroselloBlock".
+ */
+export interface CaroselloBlock {
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  schede?:
+    | {
+        immagine: number | Media;
+        occhiello?: string | null;
+        titolo: string;
+        testo?: string | null;
+        conLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carosello';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProdottoScorrimentoBlock".
+ */
+export interface ProdottoScorrimentoBlock {
+  occhiello?: string | null;
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  /**
+   * Video: un file MP4 breve (es. rotazione o apertura del dispositivo), esportato con un fotogramma chiave ogni pochi fotogrammi perché lo scorrimento sia fluido.
+   */
+  tipo?: ('immagini' | 'video') | null;
+  video?: (number | null) | Media;
+  /**
+   * Ogni passaggio occupa circa uno schermo di scorrimento.
+   */
+  passaggi?:
+    | {
+        /**
+         * Con l'animazione a video l'immagine non serve.
+         */
+        immagine?: (number | null) | Media;
+        occhiello?: string | null;
+        titolo: string;
+        testo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'prodottoScorrimento';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BarraProdottoBlock".
+ */
+export interface BarraProdottoBlock {
+  nome: string;
+  sottotitolo?: string | null;
+  link: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'barraProdotto';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContenitoreBlock".
  */
 export interface ContenitoreBlock {
@@ -1120,6 +1256,8 @@ export interface ContenitoreBlock {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
           | Contenitore2Block
         )[]
       | null;
@@ -1169,6 +1307,8 @@ export interface Contenitore2Block {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
           | Contenitore3Block
         )[]
       | null;
@@ -1218,6 +1358,8 @@ export interface Contenitore3Block {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
         )[]
       | null;
     id?: string | null;

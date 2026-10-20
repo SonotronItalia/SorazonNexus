@@ -12,6 +12,11 @@ import { SchedaProdottoBlock } from '@/blocks/SchedaProdotto/Component'
 import { GalleriaRisultatiBlock } from '@/blocks/GalleriaRisultati/Component'
 import { MappaBlock } from '@/blocks/Mappa/Component'
 import { ContenitoreBlock } from '@/blocks/Contenitore/Component'
+import { Rivela } from '@/components/Rivela'
+import { NumeriEvidenzaBlock } from '@/blocks/NumeriEvidenza/Component'
+import { CaroselloBlock } from '@/blocks/Carosello/Component'
+import { ProdottoScorrimentoBlock } from '@/blocks/ProdottoScorrimento/Component'
+import { BarraProdottoBlock } from '@/blocks/BarraProdotto/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -23,7 +28,14 @@ const blockComponents = {
   schedaProdotto: SchedaProdottoBlock,
   galleriaRisultati: GalleriaRisultatiBlock,
   mappa: MappaBlock,
+  numeriEvidenza: NumeriEvidenzaBlock,
+  carosello: CaroselloBlock,
+  prodottoScorrimento: ProdottoScorrimentoBlock,
+  barraProdotto: BarraProdottoBlock,
 }
+
+// Blocchi con un'animazione propria (o fissi in alto): niente comparsa morbida attorno
+const ANIMATI = new Set(['numeriEvidenza', 'prodottoScorrimento', 'carosello', 'barraProdotto'])
 
 // Tutti i livelli del Contenitore (contenitore, contenitore2, contenitore3) usano lo stesso componente
 const CONTENITORI = new Set(['contenitore', 'contenitore2', 'contenitore3'])
@@ -59,18 +71,38 @@ export const RenderBlocks: React.FC<{
         const Block = blockComponents[blockType as keyof typeof blockComponents]
 
         if (Block) {
-          return (
-            <div className={classe} key={index}>
-              {/* @ts-expect-error there may be some mismatch between the expected types here */}
-              <Block {...block} disableInnerContainer />
+          // @ts-expect-error there may be some mismatch between the expected types here
+          const blocco = <Block {...block} disableInnerContainer />
+          // Comparsa morbida quando il blocco entra nello schermo (non dentro le colonne)
+          return annidato || ANIMATI.has(blockType) ? (
+            // Sezioni a tutta larghezza senza margini; la barra prodotto "contents" per restare fissa
+            <div
+              className={
+                blockType === 'barraProdotto'
+                  ? 'contents'
+                  : ANIMATI.has(blockType)
+                    ? undefined
+                    : classe
+              }
+              key={index}
+            >
+              {blocco}
             </div>
+          ) : (
+            <Rivela className={classe} key={index}>
+              {blocco}
+            </Rivela>
           )
         }
       }
       return null
     })
 
-    return annidato ? <div className="space-y-8">{contenuto}</div> : <Fragment>{contenuto}</Fragment>
+    return annidato ? (
+      <div className="space-y-8">{contenuto}</div>
+    ) : (
+      <Fragment>{contenuto}</Fragment>
+    )
   }
 
   return null

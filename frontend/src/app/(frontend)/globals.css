@@ -44,7 +44,7 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer utilities {
@@ -91,6 +91,20 @@
     max-width: none;
     padding-inline: 0;
   }
+}
+
+/* Scala dei titoli (stile pagine prodotto): grandi, stretti e decisi, crescono con lo schermo */
+:root {
+  --titolo-1: clamp(2.5rem, 1.4rem + 4.4vw, 5.5rem);
+  --titolo-2: clamp(1.875rem, 1.2rem + 2.8vw, 3.75rem);
+  --titolo-3: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  --titolo-display: clamp(3rem, 1.2rem + 7.5vw, 8.5rem);
+}
+
+body {
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* Dimensioni del testo scelte nell'editor ("Stile testo"): crescono con lo schermo */

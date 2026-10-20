@@ -75,11 +75,20 @@ export interface Config {
     schedaProdotto: SchedaProdottoBlock;
     galleriaRisultati: GalleriaRisultatiBlock;
     mappa: MappaBlock;
+    numeriEvidenza: NumeriEvidenzaBlock;
+    carosello: CaroselloBlock;
+    prodottoScorrimento: ProdottoScorrimentoBlock;
+    barraProdotto: BarraProdottoBlock;
     contenitore: ContenitoreBlock;
     contenitore2: Contenitore2Block;
     contenitore3: Contenitore3Block;
   };
   collections: {
+    'tipi-effetto': TipiEffetto;
+    categories: Category;
+    users: User;
+    redirects: Redirect;
+    search: Search;
     pages: Page;
     posts: Post;
     centri: Centri;
@@ -88,11 +97,6 @@ export interface Config {
     'form-submissions': FormSubmission;
     colori: Colori;
     effetti: Effetti;
-    'tipi-effetto': TipiEffetto;
-    categories: Category;
-    users: User;
-    redirects: Redirect;
-    search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -106,6 +110,11 @@ export interface Config {
     };
   };
   collectionsSelect: {
+    'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    search: SearchSelect<false> | SearchSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     centri: CentriSelect<false> | CentriSelect<true>;
@@ -114,11 +123,6 @@ export interface Config {
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
     effetti: EffettiSelect<false> | EffettiSelect<true>;
-    'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -343,6 +347,10 @@ export interface Page {
     | SchedaProdottoBlock
     | GalleriaRisultatiBlock
     | MappaBlock
+    | NumeriEvidenzaBlock
+    | CaroselloBlock
+    | ProdottoScorrimentoBlock
+    | BarraProdottoBlock
     | ContenitoreBlock
   )[];
   meta?: {
@@ -1082,6 +1090,134 @@ export interface MappaBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NumeriEvidenzaBlock".
+ */
+export interface NumeriEvidenzaBlock {
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  voci?:
+    | {
+        tipo?: ('manuale' | 'centri' | 'regioni') | null;
+        valore?: number | null;
+        /**
+         * Spento per gli anni (es. 1992).
+         */
+        conta?: boolean | null;
+        prefisso?: string | null;
+        suffisso?: string | null;
+        etichetta: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'numeriEvidenza';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CaroselloBlock".
+ */
+export interface CaroselloBlock {
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  schede?:
+    | {
+        immagine: number | Media;
+        occhiello?: string | null;
+        titolo: string;
+        testo?: string | null;
+        conLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carosello';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProdottoScorrimentoBlock".
+ */
+export interface ProdottoScorrimentoBlock {
+  occhiello?: string | null;
+  titolo?: string | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('scuro' | 'chiaro' | 'tenue') | null;
+  /**
+   * Video: un file MP4 breve (es. rotazione o apertura del dispositivo), esportato con un fotogramma chiave ogni pochi fotogrammi perché lo scorrimento sia fluido.
+   */
+  tipo?: ('immagini' | 'video') | null;
+  video?: (number | null) | Media;
+  /**
+   * Ogni passaggio occupa circa uno schermo di scorrimento.
+   */
+  passaggi?:
+    | {
+        /**
+         * Con l'animazione a video l'immagine non serve.
+         */
+        immagine?: (number | null) | Media;
+        occhiello?: string | null;
+        titolo: string;
+        testo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'prodottoScorrimento';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BarraProdottoBlock".
+ */
+export interface BarraProdottoBlock {
+  nome: string;
+  sottotitolo?: string | null;
+  link: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'barraProdotto';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContenitoreBlock".
  */
 export interface ContenitoreBlock {
@@ -1120,6 +1256,8 @@ export interface ContenitoreBlock {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
           | Contenitore2Block
         )[]
       | null;
@@ -1169,6 +1307,8 @@ export interface Contenitore2Block {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
           | Contenitore3Block
         )[]
       | null;
@@ -1218,6 +1358,8 @@ export interface Contenitore3Block {
           | SchedaProdottoBlock
           | GalleriaRisultatiBlock
           | MappaBlock
+          | NumeriEvidenzaBlock
+          | CaroselloBlock
         )[]
       | null;
     id?: string | null;
@@ -1225,6 +1367,65 @@ export interface Contenitore3Block {
   id?: string | null;
   blockName?: string | null;
   blockType: 'contenitore3';
+}
+/**
+ * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  /**
+   * Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: number;
+  title?: string | null;
+  priority?: number | null;
+  doc: {
+    relationTo: 'posts';
+    value: number | Post;
+  };
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  categories?:
+    | {
+        relationTo?: string | null;
+        categoryID?: string | null;
+        title?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1284,65 +1485,6 @@ export interface FormSubmission {
     | {
         field: string;
         value: string;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  /**
-   * Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.
-   */
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: number | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: number | Post;
-        } | null);
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search".
- */
-export interface Search {
-  id: number;
-  title?: string | null;
-  priority?: number | null;
-  doc: {
-    relationTo: 'posts';
-    value: number | Post;
-  };
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (number | null) | Media;
-  };
-  categories?:
-    | {
-        relationTo?: string | null;
-        categoryID?: string | null;
-        title?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1466,6 +1608,26 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'tipi-effetto';
+        value: number | TipiEffetto;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'search';
+        value: number | Search;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -1496,26 +1658,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'effetti';
         value: number | Effetti;
-      } | null)
-    | ({
-        relationTo: 'tipi-effetto';
-        value: number | TipiEffetto;
-      } | null)
-    | ({
-        relationTo: 'categories';
-        value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'redirects';
-        value: number | Redirect;
-      } | null)
-    | ({
-        relationTo: 'search';
-        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -1562,6 +1704,107 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto_select".
+ */
+export interface TipiEffettoSelect<T extends boolean = true> {
+  nome?: T;
+  descrizione?: T;
+  javascript?: T;
+  css?: T;
+  verificato?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  ruolo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search_select".
+ */
+export interface SearchSelect<T extends boolean = true> {
+  title?: T;
+  priority?: T;
+  doc?: T;
+  slug?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  categories?:
+    | T
+    | {
+        relationTo?: T;
+        categoryID?: T;
+        title?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1941,107 +2184,6 @@ export interface EffettiSelect<T extends boolean = true> {
   intensita?: T;
   velocita?: T;
   posizione?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tipi-effetto_select".
- */
-export interface TipiEffettoSelect<T extends boolean = true> {
-  nome?: T;
-  descrizione?: T;
-  javascript?: T;
-  css?: T;
-  verificato?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  parent?: T;
-  breadcrumbs?:
-    | T
-    | {
-        doc?: T;
-        url?: T;
-        label?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  ruolo?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search_select".
- */
-export interface SearchSelect<T extends boolean = true> {
-  title?: T;
-  priority?: T;
-  doc?: T;
-  slug?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  categories?:
-    | T
-    | {
-        relationTo?: T;
-        categoryID?: T;
-        title?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }

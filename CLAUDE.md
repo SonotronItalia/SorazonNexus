@@ -107,6 +107,17 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 - `GalleriaRisultati`: griglia di immagini (radiografie) con etichetta in sovraimpressione e descrizione facoltativa; opzioni colonne / sfondo. Pagina Risultati non ancora popolata: mancano le immagini e i testi clinici vanno rivisti.
 - `SchedaProdotto`: titolo, descrizione, immagine, gruppi di caratteristiche con voci, componenti con foto e parti; opzioni posizione immagine / sfondo / colonne. Il campo annidato `composto_da` ha `dbName: 'parti'` per non superare i **63 caratteri** degli identificatori Postgres (con il nome lungo erano 68 e venivano troncati in silenzio).
 
+**Blocchi "stile Apple"** (sfondo di sezione nero/bianco/grigio tenue da `fields/sfondoSezione.ts` → `frontend/src/utilities/sezione.ts`):
+
+- `NumeriEvidenza` ("Numeri in evidenza"): fino a 6 numeri grandi con conteggio animato; ogni voce è manuale oppure automatica (`centri`, `regioni`, calcolati da `getCentri()`).
+- `Carosello`: schede orizzontali con immagine, occhiello, titolo, testo e link facoltativo; frecce e scorrimento a scatti.
+- `ProdottoScorrimento` ("Prodotto guidato dallo scorrimento"): sezione fissata sullo schermo, un'altezza di schermo per passaggio; scorrendo cambiano immagine e testo, oppure avanza un **video** (pronto per un futuro render 3D esportato in MP4). `dbName` corti (`prod_scorr`, `prod_scorr_pass`) per i 63 caratteri.
+- `BarraProdotto`: barra in vetro che resta sotto l'header (nome, sottotitolo, pulsante). Fuori dal Contenitore, come `ProdottoScorrimento` (servono la pagina intera e lo sticky).
+
+**Animazioni** (libreria **Motion**, `motion/react`): `providers/Movimento.tsx` mette `MotionConfig reducedMotion` su "always" quando il visitatore ha spento gli effetti (fulmine) e su "user" altrimenti, così vale anche "riduci movimento" del sistema. `components/Rivela` (comparsa morbida all'ingresso nello schermo, usata da `RenderBlocks` per tutti i blocchi tranne quelli animati da sé, elenco `ANIMATI`), `components/Parallasse` (immagine dell'hero Sorazon). Regole: con il movimento ridotto i blocchi a scorrimento mostrano una versione statica; i punti di `useTransform` legati allo scorrimento devono stare tra 0 e 1 e non decrescere (Motion li passa alle animazioni native del browser, altrimenti la pagina va in errore); un `useScroll` con `target` deve stare in un componente che rende sempre quell'elemento.
+
+**Tipografia**: Inter Tight (`next/font/google`, servita dal sito) per tutto il testo, titoli grandi con la scala `--titolo-1/2/3/display` in `globals.css` (usata anche dal `prose` in `tailwind.config.mjs`).
+
 **Contenitore** (`contenitore`, `contenitore2`, `contenitore3`): colonne (1-4, larghezza automatica o 25/33/50/66/75%) con dentro qualsiasi blocco, spazio tra le colonne e sopra/sotto, allineamento verticale, larghezza 30-100% centrata, sfondo dalla tavolozza. Annidabile su **3 livelli**: Payload 3 va in ciclo infinito con un blocco che contiene se stesso, quindi ogni livello è un blocco a sé (stesso componente nel frontend). Dentro una colonna la classe `.container` dei blocchi perde margini e larghezza massima (`globals.css`).
 
 **Hero Banner e High Impact**: sfondo immagine o video (libreria Media, URL, YouTube solo con consenso), sovrapposizione (intensità + colore della tavolozza), posizione del titolo (9), proporzione del Banner; componente comune `frontend/src/heros/comune/SfondoHero.tsx`.
@@ -127,7 +138,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
-**Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema).
+**Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema). L'header è fisso in alto: trasparente in cima, in vetro (sfocatura) e più basso dopo 24 px di scorrimento, con il logo che si riduce.
 
 **Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Colori` ("Colori del sito", tavolozza per gli sfondi dei blocchi: Galleria risultati, Scheda prodotto, Invito all'azione), `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Header`, `Footer`. Plugin: redirects, nested-docs, SEO, form-builder, search.
 
