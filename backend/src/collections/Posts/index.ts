@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
 import {
   BlocksFeature,
@@ -9,7 +10,6 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Banner } from '../../blocks/Banner/config'
 import { Code } from '../../blocks/Code/config'
@@ -37,10 +37,10 @@ export const Posts: CollectionConfig<'posts'> = {
     plural: 'Notizie',
   },
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: permesso('posts', 'crea'),
+    delete: permesso('posts', 'elimina'),
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: permesso('posts', 'modifica'),
   },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
@@ -56,6 +56,7 @@ export const Posts: CollectionConfig<'posts'> = {
   },
   admin: {
     group: 'Contenuti',
+    hidden: nascostaSenzaPermesso('posts'),
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>

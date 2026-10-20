@@ -1,10 +1,12 @@
 import type { Field, GlobalConfig } from 'payload'
 
-import { authenticated } from '@/access/authenticated'
-import { campoSoloAmministratori } from '@/access/ruoli'
+import { campoConPermesso, nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 import { campoSocial } from '@/fields/social'
 import { link } from '@/fields/link'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
+
+// La scheda "Analisi e pubblicità" ha un permesso a sé (Ruoli e permessi): può inserire script
+const analisi = campoConPermesso('impostazioni-analisi', 'modifica')
 
 // Formati degli ID di Google: un ID sbagliato non deve finire nella pagina
 export const FORMATI_ID = {
@@ -27,8 +29,8 @@ const idGoogle = (
     description: `${descrizione} Esempio: ${esempio}. Vuoto: non si usa.`,
     placeholder: esempio,
   },
-  // Solo un amministratore cambia il tracciamento (un redattore vede il valore ma non lo modifica)
-  access: { create: campoSoloAmministratori, update: campoSoloAmministratori },
+  // Solo chi ha il permesso cambia il tracciamento (gli altri vedono il valore ma non lo modificano)
+  access: { create: analisi, update: analisi },
   validate: (valore: string | null | undefined) =>
     !valore || formato.test(valore.trim()) || `Formato non valido: deve essere come ${esempio}`,
   hooks: {
@@ -45,21 +47,14 @@ export const Impostazioni: GlobalConfig = {
   label: 'Impostazioni del sito',
   admin: {
     group: 'Impostazioni',
+    hidden: nascostaSenzaPermesso('impostazioni'),
     description: 'Le impostazioni generali valgono per tutte le pagine del sito.',
   },
   access: {
     read: () => true,
-    update: authenticated,
+    update: permesso('impostazioni', 'modifica'),
   },
   fields: [
-    {
-      // Collegamento agli Strumenti avanzati, visibile solo agli amministratori
-      name: 'strumentiAvanzati',
-      type: 'ui',
-      admin: {
-        components: { Field: '@/components/admin/StrumentiAvanzati/Collegamento#Collegamento' },
-      },
-    },
     {
       type: 'tabs',
       tabs: [
@@ -116,7 +111,7 @@ export const Impostazioni: GlobalConfig = {
                 description:
                   'Avanzata stima anche le visite di chi rifiuta i cookie, ma il browser contatta Google subito: deciderla con il consulente privacy e indicarla nella cookie policy.',
               },
-              access: { create: campoSoloAmministratori, update: campoSoloAmministratori },
+              access: { create: analisi, update: analisi },
             },
             idGoogle(
               'googleTagManagerId',

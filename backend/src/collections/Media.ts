@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
 import {
   FixedToolbarFeature,
@@ -9,7 +10,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,13 +17,13 @@ const dirname = path.dirname(filename)
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Immagine o file', plural: 'Immagini e file' },
-  admin: { group: 'Contenuti' },
+  admin: { group: 'Contenuti', hidden: nascostaSenzaPermesso('media') },
   folders: true,
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: permesso('media', 'crea'),
+    delete: permesso('media', 'elimina'),
     read: anyone,
-    update: authenticated,
+    update: permesso('media', 'modifica'),
   },
   fields: [
     {

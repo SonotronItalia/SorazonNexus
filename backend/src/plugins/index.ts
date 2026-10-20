@@ -6,7 +6,7 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { controllaModulo } from '@/hooks/controllaModulo'
-import { nascostoAiRedattori, soloAmministratori } from '@/access/ruoli'
+import { accessoPubblico, nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 import { ordineMenu } from './ordineMenu'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -35,16 +35,11 @@ export const plugins: Plugin[] = [
     overrides: {
       labels: { singular: 'Reindirizzamento', plural: 'Reindirizzamenti' },
       admin: {
-        group: false, // in Strumenti avanzati
-        hidden: nascostoAiRedattori,
+        group: 'Avanzate',
+        hidden: nascostaSenzaPermesso('redirects'),
         description: 'Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).',
       },
-      access: {
-        read: () => true,
-        create: soloAmministratori,
-        update: soloAmministratori,
-        delete: soloAmministratori,
-      },
+      access: accessoPubblico('redirects'),
       // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
@@ -83,12 +78,25 @@ export const plugins: Plugin[] = [
     // Controlli sugli invii (anti-spam, obbligatori, email valide): vedi hooks/controllaModulo.ts
     formSubmissionOverrides: {
       labels: { singular: 'Richiesta ricevuta', plural: 'Richieste ricevute' },
-      admin: { group: 'Contatti', description: 'Messaggi inviati dai visitatori con i moduli del sito.' },
+      admin: {
+        group: 'Contatti',
+        hidden: nascostaSenzaPermesso('form-submissions'),
+        description: 'Messaggi inviati dai visitatori con i moduli del sito.',
+      },
+      // Inviare è pubblico (i visitatori del sito); leggere ed eliminare secondo il ruolo
+      access: {
+        create: () => true,
+        read: permesso('form-submissions', 'vede'),
+        update: () => false,
+        delete: permesso('form-submissions', 'elimina'),
+      },
       hooks: { beforeValidate: [controllaModulo] },
     },
     formOverrides: {
       labels: { singular: 'Modulo', plural: 'Moduli' },
-      admin: { group: 'Contatti' },
+      admin: { group: 'Contatti', hidden: nascostaSenzaPermesso('forms') },
+      // Il sito legge i moduli per mostrarli nelle pagine
+      access: accessoPubblico('forms'),
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           // Mittente predefinito di ogni email del modulo: l'indirizzo info
@@ -127,16 +135,11 @@ export const plugins: Plugin[] = [
     searchOverrides: {
       labels: { singular: 'Voce di ricerca', plural: 'Indice di ricerca' },
       admin: {
-        group: false, // in Strumenti avanzati
-        hidden: nascostoAiRedattori,
+        group: 'Avanzate',
+        hidden: nascostaSenzaPermesso('search'),
         description: 'Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.',
       },
-      access: {
-        read: () => true,
-        create: soloAmministratori,
-        update: soloAmministratori,
-        delete: soloAmministratori,
-      },
+      access: accessoPubblico('search'),
       fields: ({ defaultFields }) => {
         return [...defaultFields, ...searchFields]
       },

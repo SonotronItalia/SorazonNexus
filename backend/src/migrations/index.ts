@@ -19,6 +19,8 @@ import * as migration_20261020_154951_impostazioni_ruoli from './20261020_154951
 import * as migration_20261020_155104_social_in_impostazioni from './20261020_155104_social_in_impostazioni';
 import * as migration_20261020_190439_blocchi_prodotto from './20261020_190439_blocchi_prodotto';
 import * as migration_20261020_210554_schede_occhiello from './20261020_210554_schede_occhiello';
+import * as migration_20261020_222742_ruoli_personalizzati from './20261020_222742_ruoli_personalizzati';
+import * as migration_20261020_222806_togli_ruolo_fisso from './20261020_222806_togli_ruolo_fisso';
 
 export const migrations = [
   {
@@ -124,6 +126,16 @@ export const migrations = [
   {
     up: migration_20261020_210554_schede_occhiello.up,
     down: migration_20261020_210554_schede_occhiello.down,
-    name: '20261020_210554_schede_occhiello'
+    name: '20261020_210554_schede_occhiello',
+  },
+  {
+    up: migration_20261020_222742_ruoli_personalizzati.up,
+    down: migration_20261020_222742_ruoli_personalizzati.down,
+    name: '20261020_222742_ruoli_personalizzati',
+  },
+  {
+    up: migration_20261020_222806_togli_ruolo_fisso.up,
+    down: migration_20261020_222806_togli_ruolo_fisso.down,
+    name: '20261020_222806_togli_ruolo_fisso'
   },
 ];

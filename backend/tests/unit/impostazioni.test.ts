@@ -1,15 +1,31 @@
 import type { CollectionConfig, Field, GlobalConfig } from 'payload'
 import { describe, expect, it } from 'vitest'
 
-import { eAmministratore, nascostoAiRedattori } from '@/access/ruoli'
+import { RISORSE } from '@/access/risorse'
+import { eAmministratore, nascostaSenzaPermesso, può } from '@/access/ruoli'
 import { Categories } from '@/collections/Categories'
 import { TipiEffetto } from '@/collections/TipiEffetto'
 import { Users } from '@/collections/Users'
 import { FORMATI_ID, Impostazioni } from '@/Impostazioni/config'
 import { ordineMenu } from '@/plugins/ordineMenu'
 
+// Ruoli come li crea la migrazione: Amministratore (accesso completo) e Redattore
+const PROFILI = {
+  amministratore: { id: 1, completo: true },
+  redattore: {
+    id: 2,
+    completo: false,
+    permessi: Object.fromEntries(
+      RISORSE.map((r) => [r.chiave, Object.fromEntries(r.redattore.map((a) => [a, true]))]),
+    ),
+  },
+  // Ruolo personalizzato: solo le notizie, senza eliminarle
+  notizie: { id: 3, completo: false, permessi: { posts: { vede: true, crea: true, modifica: true } } },
+}
+type NomeProfilo = keyof typeof PROFILI
+const utente = (ruolo?: NomeProfilo, id = 1) => (ruolo ? { id, profilo: PROFILI[ruolo] } : null)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const con = (ruolo?: string, id = 1) => ({ req: { user: ruolo ? { id, ruolo } : null } }) as any
+const con = (ruolo?: NomeProfilo, id = 1) => ({ req: { user: utente(ruolo, id) }, id: undefined }) as any
 
 // Trova un campo per nome dentro schede, righe e gruppi
 const trova = (campi: Field[], nome: string): Field | undefined => {
@@ -29,12 +45,28 @@ const trova = (campi: Field[], nome: string): Field | undefined => {
 }
 
 describe('ruoli', () => {
-  it('solo il ruolo amministratore è amministratore', () => {
+  it("l'accesso completo vale come amministratore", () => {
     expect(eAmministratore(con('amministratore'))).toBe(true)
     expect(eAmministratore(con('redattore'))).toBe(false)
     expect(eAmministratore(con())).toBe(false)
-    expect(nascostoAiRedattori({ user: { ruolo: 'redattore' } })).toBe(true)
-    expect(nascostoAiRedattori({ user: { ruolo: 'amministratore' } })).toBe(false)
+    expect(nascostaSenzaPermesso('users')({ user: utente('redattore') })).toBe(true)
+    expect(nascostaSenzaPermesso('users')({ user: utente('amministratore') })).toBe(false)
+    expect(nascostaSenzaPermesso('effetti')({ user: utente('redattore') })).toBe(false)
+  })
+
+  it('un ruolo personalizzato fa solo quello che ha spuntato', () => {
+    expect(può(utente('notizie'), 'posts', 'crea')).toBe(true)
+    expect(può(utente('notizie'), 'posts', 'elimina')).toBe(false)
+    expect(può(utente('notizie'), 'pages', 'vede')).toBe(false)
+    expect(può(null, 'posts', 'vede')).toBe(false)
+    // Un ruolo non caricato (solo l'id) non dà permessi
+    expect(può({ id: 1, profilo: 3 }, 'posts', 'vede')).toBe(false)
+  })
+
+  it('il redattore gestisce gli effetti ma non scrive codice nei tipi di effetto', () => {
+    for (const a of ['vede', 'crea', 'modifica', 'elimina'] as const)
+      expect(può(utente('redattore'), 'effetti', a), a).toBe(true)
+    expect(può(utente('redattore'), 'tipi-effetto', 'crea')).toBe(false)
   })
 
   it('un redattore vede e modifica solo il proprio account e non crea utenti', () => {
@@ -49,14 +81,14 @@ describe('ruoli', () => {
   })
 
   it('un redattore non può cambiarsi il ruolo', () => {
-    const ruolo = Users.fields.find((f) => 'name' in f && f.name === 'ruolo') as Field & {
+    const ruolo = Users.fields.find((f) => 'name' in f && f.name === 'profilo') as Field & {
       access: { update: (x: unknown) => boolean }
     }
     expect(ruolo.access.update(con('redattore'))).toBe(false)
     expect(ruolo.access.update(con('amministratore'))).toBe(true)
   })
 
-  it('voci avanzate: si leggono, ma le modifica solo un amministratore', () => {
+  it('voci avanzate: si leggono, ma le modifica solo chi ha il permesso', () => {
     for (const c of [Categories, TipiEffetto] as CollectionConfig[]) {
       const a = c.access!
       expect((a.read as (x: unknown) => unknown)(con()), c.slug).toBe(true)
@@ -96,7 +128,7 @@ describe('Impostazioni del sito', () => {
     }
   })
 
-  it('ID di Google e modalità del consenso: modificabili solo da un amministratore', () => {
+  it('ID di Google e modalità del consenso: solo con il permesso della scheda Analisi', () => {
     for (const nome of [
       'googleTagManagerId',
       'googleAnalyticsId',

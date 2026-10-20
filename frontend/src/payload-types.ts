@@ -85,11 +85,6 @@ export interface Config {
     contenitore3: Contenitore3Block;
   };
   collections: {
-    'tipi-effetto': TipiEffetto;
-    categories: Category;
-    users: User;
-    redirects: Redirect;
-    search: Search;
     pages: Page;
     posts: Post;
     centri: Centri;
@@ -98,6 +93,12 @@ export interface Config {
     'form-submissions': FormSubmission;
     colori: Colori;
     effetti: Effetti;
+    'tipi-effetto': TipiEffetto;
+    categories: Category;
+    users: User;
+    ruoli: Ruoli;
+    redirects: Redirect;
+    search: Search;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-folders': FolderInterface;
@@ -111,11 +112,6 @@ export interface Config {
     };
   };
   collectionsSelect: {
-    'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    search: SearchSelect<false> | SearchSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     centri: CentriSelect<false> | CentriSelect<true>;
@@ -124,6 +120,12 @@ export interface Config {
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
     effetti: EffettiSelect<false> | EffettiSelect<true>;
+    'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    ruoli: RuoliSelect<false> | RuoliSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    search: SearchSelect<false> | SearchSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
@@ -575,9 +577,9 @@ export interface User {
   id: number;
   name?: string | null;
   /**
-   * Redattore: contenuti, contatti, aspetto e impostazioni generali. Amministratore: anche utenti, reindirizzamenti, tipi di effetto e la scheda "Analisi e pubblicità".
+   * I permessi di ogni ruolo si decidono in "Ruoli e permessi".
    */
-  ruolo: 'amministratore' | 'redattore';
+  profilo: number | Ruoli;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -597,6 +599,126 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * Cosa può fare chi ha ciascun ruolo. "Vede" mostra la voce nel menu; le altre caselle permettono di creare, modificare ed eliminare.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ruoli".
+ */
+export interface Ruoli {
+  id: number;
+  nome: string;
+  descrizione?: string | null;
+  /**
+   * Vede e può modificare tutto, compresi utenti e ruoli.
+   */
+  completo?: boolean | null;
+  permessi?: {
+    pages?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    posts?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    centri?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    media?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    forms?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    formSubmissions?: {
+      vede?: boolean | null;
+      elimina?: boolean | null;
+    };
+    colori?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    effetti?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    tornaSu?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    impostazioni?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    impostazioniAnalisi?: {
+      modifica?: boolean | null;
+    };
+    header?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    footer?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    categories?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    tipiEffetto?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    redirects?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    search?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    users?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+    ruoli?: {
+      vede?: boolean | null;
+      crea?: boolean | null;
+      modifica?: boolean | null;
+      elimina?: boolean | null;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo ("Stile testo" nell'editor).
@@ -1414,65 +1536,6 @@ export interface Contenitore3Block {
   blockType: 'contenitore3';
 }
 /**
- * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  /**
-   * Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.
-   */
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: number | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: number | Post;
-        } | null);
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search".
- */
-export interface Search {
-  id: number;
-  title?: string | null;
-  priority?: number | null;
-  doc: {
-    relationTo: 'posts';
-    value: number | Post;
-  };
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: (number | null) | Media;
-  };
-  categories?:
-    | {
-        relationTo?: string | null;
-        categoryID?: string | null;
-        title?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "centri".
  */
@@ -1530,6 +1593,65 @@ export interface FormSubmission {
     | {
         field: string;
         value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  /**
+   * Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: number | Post;
+        } | null);
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search".
+ */
+export interface Search {
+  id: number;
+  title?: string | null;
+  priority?: number | null;
+  doc: {
+    relationTo: 'posts';
+    value: number | Post;
+  };
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  categories?:
+    | {
+        relationTo?: string | null;
+        categoryID?: string | null;
+        title?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1653,26 +1775,6 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'tipi-effetto';
-        value: number | TipiEffetto;
-      } | null)
-    | ({
-        relationTo: 'categories';
-        value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'redirects';
-        value: number | Redirect;
-      } | null)
-    | ({
-        relationTo: 'search';
-        value: number | Search;
-      } | null)
-    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -1703,6 +1805,30 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'effetti';
         value: number | Effetti;
+      } | null)
+    | ({
+        relationTo: 'tipi-effetto';
+        value: number | TipiEffetto;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'ruoli';
+        value: number | Ruoli;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'search';
+        value: number | Search;
       } | null)
     | ({
         relationTo: 'payload-folders';
@@ -1749,107 +1875,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tipi-effetto_select".
- */
-export interface TipiEffettoSelect<T extends boolean = true> {
-  nome?: T;
-  descrizione?: T;
-  javascript?: T;
-  css?: T;
-  verificato?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
- */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  parent?: T;
-  breadcrumbs?:
-    | T
-    | {
-        doc?: T;
-        url?: T;
-        label?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  ruolo?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "search_select".
- */
-export interface SearchSelect<T extends boolean = true> {
-  title?: T;
-  priority?: T;
-  doc?: T;
-  slug?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  categories?:
-    | T
-    | {
-        relationTo?: T;
-        categoryID?: T;
-        title?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2230,6 +2255,261 @@ export interface EffettiSelect<T extends boolean = true> {
   intensita?: T;
   velocita?: T;
   posizione?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto_select".
+ */
+export interface TipiEffettoSelect<T extends boolean = true> {
+  nome?: T;
+  descrizione?: T;
+  javascript?: T;
+  css?: T;
+  verificato?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  profilo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ruoli_select".
+ */
+export interface RuoliSelect<T extends boolean = true> {
+  nome?: T;
+  descrizione?: T;
+  completo?: T;
+  permessi?:
+    | T
+    | {
+        pages?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        posts?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        centri?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        media?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        forms?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        formSubmissions?:
+          | T
+          | {
+              vede?: T;
+              elimina?: T;
+            };
+        colori?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        effetti?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        tornaSu?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
+        impostazioni?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
+        impostazioniAnalisi?:
+          | T
+          | {
+              modifica?: T;
+            };
+        header?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
+        footer?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
+        categories?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        tipiEffetto?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        redirects?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        search?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        users?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+        ruoli?:
+          | T
+          | {
+              vede?: T;
+              crea?: T;
+              modifica?: T;
+              elimina?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "search_select".
+ */
+export interface SearchSelect<T extends boolean = true> {
+  title?: T;
+  priority?: T;
+  doc?: T;
+  slug?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  categories?:
+    | T
+    | {
+        relationTo?: T;
+        categoryID?: T;
+        title?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

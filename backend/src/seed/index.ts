@@ -72,7 +72,10 @@ async function seedAdmin() {
   }
   const { docs } = await payload.find({ collection: 'users', where: { email: { equals: email } }, limit: 1 })
   if (docs[0]) return log(`utente ${email} già presente`)
-  await payload.create({ collection: 'users', data: { email, password, name: 'Admin sviluppo', ruolo: 'amministratore' }, context })
+  // Ruolo con accesso completo (lo crea la migrazione "ruoli"; su un database nuovo lo crea qui)
+  const { docs: completi } = await payload.find({ collection: 'ruoli', where: { completo: { equals: true } }, limit: 1 })
+  const ruolo = completi[0] ?? (await payload.create({ collection: 'ruoli', data: { nome: 'Amministratore', completo: true }, context }))
+  await payload.create({ collection: 'users', data: { email, password, name: 'Admin sviluppo', profilo: ruolo.id }, context })
   log(`creato utente ${email} (password in backend/.env)`)
 }
 

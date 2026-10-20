@@ -1,6 +1,6 @@
 import type { BlockSlug, CollectionConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
-import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { BLOCCHI_PAGINA } from '@/blocks/blocchiPagina'
 import { hero } from '@/heros/config'
@@ -24,10 +24,10 @@ export const Pages: CollectionConfig<'pages'> = {
   // Bozze per l'anteprima del frontend (GET /api/pages/anteprima/:slug)
   endpoints: [anteprimaEndpoint('pages')],
   access: {
-    create: authenticated,
-    delete: authenticated,
+    create: permesso('pages', 'crea'),
+    delete: permesso('pages', 'elimina'),
     read: authenticatedOrPublished,
-    update: authenticated,
+    update: permesso('pages', 'modifica'),
   },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
@@ -38,6 +38,7 @@ export const Pages: CollectionConfig<'pages'> = {
   },
   admin: {
     group: 'Contenuti',
+    hidden: nascostaSenzaPermesso('pages'),
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>

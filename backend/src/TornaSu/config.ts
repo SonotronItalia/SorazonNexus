@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
@@ -12,10 +13,12 @@ export const TornaSu: GlobalConfig = {
   label: 'Pulsante torna su',
   admin: {
     group: 'Aspetto del sito',
+    hidden: nascostaSenzaPermesso('torna-su'),
     description: 'Il pulsante che compare scorrendo la pagina e riporta in cima.',
   },
   access: {
     read: () => true,
+    update: permesso('torna-su', 'modifica'),
   },
   fields: [
     {

@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
 import { link } from '@/fields/link'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
@@ -6,9 +7,10 @@ import { notifyFrontend } from '@/hooks/notifyFrontend'
 export const Footer: GlobalConfig = {
   slug: 'footer',
   label: 'Piè di pagina',
-  admin: { group: 'Impostazioni' },
+  admin: { group: 'Impostazioni', hidden: nascostaSenzaPermesso('footer') },
   access: {
     read: () => true,
+    update: permesso('footer', 'modifica'),
   },
   fields: [
     {

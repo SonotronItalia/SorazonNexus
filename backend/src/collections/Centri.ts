@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { accessoPubblico, nascostaSenzaPermesso } from '@/access/ruoli'
 
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
@@ -30,11 +31,11 @@ export const Centri: CollectionConfig = {
   labels: { singular: 'Centro', plural: 'Centri' },
   admin: {
     group: 'Contenuti',
+    hidden: nascostaSenzaPermesso('centri'),
     useAsTitle: 'nome_struttura', // Il nome che comparirà nella lista dell'admin
   },
-  access: {
-    read: () => true, // I dati dei centri sono pubblici
-  },
+  // I dati dei centri sono pubblici; creare, modificare, eliminare secondo il ruolo
+  access: accessoPubblico('centri'),
   fields: [
     {
       name: 'nome_struttura',

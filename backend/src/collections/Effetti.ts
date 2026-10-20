@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 import { POSIZIONI } from '@/fields/posizioni'
 
-import { authenticated } from '../access/authenticated'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
 /**
@@ -18,14 +18,15 @@ export const Effetti: CollectionConfig = {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'tipo', 'attivo'],
     group: 'Aspetto del sito',
+    hidden: nascostaSenzaPermesso('effetti'),
     description:
       'Effetti animati per hero e contenitori. Spegnendo "Attivo" l\'effetto sparisce da tutte le pagine che lo usano.',
   },
   access: {
     read: () => true,
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    create: permesso('effetti', 'crea'),
+    update: permesso('effetti', 'modifica'),
+    delete: permesso('effetti', 'elimina'),
   },
   fields: [
     {

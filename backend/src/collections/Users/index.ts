@@ -1,30 +1,40 @@
-import type { Access, CollectionConfig } from 'payload'
+import { APIError, type Access, type CollectionConfig, type FieldAccess } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
-import { eAmministratore, nascostoAiRedattori, soloAmministratori } from '../../access/ruoli'
+import { haAccessoCompleto, nascostaSenzaPermesso, permesso, può } from '../../access/ruoli'
 
-// Un amministratore vede e modifica tutti; un redattore solo il proprio account
-const amministratoreOSeStesso: Access = (args) =>
-  eAmministratore(args) || (args.req.user ? { id: { equals: args.req.user.id } } : false)
+// Chi ha "Vede" sugli utenti li vede tutti; gli altri solo il proprio account
+const tuttiOSeStesso =
+  (azione: 'vede' | 'modifica'): Access =>
+  ({ req }) =>
+    può(req.user, 'users', azione) || (req.user ? { id: { equals: req.user.id } } : false)
+
+// Il ruolo lo assegna chi può modificare gli utenti; il proprio solo chi ha l'accesso completo
+// (un utente non si promuove da solo)
+const assegnaRuolo: FieldAccess = ({ req, id }) =>
+  può(req.user, 'users', 'modifica') && (id !== req.user?.id || haAccessoCompleto(req.user))
+
+const idRuolo = (v: unknown) => (v && typeof v === 'object' ? (v as { id: number }).id : v)
 
 export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: 'Utente', plural: 'Utenti' },
   access: {
     admin: authenticated,
-    create: soloAmministratori,
-    delete: soloAmministratori,
-    read: amministratoreOSeStesso,
-    update: amministratoreOSeStesso,
+    create: permesso('users', 'crea'),
+    delete: permesso('users', 'elimina'),
+    read: tuttiOSeStesso('vede'),
+    update: tuttiOSeStesso('modifica'),
   },
   admin: {
-    defaultColumns: ['name', 'email', 'ruolo'],
+    defaultColumns: ['name', 'email', 'profilo'],
     useAsTitle: 'name',
-    // Fuori dal menu: si apre da Impostazioni > Strumenti avanzati
-    group: false,
-    hidden: nascostoAiRedattori,
+    group: 'Avanzate',
+    hidden: nascostaSenzaPermesso('users'),
   },
   auth: {
+    // L'utente arriva nelle richieste con il suo ruolo già caricato (per i controlli d'accesso)
+    depth: 1,
     // Dopo 5 tentativi sbagliati l'account resta bloccato 15 minuti (contro chi prova password)
     maxLoginAttempts: 5,
     lockTime: 15 * 60 * 1000,
@@ -42,33 +52,63 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
-      name: 'ruolo',
+      name: 'profilo',
       label: 'Ruolo',
-      type: 'select',
+      type: 'relationship',
+      relationTo: 'ruoli',
       required: true,
-      defaultValue: 'redattore',
-      // Nel token di accesso: i controlli dei permessi non devono rileggere l'utente
-      saveToJWT: true,
-      options: [
-        { label: 'Amministratore', value: 'amministratore' },
-        { label: 'Redattore', value: 'redattore' },
-      ],
-      admin: {
-        description:
-          'Redattore: contenuti, contatti, aspetto e impostazioni generali. Amministratore: anche utenti, reindirizzamenti, tipi di effetto e la scheda "Analisi e pubblicità".',
-      },
-      // Solo un amministratore assegna i ruoli (un redattore non può promuoversi)
-      access: { create: ({ req }) => eAmministratore({ req }), update: ({ req }) => eAmministratore({ req }) },
+      admin: { description: 'I permessi di ogni ruolo si decidono in "Ruoli e permessi".' },
+      access: { create: assegnaRuolo, update: assegnaRuolo },
     },
   ],
   hooks: {
-    beforeChange: [
-      // Il primo utente creato (dalla pagina di primo accesso) è sempre amministratore
+    beforeValidate: [
+      // Il primo utente creato (dalla pagina di primo accesso) ha sempre l'accesso completo
       async ({ data, operation, req }) => {
-        if (operation === 'create') {
-          const { totalDocs } = await req.payload.count({ collection: 'users', req, overrideAccess: true })
-          if (totalDocs === 0) return { ...data, ruolo: 'amministratore' }
-        }
+        if (operation !== 'create') return data
+        const { totalDocs } = await req.payload.count({ collection: 'users', req, overrideAccess: true })
+        if (totalDocs > 0) return data
+        const { docs } = await req.payload.find({
+          collection: 'ruoli',
+          where: { completo: { equals: true } },
+          limit: 1,
+          req,
+          overrideAccess: true,
+        })
+        const ruolo =
+          docs[0] ??
+          (await req.payload.create({
+            collection: 'ruoli',
+            data: { nome: 'Amministratore', completo: true },
+            req,
+            overrideAccess: true,
+          }))
+        return { ...data, profilo: ruolo.id }
+      },
+    ],
+    beforeChange: [
+      // Non si toglie l'accesso completo all'ultimo utente che ce l'ha
+      async ({ data, originalDoc, operation, req }) => {
+        if (operation !== 'update' || !originalDoc || data.profilo === undefined) return data
+        const prima = idRuolo(originalDoc.profilo)
+        const dopo = idRuolo(data.profilo)
+        if (prima === dopo) return data
+        const ruoloPrima = prima
+          ? await req.payload.findByID({ collection: 'ruoli', id: prima as number, req, overrideAccess: true }).catch(() => null)
+          : null
+        if (!ruoloPrima?.completo) return data
+        const ruoloDopo = dopo
+          ? await req.payload.findByID({ collection: 'ruoli', id: dopo as number, req, overrideAccess: true }).catch(() => null)
+          : null
+        if (ruoloDopo?.completo) return data
+        const { totalDocs } = await req.payload.count({
+          collection: 'users',
+          where: { and: [{ 'profilo.completo': { equals: true } }, { id: { not_equals: originalDoc.id } }] },
+          req,
+          overrideAccess: true,
+        })
+        if (totalDocs === 0)
+          throw new APIError("È l'ultimo utente con accesso completo: assegnalo prima a un altro.", 400, null, true)
         return data
       },
     ],

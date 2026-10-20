@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Ruoli } from './collections/Ruoli'
 import { Centri } from './collections/Centri'
 import { Colori } from './collections/Colori'
 import { Effetti } from './collections/Effetti'
@@ -74,15 +75,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
-    // Pagina che raccoglie le voci tecniche tolte dal menu laterale (solo amministratori)
+    // Pulsante "Esci" con testo in fondo al menu (quello di Payload è solo un'icona)
     components: {
-      views: {
-        strumentiAvanzati: {
-          Component: '@/components/admin/StrumentiAvanzati#StrumentiAvanzati',
-          path: '/strumenti-avanzati',
-          meta: { title: 'Strumenti avanzati' },
-        },
-      },
+      logout: { Button: '@/components/admin/Esci#Esci' },
     },
     livePreview: {
       breakpoints: [
@@ -126,7 +121,7 @@ export default buildConfig({
   }),
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
-  collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users],
+  collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users, Ruoli],
   globals: [Impostazioni, Header, Footer, TornaSu],
   plugins,
   secret: process.env.PAYLOAD_SECRET,

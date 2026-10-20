@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 
-import { authenticated } from '../access/authenticated'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
 // Codice esadecimale a 6 cifre, es. #0095AC (si accetta anche senza "#")
@@ -18,14 +18,15 @@ export const Colori: CollectionConfig = {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'codice'],
     group: 'Aspetto del sito',
+    hidden: nascostaSenzaPermesso('colori'),
     description:
       "Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo (\"Stile testo\" nell'editor).",
   },
   access: {
     read: () => true,
-    create: authenticated,
-    update: authenticated,
-    delete: authenticated,
+    create: permesso('colori', 'crea'),
+    update: permesso('colori', 'modifica'),
+    delete: permesso('colori', 'elimina'),
   },
   fields: [
     {
