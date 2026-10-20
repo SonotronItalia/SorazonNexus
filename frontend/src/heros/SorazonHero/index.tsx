@@ -14,8 +14,12 @@ export const SorazonHero: React.FC<Page['hero']> = ({
   effetti,
   bordoImmagine,
 }) => {
+  // data-theme="dark": l'hero resta scuro anche nel tema chiaro, pulsanti compresi
   return (
-    <div className="relative overflow-hidden bg-slate-950 px-6 py-24 text-white md:px-12">
+    <div
+      data-theme="dark"
+      className="relative overflow-hidden bg-slate-950 px-6 py-24 text-white md:px-12"
+    >
       {/* Effetti dalla sezione "Effetti" (prima: caselle pulsazione e scarica) */}
       <Effetti effetti={effetti} />
 
