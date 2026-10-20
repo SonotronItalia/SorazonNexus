@@ -53,6 +53,14 @@ export const Impostazioni: GlobalConfig = {
   },
   fields: [
     {
+      // Collegamento agli Strumenti avanzati, visibile solo agli amministratori
+      name: 'strumentiAvanzati',
+      type: 'ui',
+      admin: {
+        components: { Field: '@/components/admin/StrumentiAvanzati/Collegamento#Collegamento' },
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {

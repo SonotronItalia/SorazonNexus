@@ -56,7 +56,8 @@ export const TipiEffetto: CollectionConfig = {
     useAsTitle: 'nome',
     defaultColumns: ['nome', 'updatedAt'],
     // Si scrive codice: solo amministratori (i redattori usano gli effetti già pronti)
-    group: 'Avanzate',
+    // Fuori dal menu: si apre da Impostazioni > Strumenti avanzati
+    group: false,
     hidden: nascostoAiRedattori,
     description:
       'Nuovi tipi di animazione scritti in CSS e JavaScript. Si usano dalla sezione "Effetti" scegliendo il tipo "Personalizzato".',

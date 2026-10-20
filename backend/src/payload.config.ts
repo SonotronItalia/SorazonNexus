@@ -74,6 +74,16 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
+    // Pagina che raccoglie le voci tecniche tolte dal menu laterale (solo amministratori)
+    components: {
+      views: {
+        strumentiAvanzati: {
+          Component: '@/components/admin/StrumentiAvanzati#StrumentiAvanzati',
+          path: '/strumenti-avanzati',
+          meta: { title: 'Strumenti avanzati' },
+        },
+      },
+    },
     livePreview: {
       breakpoints: [
         {

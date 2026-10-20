@@ -35,7 +35,7 @@ export const plugins: Plugin[] = [
     overrides: {
       labels: { singular: 'Reindirizzamento', plural: 'Reindirizzamenti' },
       admin: {
-        group: 'Avanzate',
+        group: false, // in Strumenti avanzati
         hidden: nascostoAiRedattori,
         description: 'Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).',
       },
@@ -127,7 +127,7 @@ export const plugins: Plugin[] = [
     searchOverrides: {
       labels: { singular: 'Voce di ricerca', plural: 'Indice di ricerca' },
       admin: {
-        group: 'Avanzate',
+        group: false, // in Strumenti avanzati
         hidden: nascostoAiRedattori,
         description: 'Si aggiorna da solo quando si salvano le notizie: non serve modificarlo.',
       },

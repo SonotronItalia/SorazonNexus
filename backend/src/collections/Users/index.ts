@@ -20,7 +20,8 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email', 'ruolo'],
     useAsTitle: 'name',
-    group: 'Avanzate',
+    // Fuori dal menu: si apre da Impostazioni > Strumenti avanzati
+    group: false,
     hidden: nascostoAiRedattori,
   },
   auth: {

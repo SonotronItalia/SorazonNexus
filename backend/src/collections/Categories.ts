@@ -16,7 +16,8 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    group: 'Avanzate',
+    // Fuori dal menu: si apre da Impostazioni > Strumenti avanzati
+    group: false,
     hidden: nascostoAiRedattori,
   },
   fields: [
