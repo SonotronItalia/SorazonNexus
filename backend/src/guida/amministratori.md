@@ -192,7 +192,7 @@ Il sito passa a Clarity la scelta del visitatore e, se rifiuta le statistiche, c
 
 ## Aspetto del pannello
 
-Il pannello usa i colori del marchio (celeste Sorazon per pulsanti e voce attiva), lo stesso carattere del sito e angoli più morbidi. In **Impostazioni del sito › Marchio** la casella **Aspetto Sorazon del pannello** lo accende e lo spegne: spenta, il pannello torna subito all'aspetto standard. La può cambiare solo un amministratore.
+Il pannello usa i colori del marchio: menu laterale blu notte con la voce attiva in celeste, pulsanti e scelte in celeste Sorazon, lo stesso carattere del sito e angoli più morbidi. In **Impostazioni del sito › Marchio** la casella **Aspetto Sorazon del pannello** lo accende e lo spegne: spenta, il pannello torna subito all'aspetto standard. La può cambiare solo un amministratore.
 
 Quando si aggiorna il programma del pannello, qualche dettaglio dello stile potrebbe non applicarsi più. Il pannello continua a funzionare; se qualcosa si legge male, spegni la casella e avvisa il tecnico.
 

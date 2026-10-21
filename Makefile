@@ -10,7 +10,7 @@ DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
 .PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed \
-        stack stack-proxy tunnel backup backup-media restore reset-db test test-int test-e2e test-api audit
+        stack stack-proxy pulisci tunnel backup backup-media restore reset-db test test-int test-e2e test-api audit
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
@@ -87,7 +87,7 @@ migrate: db ## Applica le migrazioni non ancora eseguite
 seed: ## Contenuti di partenza (pagine, centri, media, menu). Ripetibile, non cancella
 	@if $(COMPOSE) ps --status running -q backend 2>/dev/null | grep -q .; then \
 	  $(FX) run "Contenuti di partenza nello stack Docker" $(COMPOSE) --profile strumenti run --rm --build seed && \
-	  bash scripts/allinea-media.sh; \
+	  bash scripts/allinea-media.sh && bash scripts/pulisci-docker.sh --breve; \
 	else \
 	  $(MAKE) --no-print-directory migrate && pnpm -C backend payload run src/seed/index.ts; \
 	fi
@@ -123,9 +123,14 @@ audit: ## Vulnerabilità note nelle dipendenze di produzione (backend e frontend
 
 stack: ## Costruisce e avvia i tre container (db, backend, frontend)
 	@$(FX) run "Costruisco e avvio i tre container" $(COMPOSE) up -d --build
+	@bash scripts/pulisci-docker.sh --breve
 
 stack-proxy: ## Come stack, più il proxy nginx con HTTPS (simula la produzione)
 	@$(FX) run "Costruisco e avvio i container con il proxy" $(COMPOSE) --profile proxy up -d --build
+	@bash scripts/pulisci-docker.sh --breve
+
+pulisci: ## Libera spazio: immagini vecchie del progetto e cache di build oltre 5 GB (mai volumi o dati)
+	@bash scripts/pulisci-docker.sh
 
 tunnel: ## Rende visibile da internet lo stack acceso (Cloudflare, gratis, indirizzi nuovi a ogni avvio)
 	@bash scripts/tunnel.sh

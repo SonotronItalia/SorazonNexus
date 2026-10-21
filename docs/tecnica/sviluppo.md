@@ -35,7 +35,8 @@ SorazonNexus/
 | `make types` | Rigenera i tipi di Payload e li copia nel frontend |
 | `make migrate-create NAME=…` / `make migrate` | Crea / applica le migrazioni |
 | `make seed` | Contenuti di partenza (ripetibile, aggiorna senza duplicare) |
-| `make stack` / `make stack-proxy` | I container come in produzione, con o senza nginx |
+| `make stack` / `make stack-proxy` | I container come in produzione, con o senza nginx; alla fine pulizia automatica (vedi sotto) |
+| `make pulisci` | Libera spazio: immagini vecchie senza nome del progetto e cache di build oltre 5 GB (`scripts/pulisci-docker.sh`, `CACHE_MAX=…` per un altro limite). Mai volumi, container o immagini in uso |
 | `make test` / `make test-int` / `make test-e2e` / `make test-api` / `make audit` | Test (vedi [Test e CI](test-e-ci.md)) |
 | `make backup` / `make backup-media` / `make restore FILE=…` | Copie di sicurezza |
 | `make reset-db` | ⚠ Svuota il database (conferma e backup automatico) |

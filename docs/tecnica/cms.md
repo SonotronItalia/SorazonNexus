@@ -111,7 +111,7 @@ Un file pericoloso viene **rifiutato**, non modificato. Permessi: lettura pubbli
 
 ## Aspetto del pannello
 
-Tema Sorazon in `components/admin/TemaPannello` (`tema.ts`: regole CSS): scala del celeste al posto del blu di Payload (`--color-success-*`, `--color-blue-*`), carattere Inter Tight (`next/font`, servito dal backend), angoli (`--style-radius-*`), pulsanti principali, voce attiva del menu, scheda attiva, caselle spuntate. Payload mette i suoi stili nel livello CSS `payload-default`: le regole del tema, fuori da ogni livello, vincono senza `!important`.
+Tema Sorazon in `components/admin/TemaPannello` (`tema.ts`: regole CSS): scala del celeste al posto del blu di Payload (`--color-success-*`, `--color-blue-*`), carattere Inter Tight (`next/font`, servito dal backend), angoli (`--style-radius-*`), pulsanti principali, scheda attiva, caselle e pallini; menu laterale blu notte (come l'apertura del sito, in entrambi i temi) con titoli dei gruppi in celeste e voce attiva a pillola; schede della home bianche con bordo e celeste al passaggio del mouse; campo attivo, selettore della lingua e avatar in celeste. Classi di Payload usate: `aside.nav`, `.nav-group__toggle`, `.nav__link`, `.collections .card`, `.radio-input__styled-radio`, `.localizer-button`, `.app-header__account`. Payload mette i suoi stili nel livello CSS `payload-default`: le regole del tema, fuori da ogni livello, vincono senza `!important`.
 
 - Inserito in ogni pagina con `admin.components.header` e nella pagina di accesso insieme al logo (`components/admin/Marchio`).
 - Interruttore `marchio.pannelloSorazon` nelle Impostazioni (predefinito acceso, solo amministratori: `access.update: eAmministratore`; test in `ruoli.int.spec.ts`).
