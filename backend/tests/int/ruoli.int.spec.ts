@@ -348,3 +348,76 @@ describe('traduttori', () => {
     }
   })
 })
+
+describe('cestino', () => {
+  it('un redattore sposta nel cestino e ripristina, ma non elimina definitivamente; un amministratore sì', async () => {
+    const pagina = await payload.create({
+      collection: 'pages',
+      data: {
+        title: `Da cestinare ${suffisso}`,
+        slug: `da-cestinare-${suffisso}`,
+        layout: [{ blockType: 'content', columns: [] }],
+        _status: 'published',
+      } as never,
+      context: { disableRevalidate: true },
+    })
+    // Nel cestino (come il pulsante "Elimina" del pannello): sparisce dalle ricerche normali
+    await payload.update({
+      collection: 'pages',
+      id: pagina.id,
+      data: { deletedAt: new Date().toISOString() },
+      ...come(redattore),
+      context: { disableRevalidate: true },
+    })
+    const normali = await payload.find({
+      collection: 'pages',
+      where: { id: { equals: pagina.id } },
+    })
+    expect(normali.docs).toHaveLength(0)
+    const nelCestino = await payload.find({
+      collection: 'pages',
+      where: { id: { equals: pagina.id } },
+      trash: true,
+    })
+    expect(nelCestino.docs[0]?.deletedAt).toBeTruthy()
+    // Eliminazione definitiva: il redattore no
+    await expect(
+      payload.delete({
+        collection: 'pages',
+        id: pagina.id,
+        trash: true,
+        ...come(redattore),
+        context: { disableRevalidate: true },
+      }),
+    ).rejects.toThrow(/amministratore/)
+    // Ripristino
+    await payload.update({
+      collection: 'pages',
+      id: pagina.id,
+      data: { deletedAt: null },
+      trash: true,
+      ...come(redattore),
+      context: { disableRevalidate: true },
+    })
+    expect(
+      (await payload.find({ collection: 'pages', where: { id: { equals: pagina.id } } })).docs,
+    ).toHaveLength(1)
+    // L'amministratore elimina definitivamente
+    await payload.delete({
+      collection: 'pages',
+      id: pagina.id,
+      trash: true,
+      ...come(amministratore),
+      context: { disableRevalidate: true },
+    })
+    expect(
+      (
+        await payload.find({
+          collection: 'pages',
+          where: { id: { equals: pagina.id } },
+          trash: true,
+        })
+      ).docs,
+    ).toHaveLength(0)
+  })
+})

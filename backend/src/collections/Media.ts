@@ -10,6 +10,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,6 +20,8 @@ export const Media: CollectionConfig = {
   labels: { singular: 'Immagine o file', plural: 'Immagini e file' },
   admin: { group: 'Contenuti', hidden: nascostaSenzaPermesso('media') },
   folders: true,
+  // Cestino (i file restano sul disco finché non si elimina definitivamente): "Elimina" sposta nel cestino; eliminazione definitiva solo amministratori (hooks/cestino.ts)
+  trash: true,
   access: {
     create: permesso('media', 'crea'),
     delete: permesso('media', 'elimina'),
@@ -41,6 +44,7 @@ export const Media: CollectionConfig = {
       }),
     },
   ],
+  hooks: { beforeDelete: [soloAdminEliminaDefinitivo] },
   upload: {
     // Solo immagini, PDF e video: niente SVG, HTML o altri file che il browser potrebbe eseguire
     // (i media si aprono dal dominio del sito: un file HTML caricato diventerebbe una pagina)

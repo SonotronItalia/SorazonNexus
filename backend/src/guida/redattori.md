@@ -170,6 +170,16 @@ Hai sbagliato? Nessun problema. Premi **Versioni** in alto. Vedi le ultime 50 ve
 
 ![Le versioni di una pagina](/guida/r31-versioni.jpg)
 
+### Il cestino
+
+Quando elimini una pagina, una notizia, un centro, un modulo o un'immagine, non sparisce: finisce nel **cestino**. Dal sito scompare subito, ma puoi recuperarla.
+
+- Apri l'elenco (per esempio **Pagine**) e in alto a destra scegli **Cestino**.
+- Apri il documento e premi **Ripristina**: torna al suo posto.
+- **Eliminare per sempre** (o **Svuota cestino**) lo può fare solo un amministratore. Se ci provi, il pannello te lo dice e il documento resta nel cestino.
+
+![Il cestino delle pagine](/guida/r37-cestino.jpg)
+
 ### Creare una pagina nuova
 
 1. Vai su **Pagine** e premi **Crea nuovo**.

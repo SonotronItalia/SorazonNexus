@@ -240,6 +240,10 @@ Per sicurezza il codice gira **isolato**: non può leggere la pagina, i cookie o
 
 ![L'indice di ricerca](/guida/a16-indice-ricerca.jpg)
 
+## Il cestino
+
+Pagine, notizie, centri, moduli e immagini eliminati finiscono nel **cestino** (in alto a destra in ogni elenco). Chi ha il permesso **Elimina** su una voce sposta nel cestino; chi ha **Modifica** ripristina. **Eliminare definitivamente** e **Svuota cestino** sono solo per gli amministratori: così un errore si recupera sempre. Il cestino non si svuota da solo. Le immagini nel cestino occupano ancora spazio sul server finché non le elimini definitivamente.
+
 ## Buone pratiche
 
 - **Password robuste** per tutti, diverse da quelle di altri servizi.

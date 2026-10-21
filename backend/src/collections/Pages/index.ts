@@ -7,6 +7,7 @@ import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
@@ -23,6 +24,8 @@ export const Pages: CollectionConfig<'pages'> = {
   labels: { singular: 'Pagina', plural: 'Pagine' },
   // Bozze per l'anteprima del frontend (GET /api/pages/anteprima/:slug)
   endpoints: [anteprimaEndpoint('pages')],
+  // Cestino: "Elimina" sposta nel cestino; eliminazione definitiva solo amministratori (hooks/cestino.ts)
+  trash: true,
   access: {
     create: permesso('pages', 'crea'),
     delete: permesso('pages', 'elimina'),
@@ -144,7 +147,7 @@ export const Pages: CollectionConfig<'pages'> = {
       admin: {
         position: 'sidebar',
         description:
-          "Solo per le traduzioni: la pagina non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.",
+          'Solo per le traduzioni: la pagina non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.',
       },
     },
     slugField({
@@ -163,6 +166,7 @@ export const Pages: CollectionConfig<'pages'> = {
     afterChange: [notifyFrontend('pages', 'pages-sitemap', 'globals')],
     beforeChange: [populatePublishedAt],
     afterDelete: [notifyFrontend('pages', 'pages-sitemap', 'globals')],
+    beforeDelete: [soloAdminEliminaDefinitivo],
   },
   versions: {
     drafts: {

@@ -14,6 +14,7 @@ import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
@@ -37,7 +38,8 @@ export const plugins: Plugin[] = [
       admin: {
         group: 'Avanzate',
         hidden: nascostaSenzaPermesso('redirects'),
-        description: 'Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).',
+        description:
+          'Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).',
       },
       access: accessoPubblico('redirects'),
       // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
@@ -47,7 +49,8 @@ export const plugins: Plugin[] = [
             return {
               ...field,
               admin: {
-                description: 'Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.',
+                description:
+                  'Indirizzo vecchio, es. /it/notizie. Vale entro un minuto dal salvataggio.',
               },
             }
           }
@@ -97,6 +100,9 @@ export const plugins: Plugin[] = [
       admin: { group: 'Contatti', hidden: nascostaSenzaPermesso('forms') },
       // Il sito legge i moduli per mostrarli nelle pagine
       access: accessoPubblico('forms'),
+      // Cestino: "Elimina" sposta nel cestino; eliminazione definitiva solo amministratori (hooks/cestino.ts)
+      trash: true,
+      hooks: { beforeDelete: [soloAdminEliminaDefinitivo] },
       fields: ({ defaultFields }) => {
         return defaultFields.map((field) => {
           // Mittente predefinito di ogni email del modulo: l'indirizzo info

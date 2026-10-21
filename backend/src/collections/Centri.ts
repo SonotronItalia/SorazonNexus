@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { accessoPubblico, nascostaSenzaPermesso } from '@/access/ruoli'
 
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 
 export const REGIONI = [
@@ -35,6 +36,8 @@ export const Centri: CollectionConfig = {
     useAsTitle: 'nome_struttura', // Il nome che comparirà nella lista dell'admin
   },
   // I dati dei centri sono pubblici; creare, modificare, eliminare secondo il ruolo
+  // Cestino: "Elimina" sposta nel cestino; eliminazione definitiva solo amministratori (hooks/cestino.ts)
+  trash: true,
   access: accessoPubblico('centri'),
   fields: [
     {
@@ -85,5 +88,6 @@ export const Centri: CollectionConfig = {
   hooks: {
     afterChange: [notifyFrontend('centri')],
     afterDelete: [notifyFrontend('centri')],
+    beforeDelete: [soloAdminEliminaDefinitivo],
   },
 }

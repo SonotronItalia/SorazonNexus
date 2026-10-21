@@ -16,6 +16,7 @@ import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { anteprimaEndpoint } from '@/endpoints/anteprima'
 
@@ -36,6 +37,8 @@ export const Posts: CollectionConfig<'posts'> = {
     singular: 'Notizia',
     plural: 'Notizie',
   },
+  // Cestino: "Elimina" sposta nel cestino; eliminazione definitiva solo amministratori (hooks/cestino.ts)
+  trash: true,
   access: {
     create: permesso('posts', 'crea'),
     delete: permesso('posts', 'elimina'),
@@ -74,7 +77,7 @@ export const Posts: CollectionConfig<'posts'> = {
       }),
     useAsTitle: 'title',
   },
-  
+
   fields: [
     {
       name: 'title',
@@ -244,7 +247,7 @@ export const Posts: CollectionConfig<'posts'> = {
       admin: {
         position: 'sidebar',
         description:
-          "Solo per le traduzioni: la notizia non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.",
+          'Solo per le traduzioni: la notizia non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.',
       },
     },
     slugField({
@@ -261,6 +264,7 @@ export const Posts: CollectionConfig<'posts'> = {
     afterChange: [notifyFrontend('posts', 'posts-sitemap')],
     afterRead: [populateAuthors],
     afterDelete: [notifyFrontend('posts', 'posts-sitemap')],
+    beforeDelete: [soloAdminEliminaDefinitivo],
   },
   versions: {
     drafts: {
