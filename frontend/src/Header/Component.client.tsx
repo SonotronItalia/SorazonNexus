@@ -47,64 +47,72 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }
 
   return (
-    // Barra fissa in alto: trasparente in cima alla pagina, in vetro sfocato appena si scorre
+    // Barra fissa in alto: trasparente in cima alla pagina, in vetro sfocato appena si scorre.
+    // Lo spazio nella pagina resta quello della barra grande (124/140 px) anche quando si riduce:
+    // se cambiasse, il browser sposterebbe lo scorrimento per compensare, riportandolo sotto la
+    // soglia, e la barra si ingrandirebbe e ridurrebbe di continuo. La parte che avanza è
+    // trasparente e lascia passare i clic (pointer-events-none)
     <div
-      className={cn(
-        'sticky top-0 z-40 w-full transition-[background-color,box-shadow] duration-300',
-        scorso
-          ? 'bg-background/70 shadow-[0_1px_0_0_var(--color-border)] backdrop-blur-xl backdrop-saturate-150'
-          : 'bg-transparent',
-      )}
+      className="pointer-events-none sticky top-0 z-40 h-[124px] w-full md:h-[140px]"
       {...(headerTheme ? { 'data-theme': headerTheme } : {})}
     >
-      <header className="container relative">
-        <div
-          className={cn(
-            'flex items-center justify-between transition-[padding] duration-300',
-            scorso ? 'py-2 md:py-3' : 'py-6 md:py-8',
-          )}
-        >
-          <Link href={conPrefisso(lingua, '/')} aria-label={t.vaiAllaHome}>
-            <Logo altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
-          </Link>
-
-          {/* Schermi larghi */}
-          <div className="hidden items-center gap-4 text-foreground md:flex">
-            <HeaderNav data={data} />
-            <SelettoreLingua />
-            <EffectsToggle />
-            <ThemeSelector />
-          </div>
-
-          {/* Telefono */}
-          <div className="flex items-center gap-2 text-foreground md:hidden">
-            <EffectsToggle />
-            <button
-              type="button"
-              onClick={() => setMenuAperto((v) => !v)}
-              aria-expanded={menuAperto}
-              aria-controls="menu-mobile"
-              aria-label={menuAperto ? t.chiudiMenu : t.apriMenu}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted"
-            >
-              {menuAperto ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-
-        {menuAperto && (
+      <div
+        className={cn(
+          'pointer-events-auto w-full transition-[background-color,box-shadow] duration-300',
+          scorso
+            ? 'bg-background/70 shadow-[0_1px_0_0_var(--color-border)] backdrop-blur-xl backdrop-saturate-150'
+            : 'bg-transparent',
+        )}
+      >
+        <header className="container relative">
           <div
-            id="menu-mobile"
-            className="absolute inset-x-0 top-full rounded-b-lg border bg-background p-6 text-foreground shadow-lg md:hidden"
+            className={cn(
+              'flex items-center justify-between transition-[padding] duration-300',
+              scorso ? 'py-2 md:py-3' : 'py-6 md:py-8',
+            )}
           >
-            <div className="flex flex-col items-start gap-6 [&_nav]:flex-col [&_nav]:items-start [&_nav]:gap-4">
+            <Link href={conPrefisso(lingua, '/')} aria-label={t.vaiAllaHome}>
+              <Logo altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
+            </Link>
+
+            {/* Schermi larghi */}
+            <div className="hidden items-center gap-4 text-foreground md:flex">
               <HeaderNav data={data} />
-              <SelettoreLingua inLinea />
+              <SelettoreLingua />
+              <EffectsToggle />
               <ThemeSelector />
             </div>
+
+            {/* Telefono */}
+            <div className="flex items-center gap-2 text-foreground md:hidden">
+              <EffectsToggle />
+              <button
+                type="button"
+                onClick={() => setMenuAperto((v) => !v)}
+                aria-expanded={menuAperto}
+                aria-controls="menu-mobile"
+                aria-label={menuAperto ? t.chiudiMenu : t.apriMenu}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted"
+              >
+                {menuAperto ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
-        )}
-      </header>
+
+          {menuAperto && (
+            <div
+              id="menu-mobile"
+              className="absolute inset-x-0 top-full rounded-b-lg border bg-background p-6 text-foreground shadow-lg md:hidden"
+            >
+              <div className="flex flex-col items-start gap-6 [&_nav]:flex-col [&_nav]:items-start [&_nav]:gap-4">
+                <HeaderNav data={data} />
+                <SelettoreLingua inLinea />
+                <ThemeSelector />
+              </div>
+            </div>
+          )}
+        </header>
+      </div>
     </div>
   )
 }

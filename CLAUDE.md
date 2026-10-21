@@ -146,7 +146,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; logo negativo (`logo_sorazon_neg.svg`) con il tema scuro, sotto un hero scuro e nel piè di pagina, come immagine di sfondo (si scarica solo quella mostrata); `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
-**Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema). L'header è fisso in alto: trasparente in cima, in vetro (sfocatura) e più basso dopo 24 px di scorrimento, con il logo che si riduce.
+**Header responsive**: sotto `md` compaiono fulmine e menu a comparsa (navigazione + selettore tema). L'header è fisso in alto: trasparente in cima, in vetro (sfocatura) e più basso dopo 24 px di scorrimento, con il logo che si riduce. Lo spazio nella pagina resta sempre quello della barra grande (`h-[124px] md:h-[140px]`, parte in più trasparente e `pointer-events-none`): se cambiasse, la correzione dello scorrimento del browser farebbe ingrandire e ridurre la barra di continuo.
 
 **Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Colori` ("Colori del sito", tavolozza per gli sfondi dei blocchi: Galleria risultati, Scheda prodotto, Invito all'azione), `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Header`, `Footer`. Plugin: redirects, nested-docs, SEO, form-builder, search.
 

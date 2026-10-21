@@ -29,7 +29,7 @@ frontend/src/
 Ispirato alle pagine prodotto di Apple: alternanza di sezioni chiare e nere con accento celeste, titoli molto grandi, molto spazio.
 
 - **Tipografia**: Inter Tight (`next/font`, servita dal sito: nessuna richiesta a Google dal browser). Scala dei titoli in `globals.css` (`--titolo-1/2/3/display`), usata anche da `prose` (`tailwind.config.mjs`); testo editoriale a 46rem.
-- **Header** fisso: trasparente in cima, in vetro e più basso dopo 24 px di scorrimento; sotto `md` fulmine e menu a comparsa.
+- **Header** fisso: trasparente in cima, in vetro e più basso dopo 24 px di scorrimento; sotto `md` fulmine e menu a comparsa. Lo spazio occupato nella pagina resta quello della barra grande (124/140 px): se si accorciasse, il browser correggerebbe lo scorrimento riportandolo sotto la soglia e la barra si ingrandirebbe e ridurrebbe di continuo. La parte che avanza è trasparente e lascia passare i clic.
 - **Sezioni**: `utilities/sezione.ts` (nero, bianco, grigio chiarissimo) e `components/SezioneSfondo` (fascia a tutta larghezza per Modulo e Mappa).
 - **Colori**: solo dalla tavolozza del CMS; il layout scrive le variabili `--colore-ID`; `utilities/sfondo.ts` sceglie il testo chiaro o scuro.
 - **Tema chiaro/scuro** con `ThemeSelector`; l'hero Sorazon resta scuro (`data-theme="dark"`).
