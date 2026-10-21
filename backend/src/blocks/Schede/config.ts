@@ -1,5 +1,12 @@
 import type { Block } from 'payload'
 
+import {
+  FixedToolbarFeature,
+  HeadingFeature,
+  InlineToolbarFeature,
+  lexicalEditor,
+} from '@payloadcms/richtext-lexical'
+
 import { sfondoSezione } from '@/fields/sfondoSezione'
 
 // Griglia di schede arrotondate (stile pagine prodotto): titolo, testo formattato e immagine
@@ -47,7 +54,21 @@ export const Schede: Block = {
             { name: 'titolo', label: 'Titolo', type: 'text' },
           ],
         },
-        { name: 'richText', label: 'Testo', type: 'richText' },
+        {
+          name: 'richText',
+          label: 'Testo',
+          type: 'richText',
+          // Titoli piccoli dentro la scheda (es. gli indirizzi email in Contatti): senza
+          // HeadingFeature l'editor non apre un testo che li contiene (errore Lexical #17)
+          editor: lexicalEditor({
+            features: ({ rootFeatures }) => [
+              ...rootFeatures,
+              HeadingFeature({ enabledHeadingSizes: ['h3', 'h4'] }),
+              FixedToolbarFeature(),
+              InlineToolbarFeature(),
+            ],
+          }),
+        },
         {
           name: 'immagine',
           label: 'Immagine (facoltativa)',
