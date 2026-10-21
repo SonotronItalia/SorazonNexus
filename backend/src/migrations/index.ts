@@ -27,6 +27,7 @@ import * as migration_20261021_013459_traduzioni from './20261021_013459_traduzi
 import * as migration_20261021_023237_nascondi_traduzione from './20261021_023237_nascondi_traduzione';
 import * as migration_20261021_101421_galleria_tutto_schermo from './20261021_101421_galleria_tutto_schermo';
 import * as migration_20261021_134119_marchio from './20261021_134119_marchio';
+import * as migration_20261021_154652_tema_pannello from './20261021_154652_tema_pannello';
 
 export const migrations = [
   {
@@ -172,6 +173,11 @@ export const migrations = [
   {
     up: migration_20261021_134119_marchio.up,
     down: migration_20261021_134119_marchio.down,
-    name: '20261021_134119_marchio'
+    name: '20261021_134119_marchio',
+  },
+  {
+    up: migration_20261021_154652_tema_pannello.up,
+    down: migration_20261021_154652_tema_pannello.down,
+    name: '20261021_154652_tema_pannello'
   },
 ];

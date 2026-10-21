@@ -48,7 +48,8 @@ afterAll(async () => {
   for (const u of [amministratore, redattore, soloNotizie]) {
     if (u) await payload.delete({ collection: 'users', id: u.id }).catch(() => {})
   }
-  if (ruoloNotizie) await payload.delete({ collection: 'ruoli', id: ruoloNotizie.id }).catch(() => {})
+  if (ruoloNotizie)
+    await payload.delete({ collection: 'ruoli', id: ruoloNotizie.id }).catch(() => {})
 })
 
 const come = (user: User) => ({ user, overrideAccess: false }) as const
@@ -71,6 +72,30 @@ describe('Impostazioni del sito', () => {
     const dopo = await payload.findGlobal({ slug: 'impostazioni' })
     expect(dopo.avviso?.testo).toBe(`Avviso del redattore ${suffisso}`)
     expect(dopo.analisi?.googleAnalyticsId).toBe('G-PRIMA12345')
+  })
+
+  it("l'aspetto Sorazon del pannello lo cambia solo un amministratore", async () => {
+    await payload.updateGlobal({
+      slug: 'impostazioni',
+      data: { marchio: { pannelloSorazon: false } },
+      ...come(redattore),
+    })
+    expect((await payload.findGlobal({ slug: 'impostazioni' })).marchio?.pannelloSorazon).not.toBe(
+      false,
+    )
+    await payload.updateGlobal({
+      slug: 'impostazioni',
+      data: { marchio: { pannelloSorazon: false } },
+      ...come(amministratore),
+    })
+    expect((await payload.findGlobal({ slug: 'impostazioni' })).marchio?.pannelloSorazon).toBe(
+      false,
+    )
+    await payload.updateGlobal({
+      slug: 'impostazioni',
+      data: { marchio: { pannelloSorazon: true } },
+      ...come(amministratore),
+    })
   })
 
   it('SEO e motori AI: li cambia chi ha il permesso, non il redattore', async () => {
@@ -209,7 +234,11 @@ describe('ruoli personalizzati', () => {
         context: { disableRevalidate: true },
       }),
     ).rejects.toThrow()
-    await payload.delete({ collection: 'posts', id: notizia.id, context: { disableRevalidate: true } })
+    await payload.delete({
+      collection: 'posts',
+      id: notizia.id,
+      context: { disableRevalidate: true },
+    })
   })
 
   it('un ruolo assegnato non si elimina', async () => {
@@ -276,7 +305,12 @@ describe('traduttori', () => {
         ...come(traduttore),
         context: { disableRevalidate: true },
       })
-      const en = await payload.findByID({ collection: 'pages', id: pagina.id, locale: 'en', fallbackLocale: false })
+      const en = await payload.findByID({
+        collection: 'pages',
+        id: pagina.id,
+        locale: 'en',
+        fallbackLocale: false,
+      })
       expect(en.title).toBe(`Page to translate ${suffisso}`)
       // Italiano: no (serve "Modifica" sulle pagine)
       await expect(
@@ -304,7 +338,11 @@ describe('traduttori', () => {
       const it = await payload.findByID({ collection: 'pages', id: pagina.id, locale: 'it' })
       expect(it.title).toBe(`Pagina da tradurre ${suffisso}`)
     } finally {
-      await payload.delete({ collection: 'pages', id: pagina.id, context: { disableRevalidate: true } })
+      await payload.delete({
+        collection: 'pages',
+        id: pagina.id,
+        context: { disableRevalidate: true },
+      })
       await payload.delete({ collection: 'users', id: traduttore.id }).catch(() => {})
       await payload.delete({ collection: 'ruoli', id: ruoloTraduttore.id }).catch(() => {})
     }

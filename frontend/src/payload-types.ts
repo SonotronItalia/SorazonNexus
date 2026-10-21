@@ -2859,6 +2859,10 @@ export interface Impostazioni {
      * Per la scheda del browser quando il sistema è in tema scuro (per esempio se l'icona è nera). Vuoto: la stessa icona.
      */
     iconaScura?: (number | null) | Marchio;
+    /**
+     * Colori, carattere e angoli del marchio anche in questo pannello. Spegnilo se dopo un aggiornamento qualcosa nel pannello non si vede bene: torna subito l'aspetto standard. Lo cambia solo un amministratore.
+     */
+    pannelloSorazon?: boolean | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -3143,6 +3147,7 @@ export interface ImpostazioniSelect<T extends boolean = true> {
         piede?: T;
         icona?: T;
         iconaScura?: T;
+        pannelloSorazon?: T;
       };
   updatedAt?: T;
   createdAt?: T;

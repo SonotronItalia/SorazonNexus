@@ -3,6 +3,8 @@ import React from 'react'
 
 import type { Impostazioni, Marchio } from '@/payload-types'
 
+import { TemaPannello } from '../TemaPannello'
+
 /**
  * Marchio nel pannello al posto di quello di Payload: grande nella pagina di accesso (Logo),
  * piccolo in alto nel menu (Icona). File da Impostazioni del sito > Marchio; vuoti: i file
@@ -38,7 +40,13 @@ export const Logo = async ({ payload }: Props) => {
   if (chiaro) stile['--marchio-chiaro'] = `url("${chiaro.url}")`
   if (scuro) stile['--marchio-scuro'] = `url("${scuro.url}")`
   if (chiaro?.w && chiaro.h) stile.aspectRatio = `${chiaro.w} / ${chiaro.h}`
-  return <span role="img" aria-label="Sorazon" className="marchio-sorazon" style={stile} />
+  return (
+    <>
+      {/* La pagina di accesso non ha l'intestazione del pannello: il tema arriva con il logo */}
+      <TemaPannello payload={payload} />
+      <span role="img" aria-label="Sorazon" className="marchio-sorazon" style={stile} />
+    </>
+  )
 }
 
 export const Icona = async ({ payload }: Props) => {

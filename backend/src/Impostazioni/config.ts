@@ -1,6 +1,6 @@
 import type { Field, GlobalConfig } from 'payload'
 
-import { campoConPermesso, nascostaSenzaPermesso, permesso } from '@/access/ruoli'
+import { campoConPermesso, eAmministratore, nascostaSenzaPermesso, permesso } from '@/access/ruoli'
 import { campoSocial } from '@/fields/social'
 import { link } from '@/fields/link'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
@@ -272,6 +272,18 @@ export const Impostazioni: GlobalConfig = {
                   'Per la scheda del browser quando il sistema è in tema scuro (per esempio se l\'icona è nera). Vuoto: la stessa icona.',
                 ),
               ],
+            },
+            {
+              // Tema del pannello (components/admin/TemaPannello): spento = Payload standard
+              name: 'pannelloSorazon',
+              label: 'Aspetto Sorazon del pannello',
+              type: 'checkbox',
+              defaultValue: true,
+              access: { update: eAmministratore },
+              admin: {
+                description:
+                  'Colori, carattere e angoli del marchio anche in questo pannello. Spegnilo se dopo un aggiornamento qualcosa nel pannello non si vede bene: torna subito l\'aspetto standard. Lo cambia solo un amministratore.',
+              },
             },
           ],
         },

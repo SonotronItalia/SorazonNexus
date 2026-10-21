@@ -108,3 +108,11 @@ Raccolta `marchio` (`collections/Marchio.ts`), nascosta dal menu: si usa dalla s
 3. `upload.modifyResponseHeaders` serve i file con `Content-Security-Policy: default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox` e `nosniff`: aperto da solo nel browser, un SVG non esegue nulla.
 
 Un file pericoloso viene **rifiutato**, non modificato. Permessi: lettura pubblica, caricamento e modifica con "Modifica" su Impostazioni del sito. File in `MEDIA_DIR/marchio` (nello stack, volume dei media). Il seed (`seed/marchio.ts`) carica loghi e icona Sorazon da `seed/media/marchio` solo se la scheda è tutta vuota. Nel pannello, `components/admin/Marchio` usa gli stessi file (accesso e menu) con i loghi Sorazon in `backend/public` come riserva.
+
+## Aspetto del pannello
+
+Tema Sorazon in `components/admin/TemaPannello` (`tema.ts`: regole CSS): scala del celeste al posto del blu di Payload (`--color-success-*`, `--color-blue-*`), carattere Inter Tight (`next/font`, servito dal backend), angoli (`--style-radius-*`), pulsanti principali, voce attiva del menu, scheda attiva, caselle spuntate. Payload mette i suoi stili nel livello CSS `payload-default`: le regole del tema, fuori da ogni livello, vincono senza `!important`.
+
+- Inserito in ogni pagina con `admin.components.header` e nella pagina di accesso insieme al logo (`components/admin/Marchio`).
+- Interruttore `marchio.pannelloSorazon` nelle Impostazioni (predefinito acceso, solo amministratori: `access.update: eAmministratore`; test in `ruoli.int.spec.ts`).
+- Gli aggiornamenti di Payload non toccano questi file (sono nel nostro codice). Possono però rinominare variabili o classi interne: dopo un aggiornamento controllare a vista accesso, menu, un documento, pulsanti, in chiaro e scuro. Ripristino: la casella nelle Impostazioni (subito, senza tecnico) oppure git; il tag `pannello-standard` segna l'ultima versione senza tema.

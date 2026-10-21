@@ -190,6 +190,12 @@ Clarity mostra dove le persone cliccano e come scorrono le pagine. Si aggiunge *
 
 Il sito passa a Clarity la scelta del visitatore e, se rifiuta le statistiche, cancella i suoi cookie. Non aggiungere il codice di Clarity anche altrove: le visite verrebbero contate due volte. Nelle impostazioni di Clarity lascia attivo il **mascheramento** dei testi scritti dai visitatori (è già attivo all'inizio). Privacy policy e cookie policy devono citare Clarity e le registrazioni: chiedilo al consulente privacy.
 
+## Aspetto del pannello
+
+Il pannello usa i colori del marchio (celeste Sorazon per pulsanti e voce attiva), lo stesso carattere del sito e angoli più morbidi. In **Impostazioni del sito › Marchio** la casella **Aspetto Sorazon del pannello** lo accende e lo spegne: spenta, il pannello torna subito all'aspetto standard. La può cambiare solo un amministratore.
+
+Quando si aggiorna il programma del pannello, qualche dettaglio dello stile potrebbe non applicarsi più. Il pannello continua a funzionare; se qualcosa si legge male, spegni la casella e avvisa il tecnico.
+
 ## Reindirizzamenti
 
 In **Avanzate › Reindirizzamenti** colleghi un **indirizzo vecchio** a una **pagina nuova**. Chi arriva dal vecchio indirizzo (per esempio da Google o da un link salvato) finisce nella pagina giusta.

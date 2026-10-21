@@ -87,6 +87,8 @@ export default buildConfig({
     // Pulsante "Esci" con testo in fondo al menu (quello di Payload è solo un'icona)
     components: {
       logout: { Button: '@/components/admin/Esci#Esci' },
+      // Aspetto Sorazon (colori, carattere), spegnibile da Impostazioni del sito > Marchio
+      header: ['@/components/admin/TemaPannello#TemaPannello'],
       // Marchio Sorazon nella pagina di accesso e in alto a sinistra
       graphics: {
         Logo: '@/components/admin/Marchio#Logo',
