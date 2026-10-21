@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { DatiStrutturati } from '@/components/DatiStrutturati'
-import type { Footer, Impostazioni, Post } from '@/payload-types'
+import type { Footer, Impostazioni, Post, Seo } from '@/payload-types'
 import { briciole, datiAziendaESito, datiNotizia } from '@/utilities/datiStrutturati'
 
 // Oggetti JSON-LD letti nei test (struttura libera)
@@ -23,16 +23,16 @@ const FOOTER = {
 
 const IMPOSTAZIONI = {
   id: 1,
-  nomeSito: 'Sorazon',
-  descrizioneSito: 'Descrizione dal CMS',
   social: [{ piattaforma: 'facebook', url: 'https://facebook.com/sorazon' }],
 } as unknown as Impostazioni
+
+const SEO = { id: 1, nomeSito: 'Sorazon', descrizioneSito: 'Descrizione dal CMS' } as Seo
 
 describe('dati strutturati (schema.org)', () => {
   it('azienda: dati legali, indirizzo scomposto, contatti e social', () => {
     const {
       '@graph': [azienda, sito],
-    } = datiAziendaESito(FOOTER, IMPOSTAZIONI) as { '@graph': Json[] }
+    } = datiAziendaESito(FOOTER, IMPOSTAZIONI, SEO) as { '@graph': Json[] }
     expect(azienda['@type']).toBe('Organization')
     expect(azienda.vatID).toBe('IT02654710413')
     expect(azienda.address).toMatchObject({
@@ -49,6 +49,33 @@ describe('dati strutturati (schema.org)', () => {
     expect(azienda.sameAs).toEqual(['https://facebook.com/sorazon'])
     expect(sito.url).toBe('https://www.sorazon.it/')
     expect(sito.description).toBe('Descrizione dal CMS')
+  })
+
+  it("i dati dell'azienda in SEO e motori AI prevalgono sul Piè di pagina", () => {
+    const seo = {
+      ...SEO,
+      azienda: {
+        ragioneSociale: 'Altra S.R.L.',
+        via: 'Via Roma 1',
+        cap: '00100',
+        citta: 'Roma',
+        provincia: 'RM',
+        telefono: '+39 06 1',
+      },
+    } as Seo
+    const {
+      '@graph': [azienda],
+    } = datiAziendaESito(FOOTER, IMPOSTAZIONI, seo) as { '@graph': Json[] }
+    expect(azienda.name).toBe('Altra S.R.L.')
+    expect(azienda.address).toMatchObject({
+      streetAddress: 'Via Roma 1',
+      postalCode: '00100',
+      addressLocality: 'Roma',
+      addressRegion: 'RM',
+    })
+    expect(azienda.contactPoint.telephone).toBe('+39 06 1')
+    // Quello che manca in SEO arriva dal Piè di pagina
+    expect(azienda.contactPoint.email).toBe('info@sonotronitalia.com')
   })
 
   it('funziona anche senza Footer (backend non raggiungibile)', () => {

@@ -352,17 +352,17 @@ await payload.updateGlobal({
 })
 log('footer aggiornato')
 
-// Impostazioni del sito (dati/impostazioni.yml): solo i valori ancora vuoti nel CMS, così non si
+// SEO e motori AI (dati/seo.yml): solo i valori ancora vuoti nel CMS, così non si
 // sovrascrive mai quello che è stato cambiato dall'admin
-const impostazioniAttuali = (await payload.findGlobal({ slug: 'impostazioni', depth: 0 })) as unknown as Record<string, unknown>
-const impostazioniSeed = parse(fs.readFileSync(dati('impostazioni.yml'), 'utf8')) as Record<string, string>
+const seoAttuale = (await payload.findGlobal({ slug: 'seo', depth: 0 })) as unknown as Record<string, unknown>
+const seoSeed = parse(fs.readFileSync(dati('seo.yml'), 'utf8')) as Record<string, string>
 const mancanti = Object.fromEntries(
-  Object.entries(impostazioniSeed).filter(([k]) => !String(impostazioniAttuali[k] ?? '').trim()),
+  Object.entries(seoSeed).filter(([k]) => !String(seoAttuale[k] ?? '').trim()),
 )
 if (Object.keys(mancanti).length) {
-  await payload.updateGlobal({ slug: 'impostazioni', data: mancanti, context })
-  log(`impostazioni del sito: impostati ${Object.keys(mancanti).join(', ')}`)
-} else log('impostazioni del sito già compilate: non toccate')
+  await payload.updateGlobal({ slug: 'seo', data: mancanti, context })
+  log(`SEO e motori AI: impostati ${Object.keys(mancanti).join(', ')}`)
+} else log('SEO e motori AI già compilati: non toccati')
 
 // Durante il seed gli avvisi al frontend sono spenti: uno solo alla fine, con tutti i tag
 await revalidateFrontend(

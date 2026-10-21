@@ -142,12 +142,14 @@ export interface Config {
     impostazioni: Impostazioni;
     header: Header;
     footer: Footer;
+    seo: Seo;
   };
   globalsSelect: {
     'torna-su': TornaSuSelect<false> | TornaSuSelect<true>;
     impostazioni: ImpostazioniSelect<false> | ImpostazioniSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    seo: SeoSelect<false> | SeoSelect<true>;
   };
   locale: null;
   widgets: {
@@ -677,6 +679,10 @@ export interface Ruoli {
       modifica?: boolean | null;
     };
     footer?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    seo?: {
       vede?: boolean | null;
       modifica?: boolean | null;
     };
@@ -2426,6 +2432,12 @@ export interface RuoliSelect<T extends boolean = true> {
               vede?: T;
               modifica?: T;
             };
+        seo?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
         categories?:
           | T
           | {
@@ -2640,14 +2652,6 @@ export interface TornaSu {
  */
 export interface Impostazioni {
   id: number;
-  /**
-   * Compare nel titolo delle pagine su Google e nelle condivisioni sui social.
-   */
-  nomeSito: string;
-  /**
-   * Frase usata da Google e dalle condivisioni quando una pagina non ha una descrizione propria. Ideale: 120-160 caratteri.
-   */
-  descrizioneSito?: string | null;
   analisi: {
     /**
      * Avanzata stima anche le visite di chi rifiuta i cookie, ma il browser contatta Google subito: deciderla con il consulente privacy e indicarla nella cookie policy.
@@ -2802,6 +2806,91 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Come il sito si presenta a Google, ai social e agli assistenti AI. Le modifiche valgono entro pochi secondi; un errore qui può far sparire il sito dalle ricerche.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo".
+ */
+export interface Seo {
+  id: number;
+  /**
+   * Compare nel titolo delle pagine su Google e nelle condivisioni sui social.
+   */
+  nomeSito: string;
+  /**
+   * Usata da Google, dalle condivisioni e da llms.txt quando una pagina non ha una descrizione propria. Ideale: 120-160 caratteri.
+   */
+  descrizioneSito?: string | null;
+  /**
+   * {pagina} è il titolo della pagina, {sito} il nome del sito. La Home usa solo il nome del sito.
+   */
+  modelloTitolo?: string | null;
+  /**
+   * Per le pagine senza un'immagine SEO propria (almeno 1200×630). Vuota: si genera un'immagine con il titolo.
+   */
+  immagineCondivisione?: (number | null) | Media;
+  ricerca?: {
+    /**
+     * Solo per un sito di prova o in costruzione: Google e gli altri smettono di mostrarlo. Sul sito pubblico deve restare spento.
+     */
+    nascondiSito?: boolean | null;
+    /**
+     * Solo il codice del tag "google-site-verification".
+     */
+    verificaGoogle?: string | null;
+    /**
+     * Il codice del tag "msvalidate.01".
+     */
+    verificaBing?: string | null;
+    /**
+     * Restano visitabili ma non compaiono su Google né negli assistenti AI. API, anteprima e ricerca sono già escluse.
+     */
+    escluse?:
+      | {
+          percorso: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  ai?: {
+    ammessi?: {
+      chatgpt?: boolean | null;
+      claude?: boolean | null;
+      perplexity?: boolean | null;
+      gemini?: boolean | null;
+      apple?: boolean | null;
+      meta?: boolean | null;
+      commonCrawl?: boolean | null;
+    };
+    /**
+     * Testo in più sotto la descrizione del sito nel file /llms.txt (il sommario del sito per gli assistenti AI). Solo fatti, niente affermazioni sanitarie.
+     */
+    llmsPresentazione?: string | null;
+    llmsCentri?: boolean | null;
+    llmsNotizie?: boolean | null;
+  };
+  azienda?: {
+    ragioneSociale?: string | null;
+    /**
+     * Vuoto: il logo del sito.
+     */
+    logo?: (number | null) | Media;
+    via?: string | null;
+    cap?: string | null;
+    citta?: string | null;
+    provincia?: string | null;
+    /**
+     * Con prefisso internazionale, es. +39 0721 808759
+     */
+    telefono?: string | null;
+    email?: string | null;
+    partitaIva?: string | null;
+    codiceFiscale?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "torna-su_select".
  */
@@ -2823,8 +2912,6 @@ export interface TornaSuSelect<T extends boolean = true> {
  * via the `definition` "impostazioni_select".
  */
 export interface ImpostazioniSelect<T extends boolean = true> {
-  nomeSito?: T;
-  descrizioneSito?: T;
   analisi?:
     | T
     | {
@@ -2917,6 +3004,64 @@ export interface FooterSelect<T extends boolean = true> {
         pec?: T;
         telefono?: T;
         email?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo_select".
+ */
+export interface SeoSelect<T extends boolean = true> {
+  nomeSito?: T;
+  descrizioneSito?: T;
+  modelloTitolo?: T;
+  immagineCondivisione?: T;
+  ricerca?:
+    | T
+    | {
+        nascondiSito?: T;
+        verificaGoogle?: T;
+        verificaBing?: T;
+        escluse?:
+          | T
+          | {
+              percorso?: T;
+              id?: T;
+            };
+      };
+  ai?:
+    | T
+    | {
+        ammessi?:
+          | T
+          | {
+              chatgpt?: T;
+              claude?: T;
+              perplexity?: T;
+              gemini?: T;
+              apple?: T;
+              meta?: T;
+              commonCrawl?: T;
+            };
+        llmsPresentazione?: T;
+        llmsCentri?: T;
+        llmsNotizie?: T;
+      };
+  azienda?:
+    | T
+    | {
+        ragioneSociale?: T;
+        logo?: T;
+        via?: T;
+        cap?: T;
+        citta?: T;
+        provincia?: T;
+        telefono?: T;
+        email?: T;
+        partitaIva?: T;
+        codiceFiscale?: T;
       };
   updatedAt?: T;
   createdAt?: T;

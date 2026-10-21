@@ -1,6 +1,6 @@
-# Impostazioni del sito di partenza (nell'admin: Impostazioni > Impostazioni del sito).
+# Nome e descrizione del sito di partenza (nell'admin: Avanzate > SEO e motori AI).
 # Il seed le scrive SOLO se nel CMS sono ancora vuote: non sovrascrive mai quello che è stato
-# cambiato dall'admin. ID di Google, avviso e social si impostano dall'admin.
+# cambiato dall'admin. Il resto (assistenti AI, dati dell'azienda...) si imposta dall'admin.
 nomeSito: Sorazon
 descrizioneSito: >-
   Sorazon: terapia antinfiammatoria non invasiva con apparecchio elettromedicale brevettato,

@@ -1,30 +1,45 @@
-import { getCentri, getFooter, getImpostazioni, getPagineSommario, getPosts } from '@/lib/content'
+import { getCentri, getFooter, getPagineSommario, getPosts, getSeo } from '@/lib/content'
 import { getServerSideURL } from '@/utilities/getURL'
-import { DESCRIZIONE_SITO, SITE_NAME } from '@/utilities/mergeOpenGraph'
+import { descrizioneSito, nomeSito, nonIndicizzare } from '@/utilities/seo'
 
 // /llms.txt (llmstxt.org): sommario del sito in Markdown per assistenti e motori di risposta
-// AI. Generato dai contenuti del CMS a ogni richiesta (dati in cache con i soliti tag).
+// AI. Generato dai contenuti del CMS a ogni richiesta (dati in cache con i soliti tag); cosa
+// includere si sceglie in Avanzate > SEO e motori AI.
 export const dynamic = 'force-dynamic'
 
 // Pagine legali in fondo, il resto nell'ordine del menu del vecchio sito
-const ORDINE = ['home', 'dispositivo', 'terapia', 'indicazioni', 'risultati', 'centri', 'distribuzione', 'contatti']
+const ORDINE = [
+  'home',
+  'dispositivo',
+  'terapia',
+  'indicazioni',
+  'risultati',
+  'centri',
+  'distribuzione',
+  'contatti',
+]
 
 export async function GET() {
   const SITE = getServerSideURL()
-  const [pagine, notizie, centri, footer, impostazioni] = await Promise.all([
+  const [pagine, notizie, centri, footer, seo] = await Promise.all([
     getPagineSommario().catch(() => []),
     getPosts(1, 100).catch(() => ({ docs: [] })),
     getCentri().catch(() => []),
     getFooter().catch(() => null),
-    getImpostazioni(),
+    getSeo(),
   ])
+  if (seo?.ricerca?.nascondiSito) return new Response('Not found', { status: 404 })
+  const conCentri = seo?.ai?.llmsCentri !== false
+  const conNotizie = seo?.ai?.llmsNotizie !== false
+  const presentazione = seo?.ai?.llmsPresentazione?.trim()
 
   const url = (slug: string) => (slug === 'home' ? `${SITE}/` : `${SITE}/${slug}`)
   const voce = (titolo: string, link: string, descrizione?: string | null) =>
     `- [${titolo}](${link})${descrizione ? `: ${descrizione.replace(/\s+/g, ' ').trim()}` : ''}`
 
   const ordinate = [...pagine].sort((a, b) => {
-    const ia = ORDINE.indexOf(a.slug ?? ''), ib = ORDINE.indexOf(b.slug ?? '')
+    const ia = ORDINE.indexOf(a.slug ?? ''),
+      ib = ORDINE.indexOf(b.slug ?? '')
     return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
   })
 
@@ -35,38 +50,59 @@ export async function GET() {
   }
 
   const d = footer?.datiLegali
+  const a = seo?.azienda
+  const ragioneSociale = a?.ragioneSociale || d?.ragioneSociale
+  // "Via 44, 61032 Fano (PS)"
+  const sede = a?.via
+    ? `${a.via}, ${[a.cap, a.citta, a.provincia && `(${a.provincia})`].filter(Boolean).join(' ')}`
+    : d?.indirizzo
+  const partitaIva = a?.partitaIva || d?.partitaIva
+  const telefono = a?.telefono || d?.telefono
+  const email = a?.email || d?.email
   const righe = [
-    `# ${impostazioni?.nomeSito?.trim() || SITE_NAME}`,
+    `# ${nomeSito(seo)}`,
     '',
-    `> ${impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO}`,
+    `> ${descrizioneSito(seo)}`,
     '',
-    d?.ragioneSociale
-      ? `Produttore: ${d.ragioneSociale}${d.indirizzo ? `, ${d.indirizzo}` : ''}${d.partitaIva ? `, P.IVA ${d.partitaIva}` : ''}.` +
-        (d.telefono ? ` Telefono ${d.telefono}.` : '') +
-        (d.email ? ` Email ${d.email}.` : '')
+    presentazione ?? '',
+    '',
+    ragioneSociale
+      ? `Produttore: ${ragioneSociale}${sede ? `, ${sede}` : ''}${partitaIva ? `, P.IVA ${partitaIva}` : ''}.` +
+        (telefono ? ` Telefono ${telefono}.` : '') +
+        (email ? ` Email ${email}.` : '')
       : '',
     '',
     '## Pagine',
     '',
-    ...ordinate.filter((p) => p.slug).map((p) => voce(p.meta?.title || p.title, url(p.slug!), p.meta?.description)),
+    ...ordinate
+      .filter((p) => p.slug && !nonIndicizzare(p.slug === 'home' ? '/' : `/${p.slug}`, seo))
+      .map((p) => voce(p.meta?.title || p.title, url(p.slug!), p.meta?.description)),
     '',
-    '## Centri di riferimento',
-    '',
-    `${centri.length} centri in ${perRegione.size} regioni italiane. Elenco completo con indirizzi e telefoni: ${SITE}/centri`,
-    '',
-    ...[...perRegione.entries()]
-      .sort(([a], [b]) => a.localeCompare(b, 'it'))
-      .map(([r, citta]) => `- ${r}: ${[...new Set(citta)].join(', ')}`),
-    '',
-    '## Notizie',
-    '',
-    ...notizie.docs.map((n) =>
-      voce(
-        `${n.title}${n.publishedAt ? ` (${new Date(n.publishedAt).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })})` : ''}`,
-        `${SITE}/posts/${n.slug}`,
-        n.meta?.description,
-      ),
-    ),
+    ...(conCentri
+      ? [
+          '## Centri di riferimento',
+          '',
+          `${centri.length} centri in ${perRegione.size} regioni italiane. Elenco completo con indirizzi e telefoni: ${SITE}/centri`,
+          '',
+          ...[...perRegione.entries()]
+            .sort(([x], [y]) => x.localeCompare(y, 'it'))
+            .map(([r, citta]) => `- ${r}: ${[...new Set(citta)].join(', ')}`),
+          '',
+        ]
+      : []),
+    ...(conNotizie
+      ? [
+          '## Notizie',
+          '',
+          ...notizie.docs.map((n) =>
+            voce(
+              `${n.title}${n.publishedAt ? ` (${new Date(n.publishedAt).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })})` : ''}`,
+              `${SITE}/posts/${n.slug}`,
+              n.meta?.description,
+            ),
+          ),
+        ]
+      : []),
     '',
   ]
 

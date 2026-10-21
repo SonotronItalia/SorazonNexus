@@ -13,15 +13,16 @@ import { GoogleTag } from '@/components/Consenso/GoogleTag'
 import { PreviewBar } from '@/components/PreviewBar'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
-import { DESCRIZIONE_SITO, mergeOpenGraph, SITE_NAME } from '@/utilities/mergeOpenGraph'
+import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getColori, getFooter, getImpostazioni, getTornaSu } from '@/lib/content'
+import { getColori, getFooter, getImpostazioni, getSeo, getTornaSu } from '@/lib/content'
 import { AvvisoSito } from '@/components/AvvisoSito'
 import { configGoogle } from '@/utilities/google'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
 import { datiAziendaESito } from '@/utilities/datiStrutturati'
+import { descrizioneSito, nomeSito } from '@/utilities/seo'
 import { TornaSu } from '@/components/TornaSu'
 
 // Carattere dei titoli e dei testi: Inter Tight, scaricato in build e servito dal nostro server
@@ -36,11 +37,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non
   // risponde restano i valori di riserva salvati nel testo.
-  const [colori, tornaSu, footer, impostazioni] = await Promise.all([
+  const [colori, tornaSu, footer, impostazioni, seo] = await Promise.all([
     getColori().catch(() => []),
     getTornaSu().catch(() => null),
     getFooter().catch(() => null),
     getImpostazioni(),
+    getSeo(),
   ])
   // ID di Google e modalità del consenso: Impostazioni del sito, con le variabili d'ambiente come
   // riserva (utilities/google.ts). Senza ID nessun tag e nessuna categoria nel banner.
@@ -57,19 +59,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     .join('')
 
   return (
-    <html className={cn(interTight.variable, GeistMono.variable)} lang="it" suppressHydrationWarning>
+    <html
+      className={cn(interTight.variable, GeistMono.variable)}
+      lang="it"
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         {conGoogle && <ConsentModeScript />}
         {variabiliColori && <style>{`:root{${variabiliColori}}`}</style>}
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-        <DatiStrutturati dati={datiAziendaESito(footer, impostazioni)} />
+        <DatiStrutturati dati={datiAziendaESito(footer, impostazioni, seo)} />
       </head>
       <body>
         <Providers>
           <PreviewBar />
-          {impostazioni?.avviso && <AvvisoSito avviso={impostazioni.avviso} oraServer={oraServer} />}
+          {impostazioni?.avviso && (
+            <AvvisoSito avviso={impostazioni.avviso} oraServer={oraServer} />
+          )}
           <Header />
           {children}
           <Footer />
@@ -84,17 +92,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 // Funzione e non oggetto: SITE_URL si legge a runtime
 export async function generateMetadata(): Promise<Metadata> {
-  const impostazioni = await getImpostazioni()
-  const nomeSito = impostazioni?.nomeSito?.trim() || SITE_NAME
+  // Nome, descrizione, verifiche e "sito nascosto": Avanzate > SEO e motori AI
+  const seo = await getSeo()
+  const nome = nomeSito(seo)
+  const verificaGoogle = seo?.ricerca?.verificaGoogle?.trim()
+  const verificaBing = seo?.ricerca?.verificaBing?.trim()
   return {
     metadataBase: new URL(getServerSideURL()),
-    title: nomeSito,
-    description: impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO,
-    applicationName: nomeSito,
-    publisher: 'SONOTRON ITALIA S.R.L.S.',
+    title: nome,
+    description: descrizioneSito(seo),
+    applicationName: nome,
+    publisher: seo?.azienda?.ragioneSociale?.trim() || 'SONOTRON ITALIA S.R.L.S.',
     openGraph: mergeOpenGraph(),
     twitter: {
       card: 'summary_large_image',
     },
+    ...(seo?.ricerca?.nascondiSito ? { robots: { index: false, follow: false } } : {}),
+    ...(verificaGoogle || verificaBing
+      ? {
+          verification: {
+            ...(verificaGoogle ? { google: verificaGoogle } : {}),
+            ...(verificaBing ? { other: { 'msvalidate.01': verificaBing } } : {}),
+          },
+        }
+      : {}),
   }
 }

@@ -9,6 +9,7 @@ import type {
   Post,
   Redirect,
   Search,
+  Seo,
   TornaSu,
 } from '@/payload-types'
 
@@ -43,6 +44,11 @@ export const getTornaSu = () => api<TornaSu>('/globals/torna-su?depth=1', { tags
 // Impostazioni del sito (nome, descrizione, Google, avviso, social); null se il backend non risponde
 export const getImpostazioni = () =>
   api<Impostazioni>('/globals/impostazioni?depth=1', { tags: ['globals'] }).catch(() => null)
+
+// SEO e motori AI (nome e descrizione del sito, assistenti AI, dati dell'azienda); null se il
+// backend non risponde: si usano i valori di riserva nel codice
+export const getSeo = () =>
+  api<Seo>('/globals/seo?depth=1', { tags: ['globals'] }).catch(() => null)
 
 // Tavolozza "Colori del sito": il layout la scrive come variabili CSS (--colore-ID)
 export const getColori = async () => {

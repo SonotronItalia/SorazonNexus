@@ -3,9 +3,10 @@ import type { Metadata } from 'next'
 import type { Media, Page, Post, Config } from '../payload-types'
 
 import { mediaSrc } from '@/lib/api'
-import { DESCRIZIONE_SITO, immagineOg, mergeOpenGraph, SITE_NAME } from './mergeOpenGraph'
+import { immagineOg, mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
-import { getImpostazioni } from '@/lib/content'
+import { getSeo } from '@/lib/content'
+import { descrizioneSito, nomeSito, nonIndicizzare, titoloPagina } from './seo'
 
 // Immagine SEO solo se abbastanza grande per le anteprime dei social (es. non le copertine da 200 px)
 const LARGHEZZA_MINIMA = 600
@@ -26,16 +27,14 @@ export const generateMeta = async (args: {
   tipo?: 'website' | 'article'
 }): Promise<Metadata> => {
   const { doc, percorso, tipo = 'website' } = args
-  // Nome e descrizione del sito dalle Impostazioni (con i valori nel codice come riserva)
-  const impostazioni = await getImpostazioni()
-  const nomeSito = impostazioni?.nomeSito?.trim() || SITE_NAME
-  const descrizioneSito = impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO
+  // Nome, descrizione, modello del titolo e immagine predefinita: Avanzate > SEO e motori AI
+  const seo = await getSeo()
+  const sito = nomeSito(seo)
 
   const nome = doc?.meta?.title || (doc?.slug === 'home' ? undefined : doc?.title)
-  // Il nome del sito in coda, se il titolo non lo contiene già
-  const title = !nome ? nomeSito : nome.includes(nomeSito) ? nome : `${nome} | ${nomeSito}`
-  const description = doc?.meta?.description || descrizioneSito
-  const caricata = getImageURL(doc?.meta?.image)
+  const title = titoloPagina(nome, seo)
+  const description = doc?.meta?.description || descrizioneSito(seo)
+  const caricata = getImageURL(doc?.meta?.image) ?? getImageURL(seo?.immagineCondivisione)
   const immagine = caricata ?? immagineOg(nome ?? undefined)
   const post = tipo === 'article' ? (doc as Partial<Post>) : null
 
@@ -43,14 +42,20 @@ export const generateMeta = async (args: {
     title,
     description,
     alternates: { canonical: percorso },
+    // Pagine escluse o sito nascosto (SEO e motori AI): fuori dagli indici
+    ...(nonIndicizzare(percorso, seo) ? { robots: { index: false, follow: true } } : {}),
     openGraph: mergeOpenGraph({
       type: tipo,
       title,
       description,
       url: percorso,
       // Le misure si dichiarano solo per l'immagine generata (le altre possono variare)
-      siteName: nomeSito,
-      images: [caricata ? { url: immagine } : { url: immagine, width: 1200, height: 630, alt: nome ?? nomeSito }],
+      siteName: sito,
+      images: [
+        caricata
+          ? { url: immagine }
+          : { url: immagine, width: 1200, height: 630, alt: nome ?? sito },
+      ],
       ...(post?.publishedAt ? { publishedTime: post.publishedAt } : {}),
       ...(post?.updatedAt ? { modifiedTime: post.updatedAt } : {}),
     }),

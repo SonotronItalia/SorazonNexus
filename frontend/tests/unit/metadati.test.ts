@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
-// Niente CMS nei test unitari: le Impostazioni del sito mancano (valori di riserva del codice)
-vi.mock('@/lib/content', () => ({ getImpostazioni: async () => null }))
+// Niente CMS nei test unitari: SEO e motori AI mancano (valori di riserva del codice)
+vi.mock('@/lib/content', () => ({ getSeo: async () => null }))
 
 import { generateMeta } from '@/utilities/generateMeta'
 import { DESCRIZIONE_SITO } from '@/utilities/mergeOpenGraph'

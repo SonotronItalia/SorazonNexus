@@ -43,6 +43,7 @@ export const RISORSE: Risorsa[] = [
   },
   { slug: 'header', chiave: 'header', etichetta: 'Menu principale', azioni: GLOBALE, redattore: GLOBALE },
   { slug: 'footer', chiave: 'footer', etichetta: 'Piè di pagina', azioni: GLOBALE, redattore: GLOBALE },
+  { slug: 'seo', chiave: 'seo', etichetta: 'SEO e motori AI', azioni: GLOBALE, redattore: [] },
   { slug: 'categories', chiave: 'categories', etichetta: 'Categorie', azioni: TUTTE, redattore: [] },
   { slug: 'tipi-effetto', chiave: 'tipiEffetto', etichetta: 'Tipi di effetto (codice)', azioni: TUTTE, redattore: [] },
   { slug: 'redirects', chiave: 'redirects', etichetta: 'Reindirizzamenti', azioni: TUTTE, redattore: [] },

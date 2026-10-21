@@ -1,8 +1,8 @@
-import type { Footer, Impostazioni, Media, Post } from '@/payload-types'
+import type { Footer, Impostazioni, Media, Post, Seo } from '@/payload-types'
 
 import { mediaSrc } from '@/lib/api'
 import { getServerSideURL } from './getURL'
-import { DESCRIZIONE_SITO, SITE_NAME } from './mergeOpenGraph'
+import { descrizioneSito, nomeSito as nomeDelSito } from './seo'
 
 /**
  * Dati strutturati schema.org. Solo fatti verificabili presi dal CMS (nomi, indirizzi, date,
@@ -14,7 +14,9 @@ export const ID_AZIENDA = () => `${sito()}/#azienda`
 const ID_SITO = () => `${sito()}/#sito`
 
 export const urlAssoluto = (percorso: string) =>
-  /^https?:\/\//.test(percorso) ? percorso : `${sito()}${percorso.startsWith('/') ? '' : '/'}${percorso}`
+  /^https?:\/\//.test(percorso)
+    ? percorso
+    : `${sito()}${percorso.startsWith('/') ? '' : '/'}${percorso}`
 
 export const urlImmagine = (img: number | Media | null | undefined) =>
   img && typeof img === 'object' && img.url ? urlAssoluto(mediaSrc(img.url)) : undefined
@@ -32,28 +34,49 @@ const indirizzoPostale = (testo: string | null | undefined) => {
   }
 }
 
-// Azienda (dati legali dal Piè di pagina, social dalle Impostazioni) e sito: in ogni pagina
-export function datiAziendaESito(footer: Footer | null, impostazioni: Impostazioni | null = null) {
+// Azienda (SEO e motori AI > Dati dell'azienda, con il Piè di pagina come riserva; social dalle
+// Impostazioni) e sito: in ogni pagina
+export function datiAziendaESito(
+  footer: Footer | null,
+  impostazioni: Impostazioni | null = null,
+  seo: Seo | null = null,
+) {
   const d = footer?.datiLegali
+  const a = seo?.azienda
   const social = (impostazioni?.social ?? []).map((s) => s.url).filter(Boolean)
-  const nomeSito = impostazioni?.nomeSito?.trim() || SITE_NAME
+  const nomeSito = nomeDelSito(seo)
+  const telefono = a?.telefono || d?.telefono
+  const email = a?.email || d?.email
+  const partitaIva = a?.partitaIva || d?.partitaIva
+  const indirizzo = a?.via
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: a.via,
+        ...(a.cap ? { postalCode: a.cap } : {}),
+        ...(a.citta ? { addressLocality: a.citta } : {}),
+        ...(a.provincia ? { addressRegion: a.provincia } : {}),
+        addressCountry: 'IT',
+      }
+    : indirizzoPostale(d?.indirizzo)
   const azienda = {
     '@type': 'Organization',
     '@id': ID_AZIENDA(),
-    name: d?.ragioneSociale || 'SONOTRON ITALIA S.R.L.S.',
+    name: a?.ragioneSociale || d?.ragioneSociale || 'SONOTRON ITALIA S.R.L.S.',
     brand: { '@type': 'Brand', name: nomeSito },
     url: `${sito()}/`,
-    logo: `${sito()}/logo_sorazon.svg`,
-    ...(d?.partitaIva ? { vatID: `IT${d.partitaIva}`, taxID: d.codiceFiscale || d.partitaIva } : {}),
-    ...(d?.indirizzo ? { address: indirizzoPostale(d.indirizzo) } : {}),
-    ...(d?.telefono || d?.email
+    logo: urlImmagine(a?.logo) ?? `${sito()}/logo_sorazon.svg`,
+    ...(partitaIva
+      ? { vatID: `IT${partitaIva}`, taxID: a?.codiceFiscale || d?.codiceFiscale || partitaIva }
+      : {}),
+    ...(indirizzo ? { address: indirizzo } : {}),
+    ...(telefono || email
       ? {
           contactPoint: {
             '@type': 'ContactPoint',
             contactType: 'customer service',
             availableLanguage: 'Italian',
-            ...(d.telefono ? { telephone: d.telefono } : {}),
-            ...(d.email ? { email: d.email } : {}),
+            ...(telefono ? { telephone: telefono } : {}),
+            ...(email ? { email } : {}),
           },
         }
       : {}),
@@ -64,7 +87,7 @@ export function datiAziendaESito(footer: Footer | null, impostazioni: Impostazio
     '@id': ID_SITO(),
     url: `${sito()}/`,
     name: nomeSito,
-    description: impostazioni?.descrizioneSito?.trim() || DESCRIZIONE_SITO,
+    description: descrizioneSito(seo),
     inLanguage: 'it-IT',
     publisher: { '@id': ID_AZIENDA() },
     potentialAction: {

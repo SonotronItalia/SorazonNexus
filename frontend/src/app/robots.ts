@@ -1,35 +1,33 @@
 import type { MetadataRoute } from 'next'
 
+import { getSeo } from '@/lib/content'
 import { getServerSideURL } from '@/utilities/getURL'
+import { crawlerAI, percorsiEsclusi, SEMPRE_ESCLUSI } from '@/utilities/seo'
 
 // Sostituisce next-sitemap in postbuild, che fissava l'indirizzo del sito al momento della build
 export const dynamic = 'force-dynamic'
 
-// Pagine tecniche fuori dagli indici: API, anteprima delle bozze, risultati di ricerca
-const ESCLUSI = ['/api/', '/next/', '/search']
-
-// Crawler dei motori di risposta AI, permessi in modo esplicito (GEO): il sito vuole essere
-// citato dagli assistenti. Per escluderne uno basta spostarlo in una regola "disallow".
-const CRAWLER_AI = [
-  'GPTBot',
-  'OAI-SearchBot',
-  'ChatGPT-User',
-  'ClaudeBot',
-  'Claude-SearchBot',
-  'Claude-User',
-  'PerplexityBot',
-  'Perplexity-User',
-  'Google-Extended',
-  'Applebot-Extended',
-  'Bingbot',
-]
-
-export default function robots(): MetadataRoute.Robots {
+/**
+ * robots.txt dalle scelte di "SEO e motori AI": pagine escluse, assistenti AI ammessi (citati in
+ * modo esplicito: il sito vuole essere citato, GEO) o bloccati, sito nascosto del tutto.
+ */
+export default async function robots(): Promise<MetadataRoute.Robots> {
   const SITE_URL = getServerSideURL()
+  const seo = await getSeo()
+
+  if (seo?.ricerca?.nascondiSito) {
+    return { rules: [{ userAgent: '*', disallow: '/' }] }
+  }
+
+  const esclusi = [...SEMPRE_ESCLUSI, ...percorsiEsclusi(seo)]
+  const { ammessi, bloccati } = crawlerAI(seo)
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ESCLUSI },
-      { userAgent: CRAWLER_AI, allow: '/', disallow: ESCLUSI },
+      { userAgent: '*', allow: '/', disallow: esclusi },
+      ...(ammessi.length
+        ? [{ userAgent: [...ammessi, 'Bingbot'], allow: '/', disallow: esclusi }]
+        : []),
+      ...(bloccati.length ? [{ userAgent: bloccati, disallow: '/' }] : []),
     ],
     sitemap: [`${SITE_URL}/pages-sitemap.xml`, `${SITE_URL}/posts-sitemap.xml`],
     host: SITE_URL,

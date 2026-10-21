@@ -54,23 +54,46 @@ afterAll(async () => {
 const come = (user: User) => ({ user, overrideAccess: false }) as const
 
 describe('Impostazioni del sito', () => {
-  it('un redattore cambia il nome del sito ma non gli ID di Google', async () => {
+  it("un redattore cambia l'avviso ma non gli ID di Google", async () => {
     await payload.updateGlobal({
       slug: 'impostazioni',
-      data: { nomeSito: 'Sorazon', analisi: { googleAnalyticsId: 'G-PRIMA12345' } },
+      data: { analisi: { googleAnalyticsId: 'G-PRIMA12345' } },
       ...come(amministratore),
     })
     await payload.updateGlobal({
       slug: 'impostazioni',
       data: {
-        nomeSito: `Nome del redattore ${suffisso}`,
+        avviso: { testo: `Avviso del redattore ${suffisso}` },
         analisi: { googleAnalyticsId: 'G-REDATTORE1' },
       },
       ...come(redattore),
     })
     const dopo = await payload.findGlobal({ slug: 'impostazioni' })
-    expect(dopo.nomeSito).toBe(`Nome del redattore ${suffisso}`)
+    expect(dopo.avviso?.testo).toBe(`Avviso del redattore ${suffisso}`)
     expect(dopo.analisi?.googleAnalyticsId).toBe('G-PRIMA12345')
+  })
+
+  it('SEO e motori AI: li cambia chi ha il permesso, non il redattore', async () => {
+    await expect(
+      payload.updateGlobal({ slug: 'seo', data: { nomeSito: 'Altro' }, ...come(redattore) }),
+    ).rejects.toThrow()
+    await payload.updateGlobal({
+      slug: 'seo',
+      data: { ricerca: { escluse: [{ percorso: '/prova' }] } },
+      ...come(amministratore),
+    })
+    await expect(
+      payload.updateGlobal({
+        slug: 'seo',
+        data: { ricerca: { escluse: [{ percorso: 'senza-barra' }] } },
+        ...come(amministratore),
+      }),
+    ).rejects.toThrow()
+    await payload.updateGlobal({
+      slug: 'seo',
+      data: { ricerca: { escluse: [] } },
+      ...come(amministratore),
+    })
   })
 
   it('un amministratore cambia gli ID; un ID nel formato sbagliato è rifiutato', async () => {
@@ -91,7 +114,7 @@ describe('Impostazioni del sito', () => {
     ).rejects.toThrow()
     await payload.updateGlobal({
       slug: 'impostazioni',
-      data: { nomeSito: 'Sorazon', analisi: { googleTagManagerId: '', googleAnalyticsId: '' } },
+      data: { avviso: { testo: '' }, analisi: { googleTagManagerId: '', googleAnalyticsId: '' } },
       ...come(amministratore),
     })
   })

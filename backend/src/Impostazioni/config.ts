@@ -39,7 +39,7 @@ const idGoogle = (
 })
 
 /**
- * Impostazioni generali del sito, in un solo posto e a schede: nome e descrizione, Google
+ * Impostazioni generali del sito, a schede: Google
  * (Tag Manager, Analytics, Ads, Consent Mode), avviso in cima alle pagine, profili social.
  */
 export const Impostazioni: GlobalConfig = {
@@ -56,34 +56,14 @@ export const Impostazioni: GlobalConfig = {
   },
   fields: [
     {
+      // Nome, descrizione e tutto ciò che riguarda Google e gli assistenti AI: Avanzate > SEO
+      name: 'rimandoSeo',
+      type: 'ui',
+      admin: { components: { Field: '@/components/admin/RimandoSeo#RimandoSeo' } },
+    },
+    {
       type: 'tabs',
       tabs: [
-        {
-          label: 'Generale',
-          fields: [
-            {
-              name: 'nomeSito',
-              label: 'Nome del sito',
-              type: 'text',
-              required: true,
-              defaultValue: 'Sorazon',
-              admin: {
-                description:
-                  'Compare nel titolo delle pagine su Google e nelle condivisioni sui social.',
-              },
-            },
-            {
-              name: 'descrizioneSito',
-              label: 'Descrizione del sito',
-              type: 'textarea',
-              maxLength: 200,
-              admin: {
-                description:
-                  'Frase usata da Google e dalle condivisioni quando una pagina non ha una descrizione propria. Ideale: 120-160 caratteri.',
-              },
-            },
-          ],
-        },
         {
           name: 'analisi',
           label: 'Analisi e pubblicità',
