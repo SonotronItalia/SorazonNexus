@@ -3,7 +3,8 @@ import path from 'path'
 import { APIError, type CollectionConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
-import { permesso } from '@/access/ruoli'
+import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
+import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { CACHE_MEDIA } from '@/utilities/cacheMedia'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -26,8 +27,17 @@ export const RIFERIMENTO_ESTERNO = /(?:href|src)\s*=\s*["']\s*(?:https?:)?\/\/|u
 export const Marchio: CollectionConfig = {
   slug: 'marchio',
   labels: { singular: 'File del marchio', plural: 'File del marchio' },
-  // Si gestisce dalla scheda Marchio delle Impostazioni, non dal menu
-  admin: { group: 'Impostazioni', hidden: true },
+  // Si sceglie dalla scheda Marchio delle Impostazioni; l'elenco nel menu serve per vedere ed
+  // eliminare i file caricati (un file eliminato e ancora in uso lascia il campo vuoto: il sito
+  // torna al logo Sorazon predefinito)
+  admin: {
+    group: 'Impostazioni',
+    hidden: nascostaSenzaPermesso('impostazioni'),
+    useAsTitle: 'filename',
+    defaultColumns: ['filename', 'alt', 'mimeType', 'updatedAt'],
+    description:
+      'Loghi e icone caricati dalla scheda Marchio delle Impostazioni del sito. Qui puoi eliminare quelli che non servono più: se elimini un file ancora scelto, il sito torna al logo Sorazon predefinito.',
+  },
   access: {
     read: () => true,
     create: permesso('impostazioni', 'modifica'),
@@ -51,6 +61,9 @@ export const Marchio: CollectionConfig = {
     },
   },
   hooks: {
+    // Il sito legge i loghi dalle Impostazioni (tag "globals"): file sostituito o eliminato = cache da rinnovare
+    afterChange: [notifyFrontend('globals')],
+    afterDelete: [notifyFrontend('globals')],
     beforeValidate: [
       ({ req }) => {
         const file = req.file

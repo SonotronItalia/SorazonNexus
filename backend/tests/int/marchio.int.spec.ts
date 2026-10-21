@@ -86,4 +86,33 @@ describe('file del marchio', () => {
     const { docs } = await payload.find({ collection: 'marchio', limit: 1, overrideAccess: false })
     expect(Array.isArray(docs)).toBe(true)
   })
+
+  it("un file eliminato dall'elenco lascia vuoto il campo che lo usava", async () => {
+    const prima = await payload.findGlobal({ slug: 'impostazioni', depth: 0 })
+    const doc = await carica(
+      svg('<rect width="2" height="1" fill="#000"/>'),
+      `da-eliminare-${suffisso}.svg`,
+      'image/svg+xml',
+      {
+        context: { disableRevalidate: true },
+      },
+    )
+    await payload.updateGlobal({
+      slug: 'impostazioni',
+      data: { marchio: { ...prima.marchio, compatto: doc.id } },
+      context: { disableRevalidate: true },
+    })
+    await payload.delete({
+      collection: 'marchio',
+      id: doc.id,
+      context: { disableRevalidate: true },
+    })
+    const dopo = await payload.findGlobal({ slug: 'impostazioni', depth: 0 })
+    expect(dopo.marchio?.compatto ?? null).toBeNull()
+    await payload.updateGlobal({
+      slug: 'impostazioni',
+      data: { marchio: prima.marchio },
+      context: { disableRevalidate: true },
+    })
+  })
 })

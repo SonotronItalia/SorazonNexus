@@ -35,6 +35,7 @@ import { Esci as Esci_6bb620138fcf65294adbf2b3997b145d } from '@/components/admi
 import { Icona as Icona_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
 import { Logo as Logo_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
 import { CollegamentoGuida as CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce } from '@/components/admin/Guida/Collegamento'
+import { LogoMenu as LogoMenu_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
 import { Guida as Guida_d83219e363503be3f78a9da1513bfa21 } from '@/components/admin/Guida'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -77,6 +78,7 @@ export const importMap = {
   "@/components/admin/Marchio#Icona": Icona_76d32dd41587a28eb9865e82d5db950e,
   "@/components/admin/Marchio#Logo": Logo_76d32dd41587a28eb9865e82d5db950e,
   "@/components/admin/Guida/Collegamento#CollegamentoGuida": CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce,
+  "@/components/admin/Marchio#LogoMenu": LogoMenu_76d32dd41587a28eb9865e82d5db950e,
   "@/components/admin/Guida#Guida": Guida_d83219e363503be3f78a9da1513bfa21,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

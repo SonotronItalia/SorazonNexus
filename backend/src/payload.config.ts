@@ -28,6 +28,7 @@ import { linguePerIlPannello } from './utilities/linguePerIlPannello'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
+import { iconaPannello } from './endpoints/iconaPannello'
 import { defaultLexical } from '@/fields/defaultLexical'
 
 const filename = fileURLToPath(import.meta.url)
@@ -39,7 +40,9 @@ if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-p
   for (const nome of ['PAYLOAD_SECRET', 'REVALIDATE_SECRET', 'PREVIEW_SECRET']) {
     const valore = process.env[nome] ?? ''
     if (valore.length < 32 || /cambiami|changeme|secret/i.test(valore)) {
-      throw new Error(`${nome} mancante o debole: generalo con scripts/env.sh (almeno 32 caratteri casuali)`)
+      throw new Error(
+        `${nome} mancante o debole: generalo con scripts/env.sh (almeno 32 caratteri casuali)`,
+      )
     }
   }
 }
@@ -82,7 +85,8 @@ export default buildConfig({
     user: Users.slug,
     meta: {
       titleSuffix: ' – Sorazon',
-      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+      // Icona di Impostazioni > Marchio (endpoint qui sotto), o la Z predefinita
+      icons: [{ rel: 'icon', url: '/api/icona-pannello' }],
     },
     // Pulsante "Esci" con testo in fondo al menu (quello di Payload è solo un'icona)
     components: {
@@ -96,6 +100,8 @@ export default buildConfig({
       },
       // Manuale d'uso dentro l'admin (src/guida), con la voce "Guida" nel menu
       afterNavLinks: ['@/components/admin/Guida/Collegamento#CollegamentoGuida'],
+      // Logo piccolo in cima al menu, sopra "Sfoglia per cartella"
+      beforeNavLinks: ['@/components/admin/Marchio#LogoMenu'],
       views: {
         guida: {
           Component: '@/components/admin/Guida#Guida',
@@ -170,7 +176,21 @@ export default buildConfig({
   }),
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
-  collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Marchio, Categories, Users, Ruoli],
+  // Favicon del pannello: rimanda al file dell'icona scelta in Impostazioni > Marchio
+  endpoints: [iconaPannello],
+  collections: [
+    Pages,
+    Posts,
+    Centri,
+    Colori,
+    Effetti,
+    TipiEffetto,
+    Media,
+    Marchio,
+    Categories,
+    Users,
+    Ruoli,
+  ],
   globals: [Impostazioni, Header, Footer, TornaSu, Seo, Lingue],
   // Traduzioni: italiano principale, le altre lingue di src/lingue.ts. Nel pannello compaiono
   // solo quelle attive in "Lingue e selettore" (e, per un traduttore, quelle che può tradurre)

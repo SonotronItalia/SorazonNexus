@@ -344,6 +344,8 @@ Nella scheda **Marchio** scegli il logo e l'icona del sito. Il sito decide da so
 
 I formati sono **SVG** (il migliore: è nitido a ogni misura), PNG o WebP. Se un file SVG contiene parti che potrebbero essere pericolose, il pannello lo rifiuta: chiedi a chi ha disegnato il logo di esportarlo di nuovo come immagine semplice. Un campo vuoto usa il logo Sorazon.
 
+I file caricati restano nell'elenco **Impostazioni › File del marchio**. Da lì puoi eliminare quelli che non servono più: se elimini un file ancora scelto, il sito torna al logo Sorazon. L'icona scelta compare anche nella scheda del browser del pannello, e il logo in alto nel menu del pannello.
+
 ![Logo e icona del sito](/guida/r36-marchio.jpg)
 
 ### Menu principale

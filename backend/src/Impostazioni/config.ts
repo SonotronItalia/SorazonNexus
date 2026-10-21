@@ -225,7 +225,7 @@ export const Impostazioni: GlobalConfig = {
           name: 'marchio',
           label: 'Marchio',
           description:
-            "Logo e icona del sito. Le dimensioni a schermo le decide il sito: carica il file intero, senza margini attorno. Formati: SVG (consigliato), PNG o WebP di almeno 1000 px di larghezza. Un campo vuoto usa il logo Sorazon predefinito.",
+            "Logo e icona del sito. Le dimensioni a schermo le decide il sito: carica il file intero, senza margini attorno. Formati: SVG (consigliato), PNG o WebP di almeno 1000 px di larghezza. Un campo vuoto usa il logo Sorazon predefinito. I file caricati restano nell'elenco Impostazioni › File del marchio, da dove si eliminano.",
           fields: [
             {
               type: 'row',

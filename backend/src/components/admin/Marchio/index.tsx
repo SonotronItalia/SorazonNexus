@@ -60,3 +60,35 @@ export const Icona = async ({ payload }: Props) => {
     />
   )
 }
+
+/**
+ * Logo piccolo in cima al menu laterale, sopra "Sfoglia per cartella" (admin.components.
+ * beforeNavLinks). Il menu con l'aspetto Sorazon è blu notte: logo per sfondo scuro (compatto se
+ * c'è); con l'aspetto standard il menu è chiaro: logo per sfondo chiaro. Porta alla home del pannello.
+ */
+export const LogoMenu = async ({ payload }: Props) => {
+  const marchio = await leggiMarchio(payload)
+  const scuro = marchio?.pannelloSorazon !== false
+  const logo = scuro
+    ? (file(marchio?.compattoNegativo) ??
+      file(marchio?.compatto) ??
+      file(marchio?.negativo) ?? { url: '/logo_sorazon_neg.svg', w: 842.25, h: 254.25 })
+    : (file(marchio?.compatto) ??
+      file(marchio?.positivo) ?? { url: '/logo_sorazon.svg', w: 842.25, h: 254.25 })
+  const admin = payload?.config.routes.admin ?? '/admin'
+  return (
+    <a href={admin} aria-label="Sorazon: home del pannello" className="logo-menu-sorazon">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={logo.url}
+        alt=""
+        style={{
+          height: 36,
+          width: 'auto',
+          maxWidth: '100%',
+          aspectRatio: logo.w && logo.h ? `${logo.w} / ${logo.h}` : undefined,
+        }}
+      />
+    </a>
+  )
+}

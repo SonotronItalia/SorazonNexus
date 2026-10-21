@@ -1656,6 +1656,8 @@ export interface FormSubmission {
   createdAt: string;
 }
 /**
+ * Loghi e icone caricati dalla scheda Marchio delle Impostazioni del sito. Qui puoi eliminare quelli che non servono più: se elimini un file ancora scelto, il sito torna al logo Sorazon predefinito.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "marchio".
  */

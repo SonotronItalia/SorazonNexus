@@ -30,6 +30,7 @@ export async function seedMarchio(payload: Payload, cartella: string) {
         collection: 'marchio',
         data: { alt },
         filePath: path.join(cartella, file),
+        context: { disableRevalidate: true },
       }))
     data[campo] = doc.id
   }
