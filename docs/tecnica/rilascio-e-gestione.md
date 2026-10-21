@@ -52,7 +52,7 @@ Quando una modifica riguarda anche i **contenuti** (es. nuovi blocchi nelle pagi
 
 ## Immagini tra Mac e stack
 
-In sviluppo i file stanno in `backend/public/media`, nello stack nel volume `media`; il database è lo stesso. `make allinea-media` (chiamato anche dopo il seed nello stack) copia i file mancanti nei due sensi, senza sovrascrivere né cancellare.
+In sviluppo i file stanno in `backend/public/media`, nello stack nel volume `media`; il database è lo stesso. `make allinea-media` (chiamato anche dopo il seed nello stack) copia i file mancanti nei due sensi (media e `marchio`), senza sovrascrivere né cancellare, e rimette il proprietario dei file del volume all'utente del backend: i file creati dal seed (root) non sarebbero modificabili dal backend, che gira senza permessi speciali. Se il pannello dà "errore di caricamento", la prima cosa da provare è `make allinea-media`.
 
 ## Mostrare il lavoro da fuori
 

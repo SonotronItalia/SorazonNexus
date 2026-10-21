@@ -35,3 +35,17 @@ allinea() {
 allinea backend/public/media /data/media "Immagini e file"
 # Loghi e icona (Impostazioni del sito > Marchio): sottocartella marchio del volume
 allinea backend/public/marchio /data/media/marchio "File del marchio"
+
+# Proprietario dei file nel volume: il seed (servizio "seed", gira come root) e docker cp creano
+# file di root, che il backend (utente app, senza permessi speciali: cap_drop ALL) non può poi
+# sostituire, e nemmeno scrivere nelle cartelle nuove (es. marchio): "errore di caricamento" nel
+# pannello. Si sistema con un container temporaneo della stessa immagine, collegato al solo volume
+UTENTE=$(docker exec "$ID" id -u):$(docker exec "$ID" id -g)
+IMMAGINE=$(docker inspect "$ID" --format '{{.Config.Image}}')
+VOLUME_NOME=$(docker inspect "$ID" --format '{{range .Mounts}}{{if eq .Destination "/data/media"}}{{.Name}}{{end}}{{end}}')
+if [ -n "$VOLUME_NOME" ] &&
+  docker run --rm --user root -v "$VOLUME_NOME:/data/media" --entrypoint chown "$IMMAGINE" -R "$UTENTE" /data/media; then
+  echo "  Permessi dei file caricati sistemati (proprietario $UTENTE)"
+else
+  echo "  Attenzione: non sono riuscito a sistemare i permessi del volume dei media"
+fi
