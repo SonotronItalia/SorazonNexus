@@ -20,9 +20,13 @@ const leggiMarchio = async (payload?: Payload): Promise<Impostazioni['marchio'] 
   }
 }
 
+// Solo il percorso (/api/marchio/file/...): l'URL di Payload contiene l'indirizzo pubblico del
+// backend (serverURL), che non vale se il pannello si apre da un altro indirizzo (tunnel, rete)
+const percorso = (url: string) => new URL(url, 'http://x').pathname
+
 const file = (v: number | Marchio | null | undefined) =>
   v && typeof v === 'object' && v.url
-    ? { url: `${v.url}?v=${encodeURIComponent(v.updatedAt)}`, w: v.width, h: v.height }
+    ? { url: `${percorso(v.url)}?v=${encodeURIComponent(v.updatedAt)}`, w: v.width, h: v.height }
     : undefined
 
 export const Logo = async ({ payload }: Props) => {
