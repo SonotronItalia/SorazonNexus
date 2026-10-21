@@ -37,6 +37,10 @@ const interTight = Inter_Tight({
   variable: '--font-inter-tight',
 })
 
+// Tutte le pagine si disegnano a ogni richiesta: la lingua arriva dall'intestazione x-lingua
+// (proxy.ts). I dati del CMS restano in cache con i tag, quindi resta veloce
+export const dynamic = 'force-dynamic'
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non

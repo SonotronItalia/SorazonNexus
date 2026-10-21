@@ -15,11 +15,8 @@ import { LINGUA_PRINCIPALE, percorsoDoc } from '@/utilities/lingue'
 import { linguaRichiesta } from '@/utilities/linguaRichiesta'
 import { generateMeta } from '@/utilities/generateMeta'
 
-// Nessuna pagina pre-generata in build (il backend può non esserci):
-// ognuna si costruisce alla prima richiesta e resta in cache fino all'avviso del CMS (tag)
-export async function generateStaticParams() {
-  return []
-}
+// Disegnata a ogni richiesta (lingua dall'intestazione x-lingua); dati in cache con i tag del CMS
+export const dynamic = 'force-dynamic'
 
 type Args = {
   params: Promise<{

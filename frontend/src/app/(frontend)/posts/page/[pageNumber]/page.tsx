@@ -69,7 +69,5 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   }
 }
 
-// Nessuna pagina pre-generata in build: si costruiscono alla prima richiesta
-export async function generateStaticParams() {
-  return []
-}
+// Disegnata a ogni richiesta (lingua dall'intestazione x-lingua); dati in cache con i tag del CMS
+export const dynamic = 'force-dynamic'
