@@ -189,3 +189,48 @@
 html[data-theme='dark'] .marchio-sorazon {
   background-image: var(--marchio-scuro, url('/logo_sorazon_neg.svg'));
 }
+
+/* Logo piccolo in cima al menu laterale (components/admin/Marchio LogoMenu), centrato */
+.logo-menu-sorazon {
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  width: 100%;
+  margin: 4px 0 18px;
+}
+
+/* Pagina Cestino (components/admin/Cestino) */
+.cestino {
+  max-width: 960px;
+  padding-block: 24px 60px;
+}
+.cestino__intro { color: var(--theme-elevation-600); max-width: 70ch; }
+.cestino__sezione {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border: 1px solid var(--theme-elevation-100);
+  border-radius: var(--style-radius-l);
+}
+.cestino__testa { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cestino__testa h2 { margin: 0; font-size: 20px; }
+.cestino__conta {
+  display: inline-block;
+  min-width: 26px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--theme-elevation-100);
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+}
+.cestino__elenco { list-style: none; margin: 12px 0 0; padding: 0; }
+.cestino__elenco li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--theme-elevation-100);
+}
+.cestino__elenco li span { color: var(--theme-elevation-500); font-size: 13px; white-space: nowrap; }
+.cestino__vuoto, .cestino__altri { margin: 10px 0 0; color: var(--theme-elevation-500); }
+#nav-cestino { margin-top: calc(var(--base) * 0.5); }

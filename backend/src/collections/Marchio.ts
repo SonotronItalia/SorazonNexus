@@ -4,6 +4,7 @@ import { APIError, type CollectionConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
+import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
 import { notifyFrontend } from '@/hooks/notifyFrontend'
 import { CACHE_MEDIA } from '@/utilities/cacheMedia'
 
@@ -38,6 +39,9 @@ export const Marchio: CollectionConfig = {
     description:
       'Loghi e icone caricati dalla scheda Marchio delle Impostazioni del sito. Qui puoi eliminare quelli che non servono più: se elimini un file ancora scelto, il sito torna al logo Sorazon predefinito.',
   },
+  // Cestino come le altre voci: eliminazione definitiva solo amministratori (hooks/cestino.ts).
+  // Un file nel cestino non si usa più: il sito torna al logo predefinito finché non lo si ripristina
+  trash: true,
   access: {
     read: () => true,
     create: permesso('impostazioni', 'modifica'),
@@ -64,6 +68,7 @@ export const Marchio: CollectionConfig = {
     // Il sito legge i loghi dalle Impostazioni (tag "globals"): file sostituito o eliminato = cache da rinnovare
     afterChange: [notifyFrontend('globals')],
     afterDelete: [notifyFrontend('globals')],
+    beforeDelete: [soloAdminEliminaDefinitivo],
     beforeValidate: [
       ({ req }) => {
         const file = req.file

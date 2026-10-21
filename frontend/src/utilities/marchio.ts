@@ -29,8 +29,11 @@ type Valore = number | Marchio | null | undefined
 const conVersione = (m: Marchio) =>
   `${marchioSrc(m.url)}${m.updatedAt ? `?v=${encodeURIComponent(m.updatedAt)}` : ''}`
 
+// Un file nel cestino conta come non scelto: si usa quello predefinito
+const usabile = (v: Valore): v is Marchio => Boolean(v && typeof v === 'object' && v.url && !v.deletedAt)
+
 const logo = (v: Valore): FileLogo | undefined =>
-  v && typeof v === 'object' && v.url
+  usabile(v)
     ? {
         url: conVersione(v),
         larghezza: v.width || SORAZON.larghezza,
@@ -57,7 +60,7 @@ export const loghi = (impostazioni: Impostazioni | null | undefined): Loghi => {
 }
 
 const icona = (v: Valore): FileIcona | undefined =>
-  v && typeof v === 'object' && v.url
+  usabile(v)
     ? {
         url: marchioSrc(v.url),
         svg: v.mimeType === 'image/svg+xml',

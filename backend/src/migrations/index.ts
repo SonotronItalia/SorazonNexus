@@ -29,6 +29,7 @@ import * as migration_20261021_101421_galleria_tutto_schermo from './20261021_10
 import * as migration_20261021_134119_marchio from './20261021_134119_marchio';
 import * as migration_20261021_154652_tema_pannello from './20261021_154652_tema_pannello';
 import * as migration_20261021_164822_cestino from './20261021_164822_cestino';
+import * as migration_20261021_234744_cestino_marchio from './20261021_234744_cestino_marchio';
 
 export const migrations = [
   {
@@ -184,6 +185,11 @@ export const migrations = [
   {
     up: migration_20261021_164822_cestino.up,
     down: migration_20261021_164822_cestino.down,
-    name: '20261021_164822_cestino'
+    name: '20261021_164822_cestino',
+  },
+  {
+    up: migration_20261021_234744_cestino_marchio.up,
+    down: migration_20261021_234744_cestino_marchio.down,
+    name: '20261021_234744_cestino_marchio'
   },
 ];

@@ -14,7 +14,7 @@ export const iconaPannello: Endpoint = {
     try {
       const { marchio } = await req.payload.findGlobal({ slug: 'impostazioni', depth: 1 })
       const icona = marchio?.icona
-      if (icona && typeof icona === 'object' && icona.url) {
+      if (icona && typeof icona === 'object' && icona.url && !icona.deletedAt) {
         destinazione = `${new URL(icona.url, 'http://x').pathname}?v=${encodeURIComponent(icona.updatedAt)}`
       }
     } catch {

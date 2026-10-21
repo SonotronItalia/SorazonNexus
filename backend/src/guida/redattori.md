@@ -172,9 +172,10 @@ Hai sbagliato? Nessun problema. Premi **Versioni** in alto. Vedi le ultime 50 ve
 
 ### Il cestino
 
-Quando elimini una pagina, una notizia, un centro, un modulo o un'immagine, non sparisce: finisce nel **cestino**. Dal sito scompare subito, ma puoi recuperarla.
+Quando elimini una pagina, una notizia, un centro, un modulo, un'immagine o un file del marchio, non sparisce: finisce nel **cestino**. Dal sito scompare subito, ma puoi recuperarla.
 
-- Apri l'elenco (per esempio **Pagine**) e in alto a destra scegli **Cestino**.
+- La voce **Cestino** nel menu (dopo Avanzate) mostra tutto quello che è stato eliminato, diviso per tipo.
+- Oppure apri l'elenco (per esempio **Pagine**) e in alto a destra scegli **Cestino**.
 - Apri il documento e premi **Ripristina**: torna al suo posto.
 - **Eliminare per sempre** (o **Svuota cestino**) lo può fare solo un amministratore. Se ci provi, il pannello te lo dice e il documento resta nel cestino.
 
@@ -344,7 +345,7 @@ Nella scheda **Marchio** scegli il logo e l'icona del sito. Il sito decide da so
 
 I formati sono **SVG** (il migliore: è nitido a ogni misura), PNG o WebP. Se un file SVG contiene parti che potrebbero essere pericolose, il pannello lo rifiuta: chiedi a chi ha disegnato il logo di esportarlo di nuovo come immagine semplice. Un campo vuoto usa il logo Sorazon.
 
-I file caricati restano nell'elenco **Impostazioni › File del marchio**. Da lì puoi eliminare quelli che non servono più: se elimini un file ancora scelto, il sito torna al logo Sorazon. L'icona scelta compare anche nella scheda del browser del pannello, e il logo in alto nel menu del pannello.
+I file caricati restano nell'elenco **Impostazioni › File del marchio**. Da lì puoi eliminare quelli che non servono più: finiscono nel cestino e, finché sono lì, il sito usa il logo Sorazon al loro posto. L'icona scelta compare anche nella scheda del browser del pannello, e il logo in alto nel menu del pannello.
 
 ![Logo e icona del sito](/guida/r36-marchio.jpg)
 

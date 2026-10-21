@@ -26,8 +26,9 @@ const leggiMarchio = async (payload?: Payload): Promise<Impostazioni['marchio'] 
 // backend (serverURL), che non vale se il pannello si apre da un altro indirizzo (tunnel, rete)
 const percorso = (url: string) => new URL(url, 'http://x').pathname
 
+// Un file nel cestino conta come non scelto
 const file = (v: number | Marchio | null | undefined) =>
-  v && typeof v === 'object' && v.url
+  v && typeof v === 'object' && v.url && !v.deletedAt
     ? { url: `${percorso(v.url)}?v=${encodeURIComponent(v.updatedAt)}`, w: v.width, h: v.height }
     : undefined
 

@@ -99,10 +99,20 @@ export default buildConfig({
         Icon: '@/components/admin/Marchio#Icona',
       },
       // Manuale d'uso dentro l'admin (src/guida), con la voce "Guida" nel menu
-      afterNavLinks: ['@/components/admin/Guida/Collegamento#CollegamentoGuida'],
+      // Dopo il gruppo Avanzate: il Cestino di tutte le raccolte, poi la Guida
+      afterNavLinks: [
+        '@/components/admin/Cestino/Collegamento#CollegamentoCestino',
+        '@/components/admin/Guida/Collegamento#CollegamentoGuida',
+      ],
       // Logo piccolo in cima al menu, sopra "Sfoglia per cartella"
       beforeNavLinks: ['@/components/admin/Marchio#LogoMenu'],
       views: {
+        // Elementi eliminati di tutte le raccolte con il cestino, divisi per tipologia
+        cestino: {
+          Component: '@/components/admin/Cestino#Cestino',
+          path: '/cestino',
+          meta: { title: 'Cestino' },
+        },
         guida: {
           Component: '@/components/admin/Guida#Guida',
           path: '/guida',

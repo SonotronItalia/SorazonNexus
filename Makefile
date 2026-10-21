@@ -14,7 +14,7 @@ MEDIA_VOLUME := sorazon_media
 
 help: ## Mostra i comandi disponibili
 	@$(FX) banner "comandi disponibili"
-	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[38;5;135m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  \033[38;5;135m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo
 	@echo "  Senza animazioni: make <comando> EFFECTS=0"
 

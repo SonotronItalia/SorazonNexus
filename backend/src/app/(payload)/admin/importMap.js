@@ -34,8 +34,10 @@ import { TemaPannello as TemaPannello_66fe39966f48fd6c4544cb76ce72e119 } from '@
 import { Esci as Esci_6bb620138fcf65294adbf2b3997b145d } from '@/components/admin/Esci'
 import { Icona as Icona_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
 import { Logo as Logo_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
+import { CollegamentoCestino as CollegamentoCestino_8ad110aa50ceae2988b23619f510d7f1 } from '@/components/admin/Cestino/Collegamento'
 import { CollegamentoGuida as CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce } from '@/components/admin/Guida/Collegamento'
 import { LogoMenu as LogoMenu_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
+import { Cestino as Cestino_cb36952127f79f68ab2ebe4d90e57b20 } from '@/components/admin/Cestino'
 import { Guida as Guida_d83219e363503be3f78a9da1513bfa21 } from '@/components/admin/Guida'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -77,8 +79,10 @@ export const importMap = {
   "@/components/admin/Esci#Esci": Esci_6bb620138fcf65294adbf2b3997b145d,
   "@/components/admin/Marchio#Icona": Icona_76d32dd41587a28eb9865e82d5db950e,
   "@/components/admin/Marchio#Logo": Logo_76d32dd41587a28eb9865e82d5db950e,
+  "@/components/admin/Cestino/Collegamento#CollegamentoCestino": CollegamentoCestino_8ad110aa50ceae2988b23619f510d7f1,
   "@/components/admin/Guida/Collegamento#CollegamentoGuida": CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce,
   "@/components/admin/Marchio#LogoMenu": LogoMenu_76d32dd41587a28eb9865e82d5db950e,
+  "@/components/admin/Cestino#Cestino": Cestino_cb36952127f79f68ab2ebe4d90e57b20,
   "@/components/admin/Guida#Guida": Guida_d83219e363503be3f78a9da1513bfa21,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
