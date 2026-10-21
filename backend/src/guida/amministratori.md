@@ -108,7 +108,7 @@ In **Impostazioni › Lingue e selettore** decidi in quali lingue è il sito, ol
 
 Una lingua che non c'è nell'elenco va aggiunta da uno sviluppatore. Lo stesso vale per le scritte fisse del sito (pulsanti, banner dei cookie), oggi in italiano e in inglese.
 
-Le singole pagine compaiono in una lingua solo quando qualcuno le ha tradotte e ha spuntato **Pubblicata in questa lingua** (vedi la Guida per redattori, capitolo *Le traduzioni*). Le altre portano alla versione italiana.
+Le singole pagine compaiono in una lingua quando qualcuno le ha tradotte e ha premuto **Pubblica modifiche**, a meno che non sia spuntato **Nascondi in questa lingua** (vedi la Guida per redattori, capitolo *Le traduzioni*). Le pagine non tradotte portano alla versione italiana.
 
 ### I traduttori
 

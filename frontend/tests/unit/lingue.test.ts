@@ -32,11 +32,12 @@ describe('lingue del sito', () => {
     expect(lingueAttive(null).map((l) => l.codice)).toEqual(['it'])
   })
 
-  it('sitemap: le traduzioni solo se pubblicate e in una lingua attiva', () => {
+  it('sitemap: le traduzioni solo se esistono, non nascoste e in una lingua attiva', () => {
     const voci = vociSitemap(
       [
-        { slug: { it: 'terapia', en: 'therapy', de: 'therapie' }, inLingua: { en: true, de: true } },
-        { slug: { it: 'centri', en: 'centres' }, inLingua: { en: false } },
+        { slug: { it: 'terapia', en: 'therapy', de: 'therapie' }, nascosta: { en: false } },
+        { slug: { it: 'centri', en: 'centres' }, nascosta: { en: true } },
+        { slug: { it: 'contatti' } },
       ],
       'pages',
       ['it', 'en'],
@@ -48,6 +49,7 @@ describe('lingue del sito', () => {
       'https://www.sorazon.it/terapia',
       'https://www.sorazon.it/en/therapy',
       'https://www.sorazon.it/centri',
+      'https://www.sorazon.it/contatti',
     ])
   })
 

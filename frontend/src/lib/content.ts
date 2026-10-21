@@ -72,12 +72,14 @@ export const getColori = async () => {
 
 // --- Pagine ---
 
-// Documento tradotto: nelle lingue diverse dall'italiano si mostra solo con "Pubblicata in questa
-// lingua", cercandolo per lo slug di quella lingua (senza ripiego sull'italiano)
+// Documento tradotto: nelle lingue diverse dall'italiano si mostra se la traduzione è pubblicata
+// (slug in quella lingua, senza ripiego sull'italiano) e non è nascosta ("Nascondi in questa lingua")
 async function idTradotto(raccolta: 'pages' | 'posts', slug: string, lingua: string) {
   const q = qs({
     'where[slug][equals]': slug,
-    'where[inLingua][equals]': 'true',
+    // Non nascosta ("Nascondi in questa lingua" spenta o mai impostata)
+    'where[or][0][nascosta][equals]': 'false',
+    'where[or][1][nascosta][exists]': 'false',
     locale: lingua,
     'fallback-locale': 'none',
     limit: 1,
@@ -113,14 +115,14 @@ export async function getAlternative(
 ): Promise<Record<string, string>> {
   const doc = await api<{
     slug?: Record<string, string | null> | null
-    inLingua?: Record<string, boolean | null> | null
-  }>(`/${raccolta}/${id}?depth=0&locale=all&select[slug]=true&select[inLingua]=true`, {
+    nascosta?: Record<string, boolean | null> | null
+  }>(`/${raccolta}/${id}?depth=0&locale=all&select[slug]=true&select[nascosta]=true`, {
     tags: [raccolta],
   }).catch(() => null)
   const esito: Record<string, string> = {}
   for (const [lingua, slug] of Object.entries(doc?.slug ?? {})) {
     if (!slug) continue
-    if (lingua === LINGUA_PRINCIPALE || doc?.inLingua?.[lingua]) esito[lingua] = slug
+    if (lingua === LINGUA_PRINCIPALE || !doc?.nascosta?.[lingua]) esito[lingua] = slug
   }
   return esito
 }
@@ -165,7 +167,7 @@ export async function getPagineSommario() {
 export type VoceSitemap = {
   updatedAt?: string
   slug?: Record<string, string | null> | null
-  inLingua?: Record<string, boolean | null> | null
+  nascosta?: Record<string, boolean | null> | null
 }
 export async function getPagesForSitemap() {
   const q = qs({
@@ -174,7 +176,7 @@ export async function getPagesForSitemap() {
     depth: 0,
     locale: 'all',
     'select[slug]': 'true',
-    'select[inLingua]': 'true',
+    'select[nascosta]': 'true',
     'select[updatedAt]': 'true',
   })
   const { docs } = await api<List<VoceSitemap>>(`/pages?${q}`, { tags: ['pages-sitemap'] })
@@ -183,11 +185,16 @@ export async function getPagesForSitemap() {
 
 // --- Notizie ---
 
-// Nelle altre lingue solo le notizie tradotte ("Pubblicata in questa lingua")
+// Nelle altre lingue solo le notizie tradotte e non nascoste
 const soloTradotte = (lingua: string): Record<string, string> =>
   lingua === LINGUA_PRINCIPALE
     ? {}
-    : { 'where[inLingua][equals]': 'true', 'fallback-locale': 'none' }
+    : {
+        'where[slug][exists]': 'true',
+        'where[or][0][nascosta][equals]': 'false',
+        'where[or][1][nascosta][exists]': 'false',
+        'fallback-locale': 'none',
+      }
 
 export async function getPosts(
   page = 1,
@@ -248,7 +255,7 @@ export async function getPostsForSitemap() {
     depth: 0,
     locale: 'all',
     'select[slug]': 'true',
-    'select[inLingua]': 'true',
+    'select[nascosta]': 'true',
     'select[updatedAt]': 'true',
   })
   const { docs } = await api<List<VoceSitemap>>(`/posts?${q}`, { tags: ['posts-sitemap'] })

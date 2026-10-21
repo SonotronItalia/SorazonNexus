@@ -377,9 +377,9 @@ export interface Page {
   };
   publishedAt?: string | null;
   /**
-   * Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la pagina si vede sempre.
+   * Solo per le traduzioni: la pagina non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.
    */
-  inLingua?: boolean | null;
+  nascosta?: boolean | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -431,9 +431,9 @@ export interface Post {
       }[]
     | null;
   /**
-   * Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la notizia si vede sempre.
+   * Solo per le traduzioni: la notizia non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.
    */
-  inLingua?: boolean | null;
+  nascosta?: boolean | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1983,7 +1983,7 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
-  inLingua?: T;
+  nascosta?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -2015,7 +2015,7 @@ export interface PostsSelect<T extends boolean = true> {
         id?: T;
         name?: T;
       };
-  inLingua?: T;
+  nascosta?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;

@@ -134,16 +134,17 @@ export const Pages: CollectionConfig<'pages'> = {
       },
     },
     {
-      // Le lingue diverse dall'italiano compaiono sul sito solo con questa spunta (traduzione pronta)
-      name: 'inLingua',
-      label: 'Pubblicata in questa lingua',
+      // Una traduzione pubblicata ("Pubblica modifiche" nella lingua scelta) si vede sul sito;
+      // questa spunta la nasconde in quella lingua (per esempio mentre la si rivede)
+      name: 'nascosta',
+      label: 'Nascondi in questa lingua',
       type: 'checkbox',
       localized: true,
       defaultValue: false,
       admin: {
         position: 'sidebar',
         description:
-          "Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la pagina si vede sempre.",
+          "Solo per le traduzioni: la pagina non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.",
       },
     },
     slugField({

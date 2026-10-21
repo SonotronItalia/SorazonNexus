@@ -272,7 +272,7 @@ describe('traduttori', () => {
         collection: 'pages',
         id: pagina.id,
         locale: 'en',
-        data: { title: `Page to translate ${suffisso}`, slug: `page-to-translate-${suffisso}`, inLingua: true },
+        data: { title: `Page to translate ${suffisso}`, slug: `page-to-translate-${suffisso}` },
         ...come(traduttore),
         context: { disableRevalidate: true },
       })

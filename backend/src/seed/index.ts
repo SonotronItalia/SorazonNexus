@@ -372,7 +372,7 @@ if (!lingueAttuali.elenco?.length) {
 } else log('lingue del sito già impostate: non toccate')
 
 // Traduzioni (dati/traduzioni/<lingua>/): pagine (Markdown come quelle italiane, con "pagina:"
-// = slug italiano e "pubblicata:" = visibile in quella lingua), menu, modulo e SEO
+// = slug italiano e "pubblicata: false" = salvata ma nascosta in quella lingua), menu, modulo e SEO
 for (const lingua of fs.existsSync(dati('traduzioni')) ? fs.readdirSync(dati('traduzioni')).sort() : []) {
   const locale = lingua as TypedLocale
   const cartella = (...parti: string[]) => dati('traduzioni', lingua, ...parti)
@@ -383,8 +383,8 @@ for (const lingua of fs.existsSync(dati('traduzioni')) ? fs.readdirSync(dati('tr
     const id = pagina ? idPagine.get(pagina) : undefined
     if (!id) throw new Error(`traduzioni/${lingua}/pagine/${f}: "pagina: ${pagina}" non esiste`)
     const data = risolvi(resto, risolutori) as RequiredDataFromCollectionSlug<'pages'>
-    await payload.update({ collection: 'pages', id, locale, data: { ...data, inLingua: Boolean(pubblicata), _status: 'published' }, context })
-    log(`pagina /${lingua}/${p.slug} (da /${pagina}) ${pubblicata ? 'pubblicata' : 'da rivedere, non visibile'}`)
+    await payload.update({ collection: 'pages', id, locale, data: { ...data, nascosta: pubblicata === false, _status: 'published' }, context })
+    log(`pagina /${lingua}/${p.slug} (da /${pagina}) ${pubblicata === false ? 'da rivedere, nascosta' : 'pubblicata'}`)
   }
   // Menu dell'header nella lingua
   if (fs.existsSync(cartella('menu.csv'))) {

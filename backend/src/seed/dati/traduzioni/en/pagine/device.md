@@ -1,7 +1,7 @@
 ---
 # Traduzione della pagina italiana Dispositivi (dati ufficiali di oggi: Studio e Maxi, monitor 7").
 # Termini presi dalla vecchia pagina inglese (Main unit, Transducer, Power consumption...).
-# DA RIVEDERE: non pubblicata in inglese finché qualcuno non la controlla.
+# DA RIVEDERE: nascosta in inglese finché qualcuno non la controlla e toglie "Nascondi in questa lingua".
 pagina: dispositivo
 pubblicata: false
 title: Devices

@@ -357,8 +357,7 @@ Accanto al titolo di ogni campo compare la lingua, per esempio *Titolo — Ingle
 2. Se la pagina non è mai stata tradotta, parti da una copia dell'italiano: premi i tre puntini **⋮** in alto a destra, poi **Copia in un'altra lingua** e scegli la lingua.
 3. Traduci il **Titolo**, l'**Apertura**, i **blocchi** e la scheda **SEO**.
 4. **Indirizzo**: premi **Sblocca** e scrivi l'indirizzo nella lingua, per esempio *therapy*. Non cambiare gli indirizzi già pubblicati.
-5. Quando la traduzione è pronta, spunta **Pubblicata in questa lingua** a destra.
-6. Premi **Pubblica modifiche**.
+5. Premi **Pubblica modifiche**: la traduzione compare subito sul sito.
 
 ![La copia da un'altra lingua](/guida/r35-copia-lingua.jpg)
 
@@ -366,15 +365,19 @@ Accanto al titolo di ogni campo compare la lingua, per esempio *Titolo — Ingle
 
 Ogni lingua ha i **suoi blocchi**: puoi togliere o aggiungere blocchi in inglese senza toccare l'italiano.
 
-> **Finché "Pubblicata in questa lingua" non è spuntata** la pagina non compare in quella lingua: chi apre l'indirizzo inglese viene portato alla pagina italiana. Così non si vedono mai pagine tradotte a metà.
+Finché lavori, il pannello salva da solo una **bozza**: non si vede sul sito. Una pagina mai pubblicata in una lingua non compare in quella lingua: chi apre l'indirizzo viene portato alla pagina italiana.
 
-L'**anteprima** funziona anche per le traduzioni: con la lingua scelta in alto, l'anteprima mostra la versione in quella lingua, anche se non è ancora pubblicata.
+> **Attenzione: "Pubblica modifiche" pubblica tutte le lingue insieme.** Se stai traducendo e qualcun altro pubblica la pagina in italiano, anche la tua traduzione a metà va online. Per evitarlo, spunta **Nascondi in questa lingua** (a destra) finché la traduzione non è pronta, poi togli la spunta e pubblica.
+
+**Nascondi in questa lingua** serve anche per togliere temporaneamente una traduzione dal sito (per esempio mentre la si rivede), senza cancellarla.
+
+L'**anteprima** funziona anche per le traduzioni: con la lingua scelta in alto, l'anteprima mostra la versione in quella lingua, anche se è solo una bozza o è nascosta.
 
 ### Tradurre il resto
 
 Nello stesso modo, scegliendo la lingua in alto, si traducono:
 
-- le **notizie** (anche loro con *Pubblicata in questa lingua*);
+- le **notizie** (anche loro con *Nascondi in questa lingua*);
 - il **Menu principale** e il **Piè di pagina**: ogni lingua ha le sue voci;
 - l'**avviso in cima al sito** (Impostazioni del sito): se non è tradotto, nelle altre lingue non compare;
 - i **moduli**: le etichette dei campi e il messaggio di conferma;

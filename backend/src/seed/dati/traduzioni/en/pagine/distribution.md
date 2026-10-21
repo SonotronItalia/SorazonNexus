@@ -1,5 +1,5 @@
 ---
-# Traduzione della pagina italiana Distribuzione. DA RIVEDERE: non pubblicata in inglese finché
+# Traduzione della pagina italiana Distribuzione. DA RIVEDERE: nascosta in inglese finché
 # qualcuno non la controlla.
 pagina: distribuzione
 pubblicata: false

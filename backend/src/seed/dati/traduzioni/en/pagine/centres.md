@@ -1,6 +1,6 @@
 ---
-# Traduzione della pagina italiana Centri. DA RIVEDERE: non pubblicata in inglese finché qualcuno
-# non la controlla.
+# Traduzione della pagina italiana Centri. DA RIVEDERE: nascosta in inglese finché qualcuno
+# non la controlla e toglie "Nascondi in questa lingua".
 pagina: centri
 pubblicata: false
 title: Centres

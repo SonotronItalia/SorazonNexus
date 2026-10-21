@@ -7,7 +7,7 @@ import { nonIndicizzare } from './seo'
 
 /**
  * Indirizzi della sitemap per pagine o notizie: l'italiano sempre, le altre lingue attive solo se
- * il documento è pubblicato in quella lingua. Le pagine escluse in "SEO e motori AI" restano fuori.
+ * il documento è tradotto (slug nella lingua) e non nascosto in quella lingua. Le pagine escluse in "SEO e motori AI" restano fuori.
  */
 export const vociSitemap = (
   docs: VoceSitemap[],
@@ -21,7 +21,7 @@ export const vociSitemap = (
     attive.flatMap((lingua) => {
       const slug = d.slug?.[lingua]
       if (!slug) return []
-      if (lingua !== LINGUA_PRINCIPALE && !d.inLingua?.[lingua]) return []
+      if (lingua !== LINGUA_PRINCIPALE && d.nascosta?.[lingua]) return []
       const percorso = percorsoDoc(lingua, slug, raccolta)
       if (nonIndicizzare(percorso, seo)) return []
       return [{ loc: `${sito}${percorso === '/' ? '/' : percorso}`, lastmod: d.updatedAt || quando }]

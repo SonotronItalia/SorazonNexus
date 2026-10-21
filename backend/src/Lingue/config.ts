@@ -8,7 +8,7 @@ import { LINGUE_TRADUCIBILI, PAESI } from '@/lingue'
  * Lingue del sito e selettore con le bandiere. L'italiano c'è sempre ed è la prima; le altre si
  * scelgono dall'elenco di src/lingue.ts, si attivano e si ordinano qui. Una lingua attiva compare
  * nel selettore e nel pannello (per tradurre); le singole pagine si mostrano in quella lingua solo
- * quando sono tradotte ("Pubblicata in questa lingua").
+ * quando la loro traduzione è pubblicata (e non nascosta).
  */
 export const Lingue: GlobalConfig = {
   slug: 'lingue',

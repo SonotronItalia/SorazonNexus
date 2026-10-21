@@ -24,6 +24,7 @@ import * as migration_20261020_222806_togli_ruolo_fisso from './20261020_222806_
 import * as migration_20261020_230101_sfondo_modulo_mappa from './20261020_230101_sfondo_modulo_mappa';
 import * as migration_20261020_235842_seo_e_motori_ai from './20261020_235842_seo_e_motori_ai';
 import * as migration_20261021_013459_traduzioni from './20261021_013459_traduzioni';
+import * as migration_20261021_023237_nascondi_traduzione from './20261021_023237_nascondi_traduzione';
 
 export const migrations = [
   {
@@ -154,6 +155,11 @@ export const migrations = [
   {
     up: migration_20261021_013459_traduzioni.up,
     down: migration_20261021_013459_traduzioni.down,
-    name: '20261021_013459_traduzioni'
+    name: '20261021_013459_traduzioni',
+  },
+  {
+    up: migration_20261021_023237_nascondi_traduzione.up,
+    down: migration_20261021_023237_nascondi_traduzione.down,
+    name: '20261021_023237_nascondi_traduzione'
   },
 ];

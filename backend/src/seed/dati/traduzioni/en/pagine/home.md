@@ -1,6 +1,6 @@
 ---
 # Traduzione della Home italiana. Frasi sulla terapia prese dalla vecchia pagina inglese Therapy
-# dove esistono. DA RIVEDERE: non pubblicata in inglese finché qualcuno non la controlla.
+# dove esistono. DA RIVEDERE: nascosta in inglese finché qualcuno non la controlla.
 pagina: home
 pubblicata: false
 title: Home

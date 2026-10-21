@@ -4,15 +4,15 @@
 
 - **Localizzazione nativa di Payload**: un documento, più versioni linguistiche. Italiano lingua principale (indirizzi senza prefisso), le altre con il prefisso: `/en/therapy`.
 - Lingue possibili in `backend/src/lingue.ts` (12 europee, stesso elenco in `frontend/src/utilities/lingue.ts`). Quali sono attive, in che ordine e con quale bandiera lo decide il pannello: **Impostazioni › Lingue e selettore** (globale `lingue`).
-- Una pagina o notizia compare in una lingua solo con **Pubblicata in questa lingua** (`inLingua`, campo localizzato). Altrimenti l'indirizzo in quella lingua porta alla pagina italiana.
+- Una pagina o notizia compare in una lingua quando la sua traduzione è **pubblicata** (lo slug esiste in quella lingua nella versione pubblicata) e non è spuntata **Nascondi in questa lingua** (`nascosta`, campo localizzato). Altrimenti l'indirizzo in quella lingua porta alla pagina italiana. "Pubblica modifiche" di Payload pubblica le bozze di tutte le lingue: "Nascondi" protegge una traduzione a metà.
 - Permessi a sé: **Traduce in…** nei ruoli (`ruoli.traduzioni.<codice>`). Admin: tutte le lingue.
 
 ## Cosa si traduce
 
 | Voce | Campi localizzati |
 |---|---|
-| Pagine | `title`, `slug`, `hero` (tutto il gruppo), `layout` (tutti i blocchi), `meta` (SEO), `inLingua` |
-| Notizie | `title`, `slug`, `content`, `meta`, `inLingua` |
+| Pagine | `title`, `slug`, `hero` (tutto il gruppo), `layout` (tutti i blocchi), `meta` (SEO), `nascosta` |
+| Notizie | `title`, `slug`, `content`, `meta`, `nascosta` |
 | Menu principale, Piè di pagina | `navItems` (ogni lingua ha il suo menu) |
 | Impostazioni del sito | `avviso` |
 | SEO e motori AI | `descrizioneSito`, `llmsPresentazione` |
@@ -27,7 +27,7 @@ Nel database ogni campo localizzato sta nelle tabelle `*_locales` (una riga per 
 
 1. `frontend/src/proxy.ts` riconosce il prefisso (`/en/…`), lo toglie con un *rewrite* (l'indirizzo nel browser non cambia) e passa la lingua nell'intestazione `x-lingua`. Senza prefisso l'intestazione viene tolta: non si può forzare.
 2. `utilities/linguaRichiesta.ts` legge la lingua nelle pagine e nel layout (`<html lang>`, menu, piè di pagina, avviso, metadati).
-3. `lib/content.ts` aggiunge `locale` alle richieste. Nelle altre lingue la pagina si cerca per lo slug di quella lingua con `inLingua = true` e senza ripiego (`fallback-locale=none`), poi si legge con il ripiego sull'italiano per le parti non tradotte.
+3. `lib/content.ts` aggiunge `locale` alle richieste. Nelle altre lingue la pagina si cerca per lo slug di quella lingua, non nascosta e senza ripiego (`fallback-locale=none`), poi si legge con il ripiego sull'italiano per le parti non tradotte.
 4. Traduzione mancante: `slugItaliano()` trova la versione italiana e la pagina reindirizza lì. Se non esiste nemmeno in italiano: 404.
 5. `AlternativeLingua` (in pagine e notizie) passa al selettore gli slug nelle altre lingue; `generateMeta` scrive `hreflang` (con `x-default` sull'italiano), canonico e `og:locale`.
 6. Il layout non si ridisegna nella navigazione interna di Next: `LinguaProvider` ricarica la pagina se l'indirizzo cambia lingua (link o reindirizzamento), e il selettore usa collegamenti normali.
@@ -55,11 +55,11 @@ Collegamenti: `CMSLink` e i link interni dei testi (`LinkInterno`) aggiungono il
 
 ## Anteprima
 
-`generatePreviewPath` aggiunge il prefisso della lingua scelta nel pannello; l'endpoint `anteprima` legge la bozza in quella lingua (`?locale=`), anche se non è ancora "Pubblicata in questa lingua".
+`generatePreviewPath` aggiunge il prefisso della lingua scelta nel pannello; l'endpoint `anteprima` legge la bozza in quella lingua (`?locale=`), anche se è nascosta o non ancora pubblicata.
 
 ## Contenuti di partenza
 
-`backend/src/seed/dati/traduzioni/<lingua>/`: pagine in Markdown come quelle italiane (`pagina:` = slug italiano, `pubblicata:` = `inLingua`), `menu.csv`, `moduli/*.yml` (stessi campi del modulo italiano, nello stesso ordine), `seo.yml`. `dati/lingue.yml` imposta le lingue solo se nel CMS non ce n'è ancora nessuna.
+`backend/src/seed/dati/traduzioni/<lingua>/`: pagine in Markdown come quelle italiane (`pagina:` = slug italiano, `pubblicata: false` = salvata ma nascosta), `menu.csv`, `moduli/*.yml` (stessi campi del modulo italiano, nello stesso ordine), `seo.yml`. `dati/lingue.yml` imposta le lingue solo se nel CMS non ce n'è ancora nessuna.
 
 ## Migrazione `traduzioni`
 

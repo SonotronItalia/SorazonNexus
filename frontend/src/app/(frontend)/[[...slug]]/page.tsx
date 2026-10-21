@@ -36,7 +36,7 @@ const parse = (segments: string[] = []) => {
 }
 
 // In anteprima (draftMode) legge la bozza, senza cache; altrimenti la versione pubblicata.
-// Nelle altre lingue solo le pagine tradotte ("Pubblicata in questa lingua")
+// Nelle altre lingue solo le pagine tradotte, pubblicate e non nascoste
 const queryPageBySlug = cache(async (slug: string, lingua: string) =>
   getPageBySlug(slug, (await draftMode()).isEnabled, lingua),
 )
