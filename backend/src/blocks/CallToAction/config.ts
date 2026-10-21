@@ -39,7 +39,7 @@ export const CallToAction: Block = {
     { type: 'row', fields: campiSfondo() },
   ],
   labels: {
-    plural: 'Calls to Action',
-    singular: 'Call to Action',
+    plural: "Inviti all'azione",
+    singular: "Invito all'azione",
   },
 }

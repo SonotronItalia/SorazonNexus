@@ -30,6 +30,10 @@ import { RimandoSeo as RimandoSeo_2ae16385ab979e4ab3dd2b418d360630 } from '@/com
 import { RowLabel as RowLabel_ec255a65fa6fa8d1faeb09cf35284224 } from '@/Header/RowLabel'
 import { RowLabel as RowLabel_1f6ff6ff633e3695d348f4f3c58f1466 } from '@/Footer/RowLabel'
 import { Esci as Esci_6bb620138fcf65294adbf2b3997b145d } from '@/components/admin/Esci'
+import { Icona as Icona_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
+import { Logo as Logo_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
+import { CollegamentoGuida as CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce } from '@/components/admin/Guida/Collegamento'
+import { Guida as Guida_d83219e363503be3f78a9da1513bfa21 } from '@/components/admin/Guida'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -66,5 +70,9 @@ export const importMap = {
   "@/Header/RowLabel#RowLabel": RowLabel_ec255a65fa6fa8d1faeb09cf35284224,
   "@/Footer/RowLabel#RowLabel": RowLabel_1f6ff6ff633e3695d348f4f3c58f1466,
   "@/components/admin/Esci#Esci": Esci_6bb620138fcf65294adbf2b3997b145d,
+  "@/components/admin/Marchio#Icona": Icona_76d32dd41587a28eb9865e82d5db950e,
+  "@/components/admin/Marchio#Logo": Logo_76d32dd41587a28eb9865e82d5db950e,
+  "@/components/admin/Guida/Collegamento#CollegamentoGuida": CollegamentoGuida_ccc45209d2db5585ccff64c723c1c6ce,
+  "@/components/admin/Guida#Guida": Guida_d83219e363503be3f78a9da1513bfa21,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

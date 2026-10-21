@@ -59,6 +59,7 @@ export const Pages: CollectionConfig<'pages'> = {
   fields: [
     {
       name: 'title',
+      label: 'Titolo',
       type: 'text',
       required: true,
     },
@@ -67,12 +68,14 @@ export const Pages: CollectionConfig<'pages'> = {
       tabs: [
         {
           fields: [hero],
-          label: 'Hero',
+          label: 'Apertura (in alto)',
         },
         {
           fields: [
             {
               name: 'layout',
+              label: 'Blocchi della pagina',
+              labels: { singular: 'Blocco', plural: 'Blocchi' },
               type: 'blocks',
               // Riferimenti per nome ai blocchi di config.blocks (payload.config.ts): gli stessi
               // che si possono mettere dentro il Contenitore
@@ -87,7 +90,7 @@ export const Pages: CollectionConfig<'pages'> = {
               },
             },
           ],
-          label: 'Content',
+          label: 'Contenuto',
         },
         {
           name: 'meta',
@@ -120,12 +123,20 @@ export const Pages: CollectionConfig<'pages'> = {
     },
     {
       name: 'publishedAt',
+      label: 'Data di pubblicazione',
       type: 'date',
       admin: {
         position: 'sidebar',
       },
     },
-    slugField(),
+    slugField({
+      // Parte finale dell'indirizzo della pagina, es. /terapia
+      overrides: (campo) => {
+        const slug = campo.fields.find((f) => 'name' in f && f.name === 'slug')
+        if (slug) Object.assign(slug, { label: 'Indirizzo (es. terapia)' })
+        return campo
+      },
+    }),
   ],
   // "globals": il menu dell'header mostra solo le pagine pubblicate, quindi va rinfrescato
   // anche quando una pagina viene pubblicata, ritirata, rinominata o eliminata

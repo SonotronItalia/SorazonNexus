@@ -1,0 +1,177 @@
+// Pagina "Guida" dell'admin (components/admin/Guida): manuale leggibile e stampabile in PDF
+.guida {
+  max-width: 52rem;
+  padding: calc(var(--base) * 2) 0 calc(var(--base) * 4);
+  font-size: 1rem;
+  line-height: 1.65;
+
+  &__barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--base);
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: calc(var(--base) * 1.5);
+  }
+
+  &__schede {
+    display: flex;
+    gap: calc(var(--base) * 0.5);
+    flex-wrap: wrap;
+
+    a {
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--theme-elevation-150);
+      text-decoration: none;
+
+      &[aria-current='page'] {
+        background: var(--theme-elevation-900);
+        color: var(--theme-elevation-0);
+        border-color: var(--theme-elevation-900);
+      }
+    }
+  }
+
+  &__titolo {
+    font-size: 2.25rem;
+    line-height: 1.15;
+    margin: 0 0 calc(var(--base) * 1.5);
+  }
+
+  &__indice {
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-m);
+    padding: var(--base) calc(var(--base) * 1.5);
+    margin-bottom: calc(var(--base) * 2);
+
+    ol {
+      margin: 0.5rem 0 0;
+      padding-left: 1.25rem;
+      columns: 2;
+      column-gap: calc(var(--base) * 2);
+    }
+  }
+
+  &__testo {
+    h1 {
+      font-size: 2.25rem;
+      line-height: 1.15;
+      margin: 0 0 var(--base);
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin: calc(var(--base) * 2.5) 0 calc(var(--base) * 0.75);
+      padding-top: var(--base);
+      border-top: 1px solid var(--theme-elevation-100);
+      scroll-margin-top: calc(var(--base) * 4);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin: calc(var(--base) * 1.5) 0 calc(var(--base) * 0.5);
+      scroll-margin-top: calc(var(--base) * 4);
+    }
+
+    p,
+    li {
+      max-width: 46rem;
+    }
+
+    li + li {
+      margin-top: 0.3rem;
+    }
+
+    figure {
+      margin: calc(var(--base) * 1.25) 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--theme-elevation-150);
+      border-radius: var(--style-radius-m);
+      box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+    }
+
+    figcaption {
+      font-size: 0.85rem;
+      color: var(--theme-elevation-500);
+      margin-top: 0.4rem;
+    }
+
+    blockquote {
+      margin: var(--base) 0;
+      padding: calc(var(--base) * 0.75) var(--base);
+      border-left: 4px solid #0095ac;
+      background: var(--theme-elevation-50);
+      border-radius: var(--style-radius-s);
+
+      p {
+        margin: 0;
+      }
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: var(--base) 0;
+
+      th,
+      td {
+        border: 1px solid var(--theme-elevation-150);
+        padding: 0.4rem 0.7rem;
+        text-align: left;
+        vertical-align: top;
+      }
+    }
+
+    kbd,
+    code {
+      font-size: 0.9em;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: var(--theme-elevation-100);
+    }
+  }
+}
+
+// Stampa e "Salva come PDF": solo il manuale, senza menu e pulsanti
+@media print {
+  .nav,
+  .app-header,
+  .guida__barra,
+  .template-default__nav-toggler-wrapper {
+    display: none !important;
+  }
+
+  // La griglia del pannello tiene la colonna del menu anche col menu nascosto: in stampa niente griglia
+  .template-default {
+    display: block !important;
+  }
+
+  .template-default__wrap,
+  .gutter {
+    width: auto !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .guida {
+    max-width: none;
+    padding: 0;
+  }
+
+  .guida__testo {
+    h2 {
+      break-before: page;
+      border-top: none;
+    }
+
+    figure {
+      break-inside: avoid;
+    }
+  }
+}

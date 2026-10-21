@@ -24,22 +24,22 @@ export const hero: Field = {
       name: 'type',
       type: 'select',
       defaultValue: 'lowImpact',
-      label: 'Type',
+      label: 'Tipo di apertura',
       options: [
         {
-          label: 'None',
+          label: 'Nessuna',
           value: 'none',
         },
         {
-          label: 'High Impact',
+          label: 'Grande: immagine o video a tutto schermo',
           value: 'highImpact',
         },
         {
-          label: 'Medium Impact',
+          label: 'Media: immagine sotto il titolo',
           value: 'mediumImpact',
         },
         {
-          label: 'Low Impact',
+          label: 'Semplice: titolo grande su fondo chiaro',
           value: 'lowImpact',
         },
         {

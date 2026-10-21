@@ -88,7 +88,7 @@ export const Archive: Block = {
     },
   ],
   labels: {
-    plural: 'Archives',
-    singular: 'Archive',
+    plural: 'Archivi notizie',
+    singular: 'Archivio notizie',
   },
 }

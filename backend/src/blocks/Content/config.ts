@@ -12,23 +12,24 @@ import { link } from '@/fields/link'
 const columnFields: Field[] = [
   {
     name: 'size',
+    label: 'Larghezza',
     type: 'select',
     defaultValue: 'oneThird',
     options: [
       {
-        label: 'One Third',
+        label: 'Un terzo',
         value: 'oneThird',
       },
       {
-        label: 'Half',
+        label: 'Metà',
         value: 'half',
       },
       {
-        label: 'Two Thirds',
+        label: 'Due terzi',
         value: 'twoThirds',
       },
       {
-        label: 'Full',
+        label: 'Intera',
         value: 'full',
       },
     ],
@@ -50,6 +51,7 @@ const columnFields: Field[] = [
   },
   {
     name: 'enableLink',
+    label: 'Aggiungi un collegamento',
     type: 'checkbox',
   },
   link({
@@ -65,10 +67,13 @@ const columnFields: Field[] = [
 
 export const Content: Block = {
   slug: 'content',
+  labels: { singular: 'Testo', plural: 'Testi' },
   interfaceName: 'ContentBlock',
   fields: [
     {
       name: 'columns',
+      label: 'Colonne',
+      labels: { singular: 'Colonna', plural: 'Colonne' },
       type: 'array',
       admin: {
         initCollapsed: true,

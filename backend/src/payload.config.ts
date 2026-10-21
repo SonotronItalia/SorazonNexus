@@ -76,9 +76,27 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
+    meta: {
+      titleSuffix: ' – Sorazon',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+    },
     // Pulsante "Esci" con testo in fondo al menu (quello di Payload è solo un'icona)
     components: {
       logout: { Button: '@/components/admin/Esci#Esci' },
+      // Marchio Sorazon nella pagina di accesso e in alto a sinistra
+      graphics: {
+        Logo: '@/components/admin/Marchio#Logo',
+        Icon: '@/components/admin/Marchio#Icona',
+      },
+      // Manuale d'uso dentro l'admin (src/guida), con la voce "Guida" nel menu
+      afterNavLinks: ['@/components/admin/Guida/Collegamento#CollegamentoGuida'],
+      views: {
+        guida: {
+          Component: '@/components/admin/Guida#Guida',
+          path: '/guida',
+          meta: { title: 'Guida' },
+        },
+      },
     },
     livePreview: {
       breakpoints: [

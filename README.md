@@ -8,6 +8,7 @@ raggiungere il database.
 browser ──► frontend (Next.js) ──REST──► backend (Payload) ──► db (Postgres/PostGIS)
 ```
 
+Documentazione completa (tecnica e manuali d'uso con schermate): [docs/README.md](docs/README.md).
 Contesto, regole e decisioni: [CLAUDE.md](CLAUDE.md) e [docs/decisioni.md](docs/decisioni.md).
 
 ## Avvio su un computer nuovo

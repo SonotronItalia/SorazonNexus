@@ -78,6 +78,7 @@ export const Posts: CollectionConfig<'posts'> = {
   fields: [
     {
       name: 'title',
+      label: 'Titolo',
       type: 'text',
       required: true,
     },
@@ -88,6 +89,7 @@ export const Posts: CollectionConfig<'posts'> = {
           fields: [
             {
               name: 'heroImage',
+              label: 'Immagine principale',
               type: 'upload',
               relationTo: 'media',
             },
@@ -110,12 +112,13 @@ export const Posts: CollectionConfig<'posts'> = {
               required: true,
             },
           ],
-          label: 'Content',
+          label: 'Contenuto',
         },
         {
           fields: [
             {
               name: 'relatedPosts',
+              label: 'Notizie correlate',
               type: 'relationship',
               admin: {
                 position: 'sidebar',
@@ -132,6 +135,7 @@ export const Posts: CollectionConfig<'posts'> = {
             },
             {
               name: 'categories',
+              label: 'Categorie',
               type: 'relationship',
               admin: {
                 position: 'sidebar',
@@ -140,7 +144,7 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'categories',
             },
           ],
-          label: 'Meta',
+          label: 'Dettagli',
         },
         {
           name: 'meta',
@@ -173,6 +177,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
     {
       name: 'publishedAt',
+      label: 'Data di pubblicazione',
       type: 'date',
       admin: {
         date: {
@@ -193,6 +198,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
     {
       name: 'authors',
+      label: 'Autori',
       type: 'relationship',
       admin: {
         position: 'sidebar',
@@ -224,7 +230,14 @@ export const Posts: CollectionConfig<'posts'> = {
         },
       ],
     },
-    slugField(),
+    slugField({
+      // Parte finale dell'indirizzo della pagina, es. /terapia
+      overrides: (campo) => {
+        const slug = campo.fields.find((f) => 'name' in f && f.name === 'slug')
+        if (slug) Object.assign(slug, { label: 'Indirizzo (es. terapia)' })
+        return campo
+      },
+    }),
   ],
   hooks: {
     afterChange: [notifyFrontend('posts', 'posts-sitemap')],

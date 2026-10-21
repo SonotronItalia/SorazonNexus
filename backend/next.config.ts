@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   // Niente "X-Powered-By: Next.js": non dire a chi attacca che tecnologia usiamo
   poweredByHeader: false,
   output: 'standalone',
+  // I manuali della pagina "Guida" si leggono dal disco: vanno copiati nella build
+  outputFileTracingIncludes: { '/**/*': ['./src/guida/**/*.md'] },
   async redirects() {
     return [{ source: '/', destination: '/admin', permanent: false }]
   },
