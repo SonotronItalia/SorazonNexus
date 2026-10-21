@@ -20,7 +20,7 @@ import type {
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
-import { LinkInterno } from '@/components/LinkInterno'
+import { LinkInterno, LinkScritto } from '@/components/LinkInterno'
 import { cn } from '@/utilities/ui'
 import { stileTesto } from '@/utilities/stileTesto'
 
@@ -45,7 +45,12 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
   // Collegamenti a pagine e notizie: nella lingua della pagina (/en/…)
   link: (args) => {
     const doc = args.node.fields.doc
-    if (args.node.fields.linkType === 'internal' && doc && typeof doc.value === 'object' && doc.value.slug) {
+    if (
+      args.node.fields.linkType === 'internal' &&
+      doc &&
+      typeof doc.value === 'object' &&
+      doc.value.slug
+    ) {
       return (
         <LinkInterno
           raccolta={doc.relationTo === 'posts' ? 'posts' : 'pages'}
@@ -54,6 +59,15 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         >
           {args.nodesToJSX({ nodes: args.node.children })}
         </LinkInterno>
+      )
+    }
+    // Indirizzi scritti a mano che iniziano con "/" (es. /privacy-policy): anche loro nella lingua
+    const url = args.node.fields.url
+    if (args.node.fields.linkType !== 'internal' && url?.startsWith('/') && !url.startsWith('//')) {
+      return (
+        <LinkScritto url={url} nuovaScheda={args.node.fields.newTab}>
+          {args.nodesToJSX({ nodes: args.node.children })}
+        </LinkScritto>
       )
     }
     return typeof collegamenti.link === 'function' ? collegamenti.link(args) : null

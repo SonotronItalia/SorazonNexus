@@ -3,7 +3,14 @@ import { expect, test } from '@playwright/test'
 import { cookieRifiutati, raccogliErrori } from './comune'
 
 // Pagine inglesi pubblicate (indirizzi del vecchio sito, per non perdere il posizionamento)
-const PAGINE_EN = ['/en/therapy', '/en/indications', '/en/results', '/en/contact-us']
+const PAGINE_EN = [
+  '/en/therapy',
+  '/en/indications',
+  '/en/results',
+  '/en/contact-us',
+  '/en/privacy-policy',
+  '/en/cookie-policy',
+]
 
 test.beforeEach(async ({ page }) => cookieRifiutati(page))
 
@@ -33,7 +40,7 @@ test('il selettore di lingua porta alla stessa pagina in italiano', async ({ pag
   await expect(page.locator('html')).toHaveAttribute('lang', 'it')
 })
 
-test("una pagina non tradotta porta alla versione italiana", async ({ request }) => {
+test('una pagina non tradotta porta alla versione italiana', async ({ request }) => {
   const r = await request.get('/en/terapia', { maxRedirects: 0 })
   expect([307, 308]).toContain(r.status())
   expect(r.headers()['location']).toMatch(/\/terapia$/)

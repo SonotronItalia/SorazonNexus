@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import type { Lingue } from '@/payload-types'
-import { conPrefisso, percorsoDoc } from '@/utilities/lingue'
+import { conPrefisso, percorsoDoc, urlNellaLingua } from '@/utilities/lingue'
 import { lingueAttive } from '@/utilities/lingueAttive'
 import { vociSitemap } from '@/utilities/sitemap'
 import { testi } from '@/utilities/testi'
@@ -57,5 +57,24 @@ describe('lingue del sito', () => {
     expect(testi('it').cookieRifiuta).toBe('Rifiuta')
     expect(testi('en').cookieRifiuta).toBe('Refuse')
     expect(testi('de').cookieRifiuta).toBe('Refuse')
+  })
+})
+
+describe('urlNellaLingua (indirizzi scritti a mano nei testi, menu e pulsanti)', () => {
+  it('aggiunge la lingua agli indirizzi del sito', () => {
+    expect(urlNellaLingua('en', '/privacy-policy')).toBe('/en/privacy-policy')
+    expect(urlNellaLingua('en', '/')).toBe('/en')
+  })
+  it("lascia com'è l'italiano, i file, le API, gli indirizzi esterni e quelli con già una lingua", () => {
+    expect(urlNellaLingua('it', '/privacy-policy')).toBe('/privacy-policy')
+    for (const url of [
+      '/media/rivista.pdf',
+      '/api/form-submissions',
+      '//esempio.it/x',
+      'https://esempio.it',
+      'mailto:a@b.it',
+      '/en/therapy',
+    ])
+      expect(urlNellaLingua('en', url), url).toBe(url)
   })
 })

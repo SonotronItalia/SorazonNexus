@@ -32,7 +32,7 @@ Nel database ogni campo localizzato sta nelle tabelle `*_locales` (una riga per 
 5. `AlternativeLingua` (in pagine e notizie) passa al selettore gli slug nelle altre lingue; `generateMeta` scrive `hreflang` (con `x-default` sull'italiano), canonico e `og:locale`.
 6. Il layout non si ridisegna nella navigazione interna di Next: `LinguaProvider` ricarica la pagina se l'indirizzo cambia lingua (link o reindirizzamento), e il selettore usa collegamenti normali.
 
-Collegamenti: `CMSLink` e i link interni dei testi (`LinkInterno`) aggiungono il prefisso della lingua; gli indirizzi scritti a mano che iniziano con `/` lo ricevono, tranne `/media/` e `/api/`.
+Collegamenti: `CMSLink`, i link interni dei testi (`LinkInterno`) e gli indirizzi scritti a mano nei testi (`LinkScritto`) aggiungono il prefisso della lingua con `urlNellaLingua`: gli indirizzi che iniziano con `/` lo ricevono, tranne `/media/`, `/api/` e quelli che hanno già una lingua. Piè di pagina e banner dei cookie collegano privacy e cookie policy nella lingua della pagina.
 
 ## Scritte fisse
 
@@ -59,7 +59,7 @@ Collegamenti: `CMSLink` e i link interni dei testi (`LinkInterno`) aggiungono il
 
 ## Contenuti di partenza
 
-`backend/src/seed/dati/traduzioni/<lingua>/`: pagine in Markdown come quelle italiane (`pagina:` = slug italiano, `pubblicata: false` = salvata ma nascosta), `menu.csv`, `moduli/*.yml` (stessi campi del modulo italiano, nello stesso ordine), `seo.yml`. `dati/lingue.yml` imposta le lingue solo se nel CMS non ce n'è ancora nessuna.
+`backend/src/seed/dati/traduzioni/<lingua>/`: pagine in Markdown come quelle italiane (`pagina:` = slug italiano; pubblicate e visibili, `pubblicata: false` solo per salvarne una nascosta di proposito), `menu.csv`, `moduli/*.yml` (stessi campi del modulo italiano, nello stesso ordine), `seo.yml`. `dati/lingue.yml` imposta le lingue solo se nel CMS non ce n'è ancora nessuna.
 
 ## Migrazione `traduzioni`
 

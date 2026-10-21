@@ -1,8 +1,6 @@
 ---
-# Traduzione della pagina italiana Centri. DA RIVEDERE: nascosta in inglese finché qualcuno
-# non la controlla e toglie "Nascondi in questa lingua".
+# Traduzione della pagina italiana Centri, rivista e pubblicata dall'azienda (21/10/2026).
 pagina: centri
-pubblicata: false
 title: Centres
 slug: centres
 meta:

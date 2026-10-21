@@ -1,8 +1,6 @@
 ---
-# Traduzione della pagina italiana Distribuzione. DA RIVEDERE: nascosta in inglese finché
-# qualcuno non la controlla.
+# Traduzione della pagina italiana Distribuzione, rivista e pubblicata dall'azienda (21/10/2026).
 pagina: distribuzione
-pubblicata: false
 title: Distribution
 slug: distribution
 meta:

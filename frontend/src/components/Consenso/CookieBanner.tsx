@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { NESSUNA_SCELTA, type Scelte, useConsenso } from '@/providers/Consenso'
 import { categorieGoogle, type ConfigGoogle } from '@/utilities/google'
 import { useLingua } from '@/providers/Lingua'
+import { conPrefisso } from '@/utilities/lingue'
 
 type Categoria = { chiave: keyof Scelte; titolo: string; descrizione: string }
 
@@ -22,7 +23,7 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
   const { stato, scelte, salva, preferenzeAperte, chiudiPreferenze } = useConsenso()
   const [dettaglio, setDettaglio] = useState(false)
   const [bozza, setBozza] = useState<Scelte>(NESSUNA_SCELTA)
-  const { t } = useLingua()
+  const { lingua, t } = useLingua()
 
   const categorie: Categoria[] = [
     ...(statistiche
@@ -30,10 +31,7 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
           {
             chiave: 'statistiche' as const,
             titolo: t.cookieStatistiche,
-            descrizione:
-              google.gtmId
-                ? t.cookieStatisticheGtm
-                : t.cookieStatisticheGa,
+            descrizione: google.gtmId ? t.cookieStatisticheGtm : t.cookieStatisticheGa,
           },
         ]
       : []),
@@ -42,18 +40,14 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
           {
             chiave: 'marketing' as const,
             titolo: t.cookieMarketing,
-            descrizione:
-              google.gtmId
-                ? t.cookieMarketingGtm
-                : t.cookieMarketingAds,
+            descrizione: google.gtmId ? t.cookieMarketingGtm : t.cookieMarketingAds,
           },
         ]
       : []),
     {
       chiave: 'esterni',
       titolo: t.cookieEsterni,
-      descrizione:
-        t.cookieEsterniTesto,
+      descrizione: t.cookieEsterniTesto,
     },
   ]
 
@@ -93,8 +87,11 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
         <p className="mt-2 text-sm text-muted-foreground">
           {t.cookieTesto1} {categorie.map((c) => c.titolo.toLowerCase()).join(', ')}.{' '}
           {t.cookieTesto2}{' '}
-          {/* La cookie policy è in italiano (testo legale del consulente) */}
-          <Link href="/cookie-policy" hrefLang="it" className="underline underline-offset-2">
+          {/* Cookie policy nella lingua della pagina (senza traduzione: la versione italiana) */}
+          <Link
+            href={conPrefisso(lingua, '/cookie-policy')}
+            className="underline underline-offset-2"
+          >
             {t.cookiePolicy}
           </Link>
           .
@@ -107,7 +104,13 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
                 <p className="text-sm font-medium">{t.cookieNecessari}</p>
                 <p className="text-sm text-muted-foreground">{t.cookieNecessariTesto}</p>
               </div>
-              <input type="checkbox" checked disabled aria-label={t.cookieNecessariSempre} className="mt-1 h-4 w-4" />
+              <input
+                type="checkbox"
+                checked
+                disabled
+                aria-label={t.cookieNecessariSempre}
+                className="mt-1 h-4 w-4"
+              />
             </li>
             {categorie.map((c) => (
               <li key={c.chiave} className="flex items-start justify-between gap-4">

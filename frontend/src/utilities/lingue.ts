@@ -20,7 +20,9 @@ export const LINGUE: { codice: string; nome: string; bandiera: string; locale: s
 ]
 
 export const CODICI = new Set(LINGUE.map((l) => l.codice))
-export const SECONDARIE = new Set(LINGUE.filter((l) => l.codice !== LINGUA_PRINCIPALE).map((l) => l.codice))
+export const SECONDARIE = new Set(
+  LINGUE.filter((l) => l.codice !== LINGUA_PRINCIPALE).map((l) => l.codice),
+)
 
 export const linguaValida = (codice: string | null | undefined) =>
   codice && CODICI.has(codice) ? codice : LINGUA_PRINCIPALE
@@ -31,6 +33,15 @@ export const conPrefisso = (lingua: string, percorso: string) => {
   if (!percorso || percorso === '/') return `/${lingua}`
   return `/${lingua}${percorso.startsWith('/') ? '' : '/'}${percorso}`
 }
+
+// Indirizzo scritto a mano (menu, pulsanti, link nei testi) nella lingua della pagina: prefisso
+// solo per quelli che iniziano con "/", tranne file (/media/), API e indirizzi con già una lingua
+export const urlNellaLingua = (lingua: string, url: string) =>
+  lingua !== LINGUA_PRINCIPALE &&
+  /^\/(?!\/|media\/|api\/)/.test(url) &&
+  !SECONDARIE.has(url.split('/')[1])
+    ? conPrefisso(lingua, url)
+    : url
 
 // Percorso di una pagina o notizia dal suo slug
 export const percorsoDoc = (lingua: string, slug: string, raccolta: 'pages' | 'posts' = 'pages') =>

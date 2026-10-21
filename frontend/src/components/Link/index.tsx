@@ -7,7 +7,7 @@ import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
 import { useLingua } from '@/providers/Lingua'
-import { conPrefisso, LINGUA_PRINCIPALE, percorsoDoc, SECONDARIE } from '@/utilities/lingue'
+import { percorsoDoc, urlNellaLingua } from '@/utilities/lingue'
 
 type CMSLinkType = {
   appearance?: 'inline' | ButtonProps['variant']
@@ -43,8 +43,8 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const href =
     type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
       ? percorsoDoc(lingua, reference.value.slug, reference.relationTo)
-      : url && lingua !== LINGUA_PRINCIPALE && /^\/(?!media\/|api\/)/.test(url) && !SECONDARIE.has(url.split('/')[1])
-        ? conPrefisso(lingua, url)
+      : url
+        ? urlNellaLingua(lingua, url)
         : url
 
   if (!href) return null

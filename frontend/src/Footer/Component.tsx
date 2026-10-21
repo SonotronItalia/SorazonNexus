@@ -8,6 +8,7 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { PreferenzeCookie } from '@/components/Consenso/CookieBanner'
 import { Social } from '@/components/Social'
+import { conPrefisso } from '@/utilities/lingue'
 import { loghi } from '@/utilities/marchio'
 
 export async function Footer({ lingua }: { lingua: string }) {
@@ -43,7 +44,7 @@ export async function Footer({ lingua }: { lingua: string }) {
     <footer className="mt-auto border-t border-border bg-black dark:bg-card text-white">
       <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
         <div className="flex flex-col gap-6">
-          <Link className="flex items-center" href="/">
+          <Link className="flex items-center" href={conPrefisso(lingua, '/')}>
             {/* Piè di pagina nero: logo del piè di pagina o, se manca, quello per sfondo scuro */}
             <Logo logo={{ chiaro: logoPiede, scuro: logoPiede }} />
           </Link>
@@ -56,11 +57,12 @@ export async function Footer({ lingua }: { lingua: string }) {
             {navItems.map(({ link }, i) => {
               return <CMSLink className="text-white" key={i} {...link} />
             })}
-            {/* Sempre presenti: richiesti dalle norme sulla privacy */}
-            <Link className="text-white" href="/privacy-policy">
+            {/* Sempre presenti: richiesti dalle norme sulla privacy. Nella lingua della pagina
+                (senza traduzione pubblicata l'indirizzo porta alla versione italiana) */}
+            <Link className="text-white" href={conPrefisso(lingua, '/privacy-policy')}>
               Privacy
             </Link>
-            <Link className="text-white" href="/cookie-policy">
+            <Link className="text-white" href={conPrefisso(lingua, '/cookie-policy')}>
               Cookie policy
             </Link>
             <PreferenzeCookie className="text-left text-white hover:underline" />
