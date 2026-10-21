@@ -6,7 +6,7 @@
 |---|---|---|---|
 | `make test` | Unitari (Vitest): permessi, filtri, SEO, metadati, dati strutturati, telefoni, moduli, CSV, seed | `backend/tests/unit`, `frontend/tests/unit` | Nessuno |
 | `make test-int` | Integrazione: Payload vero su un PostGIS **usa e getta** in memoria (porta 55433): ruoli e permessi, ruoli personalizzati e protezioni, SEO, caricamenti, moduli | `backend/tests/int`, `scripts/test-int.sh` | Docker |
-| `make test-e2e` | Il sito nel browser (Playwright), desktop e telefono: pagine, h1, dati strutturati, menu, cookie, mappa, torna su, avviso, modulo, SEO, sicurezza | `frontend/tests/e2e` | Sito acceso (`BASE_URL`) |
+| `make test-e2e` | Il sito nel browser (Playwright), desktop, telefono Android e iPhone (WebKit, il motore di Safari): pagine, logo, h1, dati strutturati, menu, cookie, mappa, torna su, avviso, modulo, SEO, sicurezza | `frontend/tests/e2e` | Sito acceso (`BASE_URL`) |
 | `make test-api` | Le API REST del CMS via HTTP: permessi da anonimo, bozze, moduli, CORS, GraphQL spento, anteprima | `frontend/tests/api` | CMS acceso (`BACKEND_URL`) |
 | `make audit` | Vulnerabilità note nelle dipendenze di produzione | — | Rete |
 
@@ -22,7 +22,7 @@ Nuove funzioni: aggiungere il test accanto. Limite noto di Payload: un corpo JSO
 
 ## Verifica manuale
 
-Prima di consegnare una modifica visiva: aprire le pagine coinvolte su desktop e telefono, in tema chiaro e scuro, con effetti accesi e spenti, controllando la console del browser.
+Prima di consegnare una modifica visiva: aprire le pagine coinvolte su desktop e telefono (anche Safari: alcune regole CSS, per esempio aspect-ratio con max-width, lì danno risultati diversi), in tema chiaro e scuro, con effetti accesi e spenti, controllando la console del browser.
 
 ## CI (GitHub Actions)
 

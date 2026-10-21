@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
- * Test end-to-end: il sito vero, aperto in Chromium come da un visitatore (desktop e telefono).
+ * Test end-to-end: il sito vero, aperto come da un visitatore: Chrome (desktop e telefono Android)
+ * e WebKit, il motore di Safari (iPhone), che a volte disegna diversamente.
  * Si lancia contro un sito già acceso: BASE_URL (predefinito lo stack locale su :3000).
  *   make test-e2e                                   -> http://127.0.0.1:3000
  *   BASE_URL=https://www.sorazon.it make test-e2e   -> il sito online (sola lettura)
@@ -27,6 +28,7 @@ export default defineConfig({
   projects: [
     { name: 'desktop', testDir: './tests/e2e', use: { ...devices['Desktop Chrome'] } },
     { name: 'telefono', testDir: './tests/e2e', use: { ...devices['Pixel 7'] } },
+    { name: 'iphone', testDir: './tests/e2e', use: { ...devices['iPhone 13'] } },
     {
       name: 'api',
       testDir: './tests/api',

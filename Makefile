@@ -104,10 +104,10 @@ test-int: ## Test di integrazione del backend su un database usa e getta (serve 
 
 # Il sito deve essere acceso: lo stack locale (predefinito) o un altro indirizzo con BASE_URL.
 # Con E2E_SCRITTURA=1 prova anche l'invio vero del modulo contatti (scrive nel database).
-test-e2e: ## Test del sito nel browser, desktop e telefono. Es.: make test-e2e BASE_URL=https://...
+test-e2e: ## Test del sito nel browser: desktop, telefono Android e iPhone (Safari). Es.: make test-e2e BASE_URL=https://...
 	@curl -sk -o /dev/null --max-time 10 "$${BASE_URL:-http://127.0.0.1:3000}" || \
 	  { echo "Il sito non risponde su $${BASE_URL:-http://127.0.0.1:3000}: avvia make stack"; exit 1; }
-	@pnpm -C frontend exec playwright install chromium >/dev/null
+	@pnpm -C frontend exec playwright install chromium webkit >/dev/null
 	@pnpm -C frontend -s test:e2e
 	@echo "  Rapporto dettagliato: pnpm -C frontend exec playwright show-report"
 

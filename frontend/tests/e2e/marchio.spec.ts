@@ -1,6 +1,19 @@
 import { expect, test } from '@playwright/test'
 
 // Marchio (Impostazioni del sito > Marchio): icone ricavate, manifest, loghi serviti in sicurezza
+test('il logo si vede in alto e nel piè di pagina', async ({ page }) => {
+  await page.goto('/')
+  // Su Safari un logo con aspect-ratio e max-width finiva largo 0 (invisibile)
+  for (const logo of [
+    page.locator('header [role="img"]:visible').first(),
+    page.locator('footer [role="img"]'),
+  ]) {
+    const box = await logo.boundingBox()
+    expect(box?.width ?? 0).toBeGreaterThan(40)
+    expect(box?.height ?? 0).toBeGreaterThan(20)
+  }
+})
+
 test('icone del sito, icona Apple, favicon.ico e manifest', async ({ page, request }) => {
   await page.goto('/')
   const png = await page.locator('link[rel="icon"][type="image/png"]').first().getAttribute('href')
