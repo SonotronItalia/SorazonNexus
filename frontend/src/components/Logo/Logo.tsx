@@ -21,7 +21,8 @@ export const Logo = ({ logo, altezza = 'h-[76px]', className }: Props) => (
     role="img"
     aria-label="Sorazon"
     className={cn(
-      'block max-w-full shrink-0 bg-contain bg-left bg-no-repeat transition-[height] duration-300',
+      // Niente max-width: con le proporzioni (aspect-ratio) Safari calcolerebbe larghezza 0
+      'block shrink-0 bg-contain bg-left bg-no-repeat transition-[height] duration-300',
       'bg-[image:var(--logo)] dark:bg-[image:var(--logo-scuro)]',
       altezza,
       className,
