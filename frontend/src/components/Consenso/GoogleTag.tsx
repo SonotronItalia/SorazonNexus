@@ -4,22 +4,10 @@ import Script from 'next/script'
 import { useEffect } from 'react'
 
 import { useConsenso } from '@/providers/Consenso'
+import { cancellaCookieStatistiche, inviaConsensoClarity } from '@/utilities/clarity'
 import type { ConfigGoogle } from '@/utilities/google'
 
 type Gtag = (...args: unknown[]) => void
-
-// Cookie di Google Analytics: al ritiro del consenso si cancellano
-const cancellaCookieAnalytics = () => {
-  for (const voce of document.cookie.split(';')) {
-    const nome = voce.split('=')[0].trim()
-    if (/^_ga(_|$)|^_gid$/.test(nome)) {
-      const dominio = location.hostname.replace(/^www\./, '')
-      for (const d of ['', `; domain=${dominio}`, `; domain=.${dominio}`]) {
-        document.cookie = `${nome}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/${d}`
-      }
-    }
-  }
-}
 
 /**
  * Tag di Google con il Consent Mode v2 (ID e modalità dalle Impostazioni del sito, vedi
@@ -30,6 +18,7 @@ const cancellaCookieAnalytics = () => {
  *   segnali anonimi senza cookie.
  * Con Tag Manager, Analytics e Ads si configurano dentro Tag Manager: gtag.js non si carica
  * (altrimenti ogni visita verrebbe contata due volte).
+ * Microsoft Clarity, aggiunto in Tag Manager, riceve qui la stessa scelta (utilities/clarity.ts).
  */
 export const GoogleTag: React.FC<{ google: ConfigGoogle }> = ({ google }) => {
   const { gtmId, gaId, adsId, modalita } = google
@@ -47,7 +36,8 @@ export const GoogleTag: React.FC<{ google: ConfigGoogle }> = ({ google }) => {
       ad_user_data: m,
       ad_personalization: m,
     })
-    if (!statistiche) cancellaCookieAnalytics()
+    inviaConsensoClarity(statistiche, marketing)
+    if (!statistiche) cancellaCookieStatistiche()
   }, [stato, statistiche, marketing])
 
   const avanzata = modalita === 'avanzata'

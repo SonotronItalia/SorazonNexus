@@ -178,6 +178,18 @@ In **Impostazioni del sito › Analisi e pubblicità** si collegano gli strument
 
 Gli strumenti si attivano **solo dopo il consenso** del visitatore nel banner dei cookie. Il formato dei codici viene controllato: un codice sbagliato non viene salvato.
 
+### Microsoft Clarity (mappe dei clic e registrazioni)
+
+Clarity mostra dove le persone cliccano e come scorrono le pagine. Si aggiunge **in Google Tag Manager**, non nel pannello:
+
+1. In Clarity apri il progetto e copia l'**ID del progetto** (Impostazioni › Configurazione: una sigla di 10 caratteri).
+2. In Tag Manager scegli **Tag › Nuovo › Configurazione tag** e cerca "Microsoft Clarity" nella **Galleria modelli della community**: usa il modello pubblicato da Microsoft.
+3. Incolla l'ID del progetto. Come attivatore scegli **All Pages** (tutte le pagine).
+4. In **Impostazioni avanzate › Impostazioni di consenso** scegli **Richiedi consenso aggiuntivo** e aggiungi **analytics_storage**: così Clarity parte solo se il visitatore accetta le statistiche.
+5. Prova con **Anteprima**, poi **Invia** per pubblicare.
+
+Il sito passa a Clarity la scelta del visitatore e, se rifiuta le statistiche, cancella i suoi cookie. Non aggiungere il codice di Clarity anche altrove: le visite verrebbero contate due volte. Nelle impostazioni di Clarity lascia attivo il **mascheramento** dei testi scritti dai visitatori (è già attivo all'inizio). Privacy policy e cookie policy devono citare Clarity e le registrazioni: chiedilo al consulente privacy.
+
 ## Reindirizzamenti
 
 In **Avanzate › Reindirizzamenti** colleghi un **indirizzo vecchio** a una **pagina nuova**. Chi arriva dal vecchio indirizzo (per esempio da Google o da un link salvato) finisce nella pagina giusta.

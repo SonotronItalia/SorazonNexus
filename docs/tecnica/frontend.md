@@ -57,6 +57,8 @@ Regole: i punti di `useTransform` legati allo scorrimento devono stare tra 0 e 1
 
 `providers/Consenso` + `components/Consenso`: banner, preferenze per categoria (statistiche, marketing, contenuti esterni), scelta in `localStorage` per 6 mesi, **Consent Mode v2**. Google Tag Manager o gtag.js si caricano dopo il consenso (modalità base) o subito con tutto negato (modalità avanzata); ID e modalità dalle Impostazioni del sito, con `GA_MEASUREMENT_ID` e `GOOGLE_ADS_ID` come riserva. YouTube e Google Maps si caricano solo con `useConsenso().scelte.esterni`.
 
+**Microsoft Clarity** (heatmap e registrazioni) si aggiunge in Tag Manager con la condizione di consenso `analytics_storage` (passi nel manuale per amministratori). Il sito, in `GoogleTag`, gli passa ogni scelta del visitatore con `clarity('consentv2', …)` (statistiche → `analytics_Storage`, marketing → `ad_Storage`), usando la stessa coda del codice ufficiale se Clarity arriva dopo, e al rifiuto delle statistiche cancella `_clck`/`_clsk` insieme ai cookie di Analytics (`utilities/clarity.ts`). Scelta e alternative in `docs/decisioni.md`.
+
 ## SEO e motori di risposta AI (GEO)
 
 Tutto configurabile in **Avanzate › SEO e motori AI** (`getSeo()`; regole in `utilities/seo.ts`, con valori di riserva nel codice):
