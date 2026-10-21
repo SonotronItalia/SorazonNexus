@@ -12,6 +12,23 @@ const nextConfig: NextConfig = {
     localPatterns: [{ pathname: '/media/**' }, { pathname: '/**', search: '' }],
     // ImageMedia usa quality={100}; da Next 16 il valore predefinito ammesso è solo 75
     qualities: [75, 100],
+    // Immagini ottimizzate in cache per un mese (browser, nginx, una CDN): il loro indirizzo
+    // contiene la data di modifica, quindi un'immagine sostituita ha un indirizzo nuovo
+    minimumCacheTTL: 2678400,
+  },
+  async headers() {
+    // File fissi del sito (loghi predefiniti, bandiere, icona): un giorno, poi il browser usa la
+    // copia che ha e la rinnova in background. I file di /_next/static sono già "immutable"
+    const unGiorno = {
+      key: 'Cache-Control',
+      value: 'public, max-age=86400, stale-while-revalidate=604800',
+    }
+    return [
+      { source: '/bandiere/:file*', headers: [unGiorno] },
+      { source: '/logo_sorazon.svg', headers: [unGiorno] },
+      { source: '/logo_sorazon_neg.svg', headers: [unGiorno] },
+      { source: '/favicon.svg', headers: [unGiorno] },
+    ]
   },
   async redirects() {
     // La home è la pagina con slug "home": un solo indirizzo, niente contenuto duplicato

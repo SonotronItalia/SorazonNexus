@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { soloAdminEliminaDefinitivo } from '@/hooks/cestino'
+import { CACHE_MEDIA } from '@/utilities/cacheMedia'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -46,6 +47,11 @@ export const Media: CollectionConfig = {
   ],
   hooks: { beforeDelete: [soloAdminEliminaDefinitivo] },
   upload: {
+    // Cache di una settimana per i file caricati (utilities/cacheMedia.ts)
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', CACHE_MEDIA)
+      return headers
+    },
     // Solo immagini, PDF e video: niente SVG, HTML o altri file che il browser potrebbe eseguire
     // (i media si aprono dal dominio del sito: un file HTML caricato diventerebbe una pagina)
     mimeTypes: [

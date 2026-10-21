@@ -4,6 +4,7 @@ import { APIError, type CollectionConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { permesso } from '@/access/ruoli'
+import { CACHE_MEDIA } from '@/utilities/cacheMedia'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -45,6 +46,7 @@ export const Marchio: CollectionConfig = {
         "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
       )
       headers.set('X-Content-Type-Options', 'nosniff')
+      headers.set('Cache-Control', CACHE_MEDIA)
       return headers
     },
   },
