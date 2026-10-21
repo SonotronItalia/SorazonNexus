@@ -2,7 +2,7 @@
 
 import {
   type MotionValue,
-  motion,
+  m,
   useMotionValueEvent,
   useReducedMotionConfig,
   useScroll,
@@ -60,14 +60,14 @@ const ImmaginePassaggio: React.FC<{
   const scala = useTransform(avanzamento, [inizio, fine], [1.12, 1])
   if (!p.immagine || typeof p.immagine !== 'object') return null
   return (
-    <motion.div className="absolute inset-0" style={{ opacity: opacita, scale: scala }}>
+    <m.div className="absolute inset-0" style={{ opacity: opacita, scale: scala }}>
       <Media
         fill
         resource={p.immagine}
         imgClassName="object-contain"
         size="(min-width: 1024px) 55vw, 100vw"
       />
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -85,12 +85,12 @@ const TestoPassaggio: React.FC<{
     [i === 0 ? 0 : 40, 0],
   )
   return (
-    <motion.div
+    <m.div
       className="absolute inset-x-0 top-1/2 -translate-y-1/2"
       style={{ opacity: opacita, y }}
     >
       <TestoStatico p={p} />
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -258,5 +258,5 @@ const Trattino: React.FC<{ i: number; n: number; avanzamento: MotionValue<number
   avanzamento,
 }) => {
   const opacita = useTransform(useVisibilita(avanzamento, i, n), [0, 1], [0.25, 1])
-  return <motion.span className="h-1 w-8 rounded-full bg-current" style={{ opacity: opacita }} />
+  return <m.span className="h-1 w-8 rounded-full bg-current" style={{ opacity: opacita }} />
 }

@@ -1,46 +1,58 @@
 'use client'
 
-import { useLingua } from '@/providers/Lingua'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Monitor, Moon, Sun } from 'lucide-react'
 import React, { useSyncExternalStore } from 'react'
 
-import type { Theme } from './types'
+import { useLingua } from '@/providers/Lingua'
+import { cn } from '@/utilities/ui'
 
 import { useTheme } from '..'
 import { getThemePreference, subscribeTheme } from '../shared'
 
-// Sul server la scelta non si conosce: il selettore resta vuoto fino all'idratazione
+// Sul server la scelta non si conosce: nessuna icona evidenziata fino all'idratazione
 const getServerPreference = () => ''
 
+/**
+ * Tema del sito con tre icone affiancate (automatico, chiaro, scuro): un clic e niente librerie
+ * per il menu a tendina. Colori da currentColor, così va bene su header, menu e piè di pagina nero.
+ */
 export const ThemeSelector: React.FC = () => {
   const { setTheme } = useTheme()
   // Letto da localStorage; setTheme avvisa del cambio e il valore si aggiorna da solo
   const value = useSyncExternalStore(subscribeTheme, getThemePreference, getServerPreference)
-
   const { t } = useLingua()
-  const onThemeChange = (themeToSet: Theme & 'auto') => {
-    setTheme(themeToSet === 'auto' ? null : themeToSet)
-  }
+
+  const voci = [
+    { valore: 'auto', etichetta: t.temaAuto, Icona: Monitor },
+    { valore: 'light', etichetta: t.temaChiaro, Icona: Sun },
+    { valore: 'dark', etichetta: t.temaScuro, Icona: Moon },
+  ] as const
 
   return (
-    <Select onValueChange={onThemeChange} value={value}>
-      <SelectTrigger
-        aria-label={t.tema}
-        className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none"
-      >
-        <SelectValue placeholder={t.tema} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="auto">{t.temaAuto}</SelectItem>
-        <SelectItem value="light">{t.temaChiaro}</SelectItem>
-        <SelectItem value="dark">{t.temaScuro}</SelectItem>
-      </SelectContent>
-    </Select>
+    <div
+      role="group"
+      aria-label={t.tema}
+      className="inline-flex items-center gap-0.5 rounded-full bg-current/[0.07] p-1"
+    >
+      {voci.map(({ valore, etichetta, Icona }) => {
+        const attivo = value === valore
+        return (
+          <button
+            key={valore}
+            type="button"
+            aria-pressed={attivo}
+            aria-label={`${t.tema}: ${etichetta}`}
+            title={etichetta}
+            onClick={() => setTheme(valore === 'auto' ? null : valore)}
+            className={cn(
+              'inline-flex size-8 items-center justify-center rounded-full transition-colors',
+              attivo ? 'bg-current/15 opacity-100' : 'opacity-60 hover:opacity-100',
+            )}
+          >
+            <Icona className="size-4" aria-hidden />
+          </button>
+        )
+      })}
+    </div>
   )
 }

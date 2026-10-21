@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { CaroselloBlock as Props } from '@/payload-types'
@@ -26,10 +26,11 @@ export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
   const aggiorna = useCallback(() => {
     const el = binario.current
     if (!el) return
-    setEstremi({
-      inizio: el.scrollLeft < 8,
-      fine: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8,
-    })
+    const inizio = el.scrollLeft < 8
+    const fine = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8
+    // Stesso oggetto se non cambia nulla: niente nuovo disegno del carosello a ogni evento di
+    // scorrimento (decine al secondo), solo quando si arriva o si lascia un estremo
+    setEstremi((prima) => (prima.inizio === inizio && prima.fine === fine ? prima : { inizio, fine }))
   }, [])
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
         aria-label={titolo ?? 'Carosello'}
       >
         {(schede ?? []).map((scheda, i) => (
-          <motion.li
+          <m.li
             key={scheda.id ?? i}
             className="group relative aspect-[4/5] w-[82vw] shrink-0 snap-start overflow-hidden rounded-[28px] bg-neutral-900 shadow-sm sm:w-[24rem]"
             initial={{ opacity: 0, x: 60 }}
@@ -112,7 +113,7 @@ export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
                 />
               )}
             </div>
-          </motion.li>
+          </m.li>
         ))}
       </ul>
       <div className="container mt-6 flex justify-end gap-3">

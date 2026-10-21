@@ -432,7 +432,7 @@ Da sinistra a destra:
 - il **selettore della lingua** con la bandiera: porta alla stessa pagina nell'altra lingua (o alla sua home, se la pagina non è tradotta);
 - la 🔍 **ricerca** nelle notizie (solo in italiano);
 - il fulmine ⚡, che **accende o spegne gli effetti animati**;
-- **Auto / Chiaro / Scuro**: il tema del sito. *Auto* segue l'impostazione del telefono o del computer.
+- tre icone per il **tema** del sito: *schermo* (automatico, segue l'impostazione del telefono o del computer), *sole* (chiaro) e *luna* (scuro).
 
 Sul telefono le voci sono nel menu ☰.
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import React from 'react'
 
 // Curva morbida in uscita, come nelle pagine prodotto: parte decisa e si posa lentamente
@@ -15,7 +15,7 @@ export const Rivela: React.FC<{
   className?: string
   ritardo?: number
 }> = ({ children, className, ritardo = 0 }) => (
-  <motion.div
+  <m.div
     className={className}
     initial={{ opacity: 0, y: 48 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -23,5 +23,5 @@ export const Rivela: React.FC<{
     transition={{ duration: 1, ease: CURVA, delay: ritardo }}
   >
     {children}
-  </motion.div>
+  </m.div>
 )

@@ -65,6 +65,8 @@ export const TeslaDischarge: React.FC<Props> = ({
     let visible = true
     let bolts: Bolt[] = []
     let nextAt = 0
+    // Canvas già vuoto: tra una scarica e l'altra (quasi sempre) non si ridisegna nulla
+    let vuoto = true
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -100,10 +102,10 @@ export const TeslaDischarge: React.FC<Props> = ({
     }
 
     const draw = (t: number) => {
+      raf = 0
+      if (!visible || document.hidden) return // ripartirà da avvia()
       raf = requestAnimationFrame(draw)
-      if (!visible || document.hidden) return
 
-      ctx.clearRect(0, 0, w, h)
       // Al massimo una scarica ogni 0,7-2 secondi (x ritmo, mai più spesso di 0,7 s), ognuna con
       // dissolvenza morbida: niente lampeggi
       if (t >= nextAt) {
@@ -111,6 +113,13 @@ export const TeslaDischarge: React.FC<Props> = ({
         nextAt = t + Math.max(700, (700 + Math.random() * 1300) * ritmo)
       }
       bolts = bolts.filter((b) => t - b.born < b.life)
+      if (bolts.length === 0) {
+        if (!vuoto) ctx.clearRect(0, 0, w, h)
+        vuoto = true
+        return
+      }
+      ctx.clearRect(0, 0, w, h)
+      vuoto = false
       for (const b of bolts) {
         const fade = 1 - (t - b.born) / b.life
         const a = Math.min(1, intensita)
@@ -122,16 +131,24 @@ export const TeslaDischarge: React.FC<Props> = ({
     resize()
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
+    // Fuori schermo o con la scheda nascosta il ciclo si ferma del tutto e riparte da qui
+    const avvia = () => {
+      if (raf || !visible || document.hidden) return
+      raf = requestAnimationFrame(draw)
+    }
     const io = new IntersectionObserver(([entry]) => {
       visible = entry?.isIntersecting ?? true
+      avvia()
     })
     io.observe(canvas)
-    raf = requestAnimationFrame(draw)
+    document.addEventListener('visibilitychange', avvia)
+    avvia()
 
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
       io.disconnect()
+      document.removeEventListener('visibilitychange', avvia)
     }
   }, [enabled, origin.x, origin.y, colore, ritmo, intensita])
 

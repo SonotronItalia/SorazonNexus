@@ -5,7 +5,6 @@ import RichText from '@/components/RichText'
 import { Effetti } from '@/components/Effetti'
 import { CMSLink } from '@/components/Link'
 import { Parallasse } from '@/components/Parallasse'
-import { Rivela } from '@/components/Rivela'
 
 export const SorazonHero: React.FC<Page['hero']> = ({
   richText,
@@ -24,7 +23,7 @@ export const SorazonHero: React.FC<Page['hero']> = ({
       <Effetti effetti={effetti} />
 
       <div className="container relative z-10 mx-auto grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        <Rivela>
+        <div className="entrata">
           {richText && (
             <RichText
               data={richText}
@@ -41,7 +40,7 @@ export const SorazonHero: React.FC<Page['hero']> = ({
               ))}
             </ul>
           )}
-        </Rivela>
+        </div>
         {media && typeof media === 'object' && (
           <Parallasse>
             {/* Bordo e ombra attivabili dall'admin (predefinito: attivi) */}
@@ -52,7 +51,12 @@ export const SorazonHero: React.FC<Page['hero']> = ({
                   : 'relative overflow-hidden rounded-lg border border-slate-800 shadow-2xl'
               }
             >
-              <Media resource={media} imgClassName="h-auto w-full object-cover" />
+              <Media
+                resource={media}
+                imgClassName="h-auto w-full object-cover"
+                priority
+                size="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </Parallasse>
         )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useReducedMotionConfig, useScroll, useTransform } from 'motion/react'
+import { m, useReducedMotionConfig, useScroll, useTransform } from 'motion/react'
 import React, { useRef } from 'react'
 
 /**
@@ -18,12 +18,12 @@ export const Parallasse: React.FC<{ children: React.ReactNode; className?: strin
   const scala = useTransform(scrollYProgress, [0, 1], [1, 0.94])
   const opacita = useTransform(scrollYProgress, [0, 0.9], [1, 0.25])
   return (
-    <motion.div
+    <m.div
       ref={ref}
       className={className}
       style={ridotto ? undefined : { y, scale: scala, opacity: opacita }}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }

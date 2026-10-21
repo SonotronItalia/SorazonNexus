@@ -38,6 +38,13 @@ export const InitTheme: React.FC = () => {
     }
 
     document.documentElement.setAttribute('data-theme', themeToSet)
+
+    // Fulmine spento (EffectsProvider): l'entrata CSS dell'apertura non parte
+    try {
+      if (window.localStorage.getItem('sorazon-effetti') === 'off') {
+        document.documentElement.setAttribute('data-effetti', 'off')
+      }
+    } catch (e) {}
   })();
   `,
       }}

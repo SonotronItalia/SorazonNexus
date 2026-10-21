@@ -3,7 +3,7 @@ import React from 'react'
 import type { Page } from '@/payload-types'
 
 import { BannerHero } from '@/heros/Banner'
-import { HighImpactHero } from '@/heros/HighImpact'
+import { HighImpactHero } from '@/heros/HighImpact/Pigro'
 import { LowImpactHero } from '@/heros/LowImpact'
 import { MediumImpactHero } from '@/heros/MediumImpact'
 import { SorazonHero } from '@/heros/SorazonHero'

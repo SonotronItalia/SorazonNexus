@@ -255,22 +255,47 @@ html[data-theme='light'] {
   opacity: initial;
 }
 
-/* Effetti animati (components/Effetti): movimenti lenti e dissolvenze, nessun lampeggio */
+/* Effetti animati (components/Effetti): movimenti lenti e dissolvenze, nessun lampeggio.
+   Solo transform e opacity: il browser li anima sulla scheda grafica, senza ricalcolare la pagina
+   a ogni fotogramma (larghezza, altezza o left li farebbero scattare) */
 @keyframes effetto-onda {
-  0% { width: 0; height: 0; opacity: var(--onda-alfa, 0.45); transform: translate(-50%, -50%); }
-  100% { width: 140vmax; height: 140vmax; opacity: 0; transform: translate(-50%, -50%); }
+  0% { opacity: var(--onda-alfa, 0.45); transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
 }
 .effetto-onda {
+  width: 140vmax;
+  height: 140vmax;
+  will-change: transform, opacity;
   animation-name: effetto-onda;
   animation-timing-function: ease-out;
   animation-iteration-count: infinite;
 }
+/* La fascia è larga 1/3 dell'area: da -120% a 330% della sua larghezza = da -40% a 110% dell'area */
 @keyframes effetto-bagliore {
-  0% { left: -40%; }
-  100% { left: 110%; }
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(330%); }
 }
 .effetto-bagliore {
+  left: 0;
+  will-change: transform;
   animation-name: effetto-bagliore;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
+}
+
+/* Entrata dell'apertura (hero): animazione CSS che parte con il primo disegno della pagina, senza
+   aspettare il JavaScript (con Motion il titolo restava invisibile finché non si caricava).
+   Spenta con "riduci movimento" e con il fulmine spento (data-effetti, impostato da InitTheme) */
+@keyframes entrata {
+  from { opacity: 0; transform: translateY(48px); }
+  to { opacity: 1; transform: none; }
+}
+.entrata {
+  animation: entrata 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrata { animation: none; }
+}
+html[data-effetti='off'] .entrata {
+  animation: none;
 }

@@ -11,7 +11,8 @@ interface Props {
 
 /**
  * Logo come immagine di sfondo: il browser scarica solo la versione che mostra. La versione
- * negativa (logo_sorazon_neg.svg, 388 KB perché contiene un'immagine) vale con il tema scuro
+ * negativa (logo_sorazon_neg.svg, 130 KB: contiene un'immagine, ridotta a 1008 px senza perdita
+ * perché il logo non si mostra mai più largo di circa 760 px) vale con il tema scuro
  * e sotto un hero scuro (data-theme="dark" sull'header), oppure sempre con "scuro".
  */
 export const Logo = ({ altezza = 'h-[76px]', scuro = false }: Props) => (

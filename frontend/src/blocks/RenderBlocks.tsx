@@ -5,7 +5,7 @@ import type { Page } from '@/payload-types'
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
-import { FormBlock } from '@/blocks/Form/Component'
+import { FormBlock } from '@/blocks/Form/Pigro'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { CentriListBlock } from '@/blocks/CentriList/Component'
 import { SchedaProdottoBlock } from '@/blocks/SchedaProdotto/Component'
@@ -83,8 +83,10 @@ export const RenderBlocks: React.FC<{
         if (Block) {
           // @ts-expect-error there may be some mismatch between the expected types here
           const blocco = <Block {...block} disableInnerContainer />
-          // Comparsa morbida quando il blocco entra nello schermo (non dentro le colonne)
-          return annidato || ANIMATI.has(blockType) ? (
+          // Comparsa morbida quando il blocco entra nello schermo (non dentro le colonne). Non per
+          // il primo blocco: di solito è già sullo schermo all'apertura e resterebbe invisibile
+          // finché il JavaScript non è caricato (sui telefoni lenti anche più di un secondo)
+          return annidato || ANIMATI.has(blockType) || index === 0 ? (
             // Sezioni a tutta larghezza senza margini; la barra prodotto "contents" per restare fissa
             <div
               className={

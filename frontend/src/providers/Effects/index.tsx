@@ -42,6 +42,8 @@ export const EffectsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const toggle = useCallback(() => {
     const next = getSnapshot() ? 'off' : 'on'
     sceltaInMemoria = next
+    // Per le regole CSS (entrata dell'apertura): stesso attributo che imposta InitTheme
+    document.documentElement.setAttribute('data-effetti', next)
     try {
       localStorage.setItem(STORAGE_KEY, next)
     } catch {}

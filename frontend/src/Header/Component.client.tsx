@@ -75,8 +75,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               <Logo altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
             </Link>
 
-            {/* Schermi larghi */}
-            <div className="hidden items-center gap-4 text-foreground md:flex">
+            {/* Schermi larghi (da 1280 px: con meno spazio le voci non ci stanno e la pagina scorreva di lato) */}
+            <div className="hidden items-center gap-4 text-foreground xl:flex">
               <HeaderNav data={data} />
               <SelettoreLingua />
               <EffectsToggle />
@@ -84,7 +84,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             </div>
 
             {/* Telefono */}
-            <div className="flex items-center gap-2 text-foreground md:hidden">
+            <div className="flex items-center gap-2 text-foreground xl:hidden">
               <EffectsToggle />
               <button
                 type="button"
@@ -102,7 +102,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           {menuAperto && (
             <div
               id="menu-mobile"
-              className="absolute inset-x-0 top-full rounded-b-lg border bg-background p-6 text-foreground shadow-lg md:hidden"
+              className="absolute inset-x-0 top-full rounded-b-lg border bg-background p-6 text-foreground shadow-lg xl:hidden"
             >
               <div className="flex flex-col items-start gap-6 [&_nav]:flex-col [&_nav]:items-start [&_nav]:gap-4">
                 <HeaderNav data={data} />

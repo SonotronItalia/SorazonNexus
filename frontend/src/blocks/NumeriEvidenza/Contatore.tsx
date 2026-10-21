@@ -1,9 +1,11 @@
 'use client'
 
-import { animate, useInView, useReducedMotionConfig } from 'motion/react'
+import { cubicBezier, useInView, useReducedMotionConfig } from 'motion/react'
 import React, { useEffect, useRef } from 'react'
 
 const formato = new Intl.NumberFormat('it-IT')
+// Stessa curva delle comparse (parte decisa, si posa lentamente)
+const curva = cubicBezier(0.16, 1, 0.3, 1)
 
 /**
  * Numero che sale da zero quando entra nello schermo (una volta). Nell'HTML c'è già il valore
@@ -18,14 +20,18 @@ export const Contatore: React.FC<{ valore: number; conta: boolean }> = ({ valore
   useEffect(() => {
     const el = ref.current
     if (!el || !visibile || !conta || ridotto) return
-    const controlli = animate(0, valore, {
-      duration: Math.min(2.2, 0.8 + Math.log10(Math.max(valore, 1)) * 0.5),
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => {
-        el.textContent = formato.format(Math.round(v))
-      },
-    })
-    return () => controlli.stop()
+    // Ciclo di fotogrammi semplice invece di animate() di Motion (che porta con sé tutto il
+    // motore di animazione per contare un numero)
+    const durata = Math.min(2.2, 0.8 + Math.log10(Math.max(valore, 1)) * 0.5) * 1000
+    const inizio = performance.now()
+    let raf = 0
+    const passo = (t: number) => {
+      const avanzamento = Math.min(1, (t - inizio) / durata)
+      el.textContent = formato.format(Math.round(valore * curva(avanzamento)))
+      if (avanzamento < 1) raf = requestAnimationFrame(passo)
+    }
+    raf = requestAnimationFrame(passo)
+    return () => cancelAnimationFrame(raf)
   }, [visibile, conta, ridotto, valore])
 
   return <span ref={ref}>{conta ? formato.format(valore) : String(valore)}</span>
