@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Allinea le immagini caricate dal CMS tra il Mac (backend/public/media, usate da make dev) e il
-# volume dello stack Docker (/data/media nel container backend). Il database è lo stesso, le
+# volume dello stack Docker (/data/media nel container backend), e così i file del marchio
+# (backend/public/marchio e /data/media/marchio). Il database è lo stesso, le
 # cartelle no: senza questo, un'immagine caricata da una parte manca dall'altra.
 # Copia solo i file che mancano, in entrambe le direzioni; non sovrascrive e non cancella nulla.
 # Serve il container backend acceso; altrimenti non fa niente.
@@ -8,24 +9,29 @@ set -u
 cd "$(dirname "$0")/.."
 
 COMPOSE=${COMPOSE:-docker compose}
-LOCALE=backend/public/media
-VOLUME=/data/media
 
 ID=$($COMPOSE ps --status running -q backend 2>/dev/null)
 [ -n "$ID" ] || { echo "  Stack spento: immagini non allineate"; exit 0; }
-mkdir -p "$LOCALE"
 
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-docker exec "$ID" ls -1 "$VOLUME" 2>/dev/null | sort >"$TMP/volume"
-ls -1 "$LOCALE" | sort >"$TMP/locale"
 
-verso_mac=0; verso_stack=0
-while IFS= read -r f; do
-  [ -n "$f" ] && docker cp -q "$ID:$VOLUME/$f" "$LOCALE/$f" && verso_mac=$((verso_mac + 1))
-done < <(comm -23 "$TMP/volume" "$TMP/locale")
-while IFS= read -r f; do
-  [ -n "$f" ] && docker cp -q "$LOCALE/$f" "$ID:$VOLUME/$f" && verso_stack=$((verso_stack + 1))
-done < <(comm -13 "$TMP/volume" "$TMP/locale")
+# allinea <cartella sul Mac> <cartella nel volume> <nome>: solo i file, non le sottocartelle
+allinea() {
+  local locale=$1 volume=$2 nome=$3 verso_mac=0 verso_stack=0 f
+  mkdir -p "$locale"
+  docker exec "$ID" mkdir -p "$volume"
+  docker exec "$ID" find "$volume" -maxdepth 1 -type f -exec basename {} \; 2>/dev/null | sort >"$TMP/volume"
+  find "$locale" -maxdepth 1 -type f -exec basename {} \; | sort >"$TMP/locale"
+  while IFS= read -r f; do
+    [ -n "$f" ] && docker cp -q "$ID:$volume/$f" "$locale/$f" && verso_mac=$((verso_mac + 1))
+  done < <(comm -23 "$TMP/volume" "$TMP/locale")
+  while IFS= read -r f; do
+    [ -n "$f" ] && docker cp -q "$locale/$f" "$ID:$volume/$f" && verso_stack=$((verso_stack + 1))
+  done < <(comm -13 "$TMP/volume" "$TMP/locale")
+  echo "  $nome allineati: $verso_mac copiati sul Mac, $verso_stack copiati nello stack"
+}
 
-echo "  Immagini allineate: $verso_mac copiate sul Mac, $verso_stack copiate nello stack"
+allinea backend/public/media /data/media "Immagini e file"
+# Loghi e icona (Impostazioni del sito > Marchio): sottocartella marchio del volume
+allinea backend/public/marchio /data/media/marchio "File del marchio"
