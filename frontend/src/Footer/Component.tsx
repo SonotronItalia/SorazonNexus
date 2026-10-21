@@ -40,7 +40,7 @@ export async function Footer({ lingua }: { lingua: string }) {
       <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
         <div className="flex flex-col gap-6">
           <Link className="flex items-center" href="/">
-            <Logo />
+            <Logo scuro />
           </Link>
           <Social profili={impostazioni?.social} />
         </div>

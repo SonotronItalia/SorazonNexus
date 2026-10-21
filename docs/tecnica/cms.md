@@ -56,7 +56,7 @@ Configurazione in `backend/src/blocks/*/config.ts`, registrazione in `blocchiPag
 | `formBlock` | Modulo | Modulo, testo introduttivo, sfondo |
 | `centriList` | Elenco centri | Indice delle regioni fisso, 2/3 colonne; dati da `getCentri()` |
 | `schedaProdotto` | Scheda prodotto | Caratteristiche e componenti; `dbName: 'parti'` per i 63 caratteri |
-| `galleriaRisultati` | Galleria risultati | Colonne, sfondo |
+| `galleriaRisultati` | Galleria risultati | Colonne, sfondo, larghezza (anche "Tutto lo schermo": il blocco toglie la larghezza massima di pagina) |
 | `mappa` | Mappa | Indirizzo, altezza, sfondo; si carica solo con il consenso |
 | `numeriEvidenza` | Numeri in evidenza | Numeri manuali o automatici (centri, regioni) con conteggio animato |
 | `carosello` | Carosello | Schede con immagine e collegamento |

@@ -65,7 +65,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           )}
         >
           <Link href={conPrefisso(lingua, '/')} aria-label={t.vaiAllaHome}>
-            <Logo loading="eager" priority="high" altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
+            <Logo altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
           </Link>
 
           {/* Schermi larghi */}

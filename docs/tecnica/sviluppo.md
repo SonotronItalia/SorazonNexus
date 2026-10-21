@@ -79,7 +79,8 @@ Regole imparate sul campo:
 - pagine in Markdown con intestazione YAML (`dati/pagine/*.md`, formato spiegato in `seed/pagine.ts`): `media:file.jpg`, `pagina:slug`, `colore:Nome`, `effetto:Nome`, `modulo:Titolo`;
 - notizie in `dati/notizie/*.md` (`bozza: true` per non pubblicarle);
 - centri in `dati/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel; chiave città + indirizzo);
-- SEO in `dati/seo.yml` (solo i valori ancora vuoti).
+- SEO in `dati/seo.yml` (solo i valori ancora vuoti);
+- immagini in `seed/media/` con il testo alternativo in `dati/media.csv`: un file sostituito con un altro (dimensione diversa) aggiorna l'immagine già caricata, con lo stesso nome.
 
 Nuovi contenuti di partenza si aggiungono **come file**, non nel codice. Il seed aggiorna e non cancella; sovrascrive però le pagine del seed: sul database di produzione si aggiorna solo quello che serve.
 

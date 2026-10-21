@@ -83,10 +83,20 @@ async function seedAdmin() {
 
 async function seedMedia(file: string, alt: string): Promise<Media> {
   const { docs } = await payload.find({ collection: 'media', where: { filename: { equals: file } }, limit: 1 })
-  if (docs[0]) return docs[0]
   const filePath = path.join(dir, 'media', file)
   if (!fs.existsSync(filePath)) throw new Error(`dati/media.csv: manca il file src/seed/media/${file}`)
-  return payload.create({ collection: 'media', data: { alt }, filePath, context })
+  if (!docs[0]) return payload.create({ collection: 'media', data: { alt }, filePath, context })
+  // File cambiato in src/seed/media (es. immagine di qualità migliore): sostituito con lo stesso
+  // nome, così pagine e blocchi che lo usano lo mostrano subito
+  if (docs[0].filesize === fs.statSync(filePath).size) return docs[0]
+  return payload.update({
+    collection: 'media',
+    id: docs[0].id,
+    data: {},
+    filePath,
+    overwriteExistingFiles: true,
+    context,
+  })
 }
 
 // --- Pagine: aggiornate se lo slug esiste già, sempre pubblicate ---

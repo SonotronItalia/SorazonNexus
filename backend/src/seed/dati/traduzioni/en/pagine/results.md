@@ -16,7 +16,7 @@ layout:
   - blockType: content
   - blockType: galleriaRisultati
     colonne: '2'
-    larghezza: '100'
+    larghezza: schermo
     sfondo: colore
     colore: colore:Celeste Sorazon
     schede: colore:Grigio schede

@@ -33,6 +33,7 @@ Ispirato alle pagine prodotto di Apple: alternanza di sezioni chiare e nere con 
 - **Sezioni**: `utilities/sezione.ts` (nero, bianco, grigio chiarissimo) e `components/SezioneSfondo` (fascia a tutta larghezza per Modulo e Mappa).
 - **Colori**: solo dalla tavolozza del CMS; il layout scrive le variabili `--colore-ID`; `utilities/sfondo.ts` sceglie il testo chiaro o scuro.
 - **Tema chiaro/scuro** con `ThemeSelector`; l'hero Sorazon resta scuro (`data-theme="dark"`).
+- **Logo** (`components/Logo`): immagine di sfondo, così il browser scarica solo la versione mostrata; `logo_sorazon_neg.svg` (fornito dall'azienda, 388 KB perché contiene un'immagine) con il tema scuro, sotto un hero scuro e sempre nel piè di pagina nero (`scuro`). Nel pannello lo stesso con `.marchio-sorazon` in `custom.scss`.
 
 ## Animazioni
 

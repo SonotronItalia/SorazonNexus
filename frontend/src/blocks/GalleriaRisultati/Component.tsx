@@ -33,9 +33,16 @@ export const GalleriaRisultatiBlock: React.FC<GalleriaRisultatiProps> = ({
   const { className: classeSfondo, ...attributiSfondo } = stileSfondo(sfondo, colore)
   const conSfondo = Boolean(classeSfondo || attributiSfondo.style)
   const coloreSchede = codiceColore(schede) ?? SCHEDE_PREDEFINITE
+  // "Tutto lo schermo": niente larghezza massima di pagina (restano i margini laterali).
+  // Con "!" perché le regole di .container (globals.css, livello utilities) vincerebbero
+  const schermo = larghezza === 'schermo'
+  const dimensioni =
+    colonne === '3'
+      ? '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+      : '(max-width: 640px) 100vw, 50vw'
 
   return (
-    <div className="container @container">
+    <div className={cn('container @container', schermo && 'max-w-none!')}>
       <section
         className={cn(
           classeLarghezza(larghezza),
@@ -66,7 +73,7 @@ export const GalleriaRisultatiBlock: React.FC<GalleriaRisultatiProps> = ({
                       // Con "fill" il contenitore diretto dell'immagine deve essere posizionato
                       pictureClassName="absolute inset-0"
                       imgClassName="object-cover"
-                      size="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      size={dimensioni}
                     />
                   )}
                 </div>

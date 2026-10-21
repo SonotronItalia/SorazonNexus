@@ -25,7 +25,7 @@ export const GalleriaRisultati: Block = {
             { label: '3 colonne', value: '3' },
           ],
         },
-        campoLarghezza(),
+        campoLarghezza({ schermo: true }),
       ],
     },
     { type: 'row', fields: campiSfondo() },

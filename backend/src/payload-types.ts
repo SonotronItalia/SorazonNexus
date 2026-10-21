@@ -1216,7 +1216,7 @@ export interface GalleriaRisultatiBlock {
   titolo?: string | null;
   introduzione?: string | null;
   colonne?: ('2' | '3') | null;
-  larghezza?: ('100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
+  larghezza?: ('schermo' | '100' | '90' | '80' | '70' | '60' | '50' | '40' | '30') | null;
   sfondo?: ('nessuno' | 'tenue' | 'scuro' | 'colore') | null;
   /**
    * Si aggiunge o si modifica in "Colori del sito".

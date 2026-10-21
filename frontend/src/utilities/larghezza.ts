@@ -2,6 +2,8 @@
 // Container query: serve un antenato con la classe @container (il .container del blocco).
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo.
 export const LARGHEZZE = {
+  // "Tutto lo schermo" (solo alcuni blocchi): il blocco toglie il limite del suo .container
+  schermo: '',
   '100': '',
   '90': '@2xl:w-[90%]',
   '80': '@2xl:w-[80%]',

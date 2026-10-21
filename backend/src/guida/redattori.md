@@ -112,7 +112,7 @@ Per **aggiungere un blocco** premi **Aggiungi Blocco** in fondo. Si apre l'elenc
 | **Prodotto guidato dallo scorrimento** | Il prodotto resta fermo e, scorrendo, cambiano immagine e testo. |
 | **Barra prodotto** | Una barra con nome e pulsante che resta in alto mentre si scorre. Va messa per prima. |
 | **Scheda prodotto** | Caratteristiche e componenti di un dispositivo. |
-| **Galleria risultati** | Immagini con un'etichetta (per esempio le radiografie). |
+| **Galleria risultati** | Immagini con un'etichetta (per esempio le radiografie). Con **Larghezza › Tutto lo schermo** arriva fino ai bordi della finestra. |
 | **Elenco centri** | L'elenco dei centri diviso per regione. Si aggiorna da solo. |
 | **Archivio notizie** | Le ultime notizie. |
 | **Modulo** | Un modulo di contatto. |
