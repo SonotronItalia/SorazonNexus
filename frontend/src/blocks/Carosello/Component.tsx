@@ -10,12 +10,14 @@ import { Media } from '@/components/Media'
 import { CURVA } from '@/components/Rivela'
 import { sezione } from '@/utilities/sezione'
 import { cn } from '@/utilities/ui'
+import { useLingua } from '@/providers/Lingua'
 
 /**
  * Carosello orizzontale di schede grandi (stile "Le novità"): si scorre con il dito, la rotella
  * o le frecce, e si aggancia a ogni scheda. Le schede compaiono in sequenza la prima volta.
  */
 export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
+  const { t } = useLingua()
   const s = sezione(sfondo)
   const scuro = s['data-theme'] === 'dark'
   const binario = useRef<HTMLUListElement>(null)
@@ -119,7 +121,7 @@ export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
           className={freccia}
           onClick={() => scorri(-1)}
           disabled={estremi.inizio}
-          aria-label="Scheda precedente"
+          aria-label={t.precedente}
         >
           <ChevronLeft aria-hidden className="size-5" />
         </button>
@@ -128,7 +130,7 @@ export const CaroselloBlock: React.FC<Props> = ({ titolo, sfondo, schede }) => {
           className={freccia}
           onClick={() => scorri(1)}
           disabled={estremi.fine}
-          aria-label="Scheda successiva"
+          aria-label={t.successivo}
         >
           <ChevronRight aria-hidden className="size-5" />
         </button>

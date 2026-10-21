@@ -1,0 +1,7 @@
+# Lingue del sito oltre all'italiano (nell'admin: Impostazioni > Lingue e selettore).
+# Il seed le scrive SOLO se nel CMS non c'è ancora nessuna lingua.
+stile: bandiera-nome
+elenco:
+  - codice: en
+    bandiera: gb
+    attiva: true

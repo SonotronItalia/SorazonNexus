@@ -20,6 +20,7 @@ import type {
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { LinkInterno } from '@/components/LinkInterno'
 import { cn } from '@/utilities/ui'
 import { stileTesto } from '@/utilities/stileTesto'
 
@@ -36,9 +37,27 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   return relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
 }
 
+const collegamenti = LinkJSXConverter({ internalDocToHref })
+
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
-  ...LinkJSXConverter({ internalDocToHref }),
+  ...collegamenti,
+  // Collegamenti a pagine e notizie: nella lingua della pagina (/en/…)
+  link: (args) => {
+    const doc = args.node.fields.doc
+    if (args.node.fields.linkType === 'internal' && doc && typeof doc.value === 'object' && doc.value.slug) {
+      return (
+        <LinkInterno
+          raccolta={doc.relationTo === 'posts' ? 'posts' : 'pages'}
+          slug={String(doc.value.slug)}
+          nuovaScheda={args.node.fields.newTab}
+        >
+          {args.nodesToJSX({ nodes: args.node.children })}
+        </LinkInterno>
+      )
+    }
+    return typeof collegamenti.link === 'function' ? collegamenti.link(args) : null
+  },
   // Testo con "Stile testo" dell'editor (dimensione, colore della tavolozza): solo stili ammessi
   text: (args) => {
     const testo =

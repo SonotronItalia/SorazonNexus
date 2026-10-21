@@ -1,12 +1,14 @@
 'use client'
 
 import { Zap, ZapOff } from 'lucide-react'
+import { useLingua } from '@/providers/Lingua'
 import React from 'react'
 import { useEffects } from '@/providers/Effects'
 
 export const EffectsToggle: React.FC = () => {
   const { enabled, toggle } = useEffects()
-  const label = enabled ? 'Disattiva effetti grafici' : 'Attiva effetti grafici'
+  const { t } = useLingua()
+  const label = enabled ? t.disattivaEffetti : t.attivaEffetti
 
   return (
     <button

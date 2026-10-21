@@ -119,6 +119,7 @@ export const Impostazioni: GlobalConfig = {
         {
           name: 'avviso',
           label: 'Avviso in cima al sito',
+          localized: true,
           description:
             'Una striscia sopra il menu, in tutte le pagine: chiusure per ferie, eventi, novità. Con le date si accende e si spegne da sola.',
           fields: [

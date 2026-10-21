@@ -29,6 +29,8 @@ export const anteprimaEndpoint = (collection: 'pages' | 'posts'): Endpoint => ({
       depth: 2,
       limit: 1,
       overrideAccess: true,
+      // Lingua della richiesta (?locale=en): la bozza della traduzione
+      locale: req.locale,
     })
 
     return docs[0]

@@ -29,6 +29,7 @@ import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } f
 import { RimandoSeo as RimandoSeo_2ae16385ab979e4ab3dd2b418d360630 } from '@/components/admin/RimandoSeo'
 import { RowLabel as RowLabel_ec255a65fa6fa8d1faeb09cf35284224 } from '@/Header/RowLabel'
 import { RowLabel as RowLabel_1f6ff6ff633e3695d348f4f3c58f1466 } from '@/Footer/RowLabel'
+import { EtichettaLingua as EtichettaLingua_2f2af3317ce3caf81bd4401f6fb3f9ed } from '@/components/admin/EtichettaLingua'
 import { Esci as Esci_6bb620138fcf65294adbf2b3997b145d } from '@/components/admin/Esci'
 import { Icona as Icona_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
 import { Logo as Logo_76d32dd41587a28eb9865e82d5db950e } from '@/components/admin/Marchio'
@@ -69,6 +70,7 @@ export const importMap = {
   "@/components/admin/RimandoSeo#RimandoSeo": RimandoSeo_2ae16385ab979e4ab3dd2b418d360630,
   "@/Header/RowLabel#RowLabel": RowLabel_ec255a65fa6fa8d1faeb09cf35284224,
   "@/Footer/RowLabel#RowLabel": RowLabel_1f6ff6ff633e3695d348f4f3c58f1466,
+  "@/components/admin/EtichettaLingua#EtichettaLingua": EtichettaLingua_2f2af3317ce3caf81bd4401f6fb3f9ed,
   "@/components/admin/Esci#Esci": Esci_6bb620138fcf65294adbf2b3997b145d,
   "@/components/admin/Marchio#Icona": Icona_76d32dd41587a28eb9865e82d5db950e,
   "@/components/admin/Marchio#Logo": Logo_76d32dd41587a28eb9865e82d5db950e,

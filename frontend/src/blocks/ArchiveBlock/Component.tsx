@@ -5,6 +5,7 @@ import { getPostsByCategories } from '@/lib/content'
 import RichText from '@/components/RichText'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
 
 export const ArchiveBlock: React.FC<
   ArchiveBlockProps & {
@@ -22,7 +23,7 @@ export const ArchiveBlock: React.FC<
       typeof category === 'object' ? category.id : category,
     )
 
-    posts = await getPostsByCategories(flattenedCategories, limit)
+    posts = await getPostsByCategories(flattenedCategories, limit, await linguaRichiesta())
   } else {
     if (selectedDocs?.length) {
       const filteredSelectedPosts = selectedDocs.map((post) => {

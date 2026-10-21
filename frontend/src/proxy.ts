@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
 import type { Redirect } from '@/payload-types'
+import { SECONDARIE } from '@/utilities/lingue'
 
 /**
  * Redirect del CMS (vecchi indirizzi del sito Joomla e quelli aggiunti nell'admin) risolti prima
@@ -44,12 +45,26 @@ async function redirects(): Promise<Map<string, string>> {
   return inCorso
 }
 
+// Lingua dal prefisso dell'indirizzo: /en/therapy -> pagina "therapy" in inglese. Il prefisso si
+// toglie (rewrite, l'indirizzo nel browser resta /en/therapy) e la lingua passa alle pagine
+// nell'intestazione x-lingua. Senza prefisso è italiano (intestazione tolta: non si può forzare)
+const conLingua = (request: NextRequest) => {
+  const intestazioni = new Headers(request.headers)
+  intestazioni.delete('x-lingua')
+  const m = request.nextUrl.pathname.match(/^\/([a-z]{2})(\/.*)?$/)
+  if (!m || !SECONDARIE.has(m[1])) return NextResponse.next({ request: { headers: intestazioni } })
+  intestazioni.set('x-lingua', m[1])
+  const url = request.nextUrl.clone()
+  url.pathname = m[2] && m[2] !== '/' ? m[2].replace(/\/+$/, '') : '/'
+  return NextResponse.rewrite(url, { request: { headers: intestazioni } })
+}
+
 export async function proxy(request: NextRequest) {
   const a = (await redirects()).get(request.nextUrl.pathname)
-  if (!a) return NextResponse.next()
+  if (!a) return conLingua(request)
   // Solo destinazioni interne o assolute in http(s): niente "javascript:" o simili
   const url = /^https?:\/\//.test(a) ? new URL(a) : a.startsWith('/') ? new URL(a, request.url) : null
-  return url ? NextResponse.redirect(url, 308) : NextResponse.next()
+  return url ? NextResponse.redirect(url, 308) : conLingua(request)
 }
 
 export const config = {

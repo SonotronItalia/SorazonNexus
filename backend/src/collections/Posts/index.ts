@@ -80,6 +80,7 @@ export const Posts: CollectionConfig<'posts'> = {
       name: 'title',
       label: 'Titolo',
       type: 'text',
+      localized: true,
       required: true,
     },
     {
@@ -95,6 +96,7 @@ export const Posts: CollectionConfig<'posts'> = {
             },
             {
               name: 'content',
+              localized: true,
               type: 'richText',
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
@@ -149,6 +151,7 @@ export const Posts: CollectionConfig<'posts'> = {
         {
           name: 'meta',
           label: 'SEO',
+          localized: true,
           fields: [
             OverviewField({
               titlePath: 'meta.title',
@@ -230,7 +233,21 @@ export const Posts: CollectionConfig<'posts'> = {
         },
       ],
     },
+    {
+      // Le lingue diverse dall'italiano compaiono sul sito solo con questa spunta (traduzione pronta)
+      name: 'inLingua',
+      label: 'Pubblicata in questa lingua',
+      type: 'checkbox',
+      localized: true,
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description:
+          "Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la notizia si vede sempre.",
+      },
+    },
     slugField({
+      localized: true,
       // Parte finale dell'indirizzo della pagina, es. /terapia
       overrides: (campo) => {
         const slug = campo.fields.find((f) => 'name' in f && f.name === 'slug')

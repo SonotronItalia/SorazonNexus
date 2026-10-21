@@ -1,6 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
+import { useLingua } from '@/providers/Lingua'
 import React, { useSyncExternalStore } from 'react'
 
 import { CMSLink } from '@/components/Link'
@@ -61,6 +62,7 @@ const useChiuso = (f: string) =>
  * collegamento facoltativo, tre stili, date di inizio e fine, chiusura ricordata nel browser.
  */
 export const AvvisoSito: React.FC<{ avviso: Avviso; oraServer: number }> = ({ avviso, oraServer }) => {
+  const { t } = useLingua()
   const minuto = useMinuto(oraServer)
   const f = firma(avviso)
   const chiuso = useChiuso(f)
@@ -80,7 +82,7 @@ export const AvvisoSito: React.FC<{ avviso: Avviso; oraServer: number }> = ({ av
   return (
     <div
       role="region"
-      aria-label="Avviso"
+      aria-label={t.avviso}
       className={cn('relative z-30 text-sm', STILE[avviso.stile ?? 'informazione'])}
     >
       <div className="container flex items-center justify-center gap-x-3 gap-y-1 py-2 pr-10 text-center max-sm:flex-col">
@@ -93,7 +95,7 @@ export const AvvisoSito: React.FC<{ avviso: Avviso; oraServer: number }> = ({ av
         <button
           type="button"
           onClick={chiudi}
-          aria-label="Chiudi l'avviso"
+          aria-label={t.chiudiAvviso}
           className="absolute top-1/2 right-2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-md hover:bg-black/10"
         >
           <X aria-hidden className="size-4" />

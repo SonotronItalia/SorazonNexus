@@ -1,9 +1,13 @@
+'use client'
+
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { cn } from '@/utilities/ui'
 import Link from 'next/link'
 import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
+import { useLingua } from '@/providers/Lingua'
+import { conPrefisso, LINGUA_PRINCIPALE, percorsoDoc, SECONDARIE } from '@/utilities/lingue'
 
 type CMSLinkType = {
   appearance?: 'inline' | ButtonProps['variant']
@@ -33,12 +37,15 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     url,
   } = props
 
+  const { lingua } = useLingua()
+  // Pagine e notizie: indirizzo nella lingua della pagina (/en/therapy). Indirizzi scritti a mano
+  // che iniziano con "/": prefisso della lingua, tranne file e indirizzi già con una lingua
   const href =
     type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
-      : url
+      ? percorsoDoc(lingua, reference.value.slug, reference.relationTo)
+      : url && lingua !== LINGUA_PRINCIPALE && /^\/(?!media\/|api\/)/.test(url) && !SECONDARIE.has(url.split('/')[1])
+        ? conPrefisso(lingua, url)
+        : url
 
   if (!href) return null
 

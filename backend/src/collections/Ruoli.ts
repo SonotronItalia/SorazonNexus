@@ -3,6 +3,7 @@ import { APIError, type CollectionConfig, type Field } from 'payload'
 import { authenticated } from '@/access/authenticated'
 import { RISORSE, type Azione } from '@/access/risorse'
 import { nascostaSenzaPermesso, permesso } from '@/access/ruoli'
+import { LINGUE_TRADUCIBILI } from '@/lingue'
 
 const ETICHETTE: Record<Azione, string> = {
   vede: 'Vede',
@@ -61,6 +62,29 @@ export const Ruoli: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
       admin: { description: 'Vede e può modificare tutto, compresi utenti e ruoli.' },
+    },
+    {
+      // Permessi a sé, oltre a quelli voce per voce: tradurre pagine, notizie, menu, moduli…
+      // in una lingua. L'accesso completo li comprende tutti
+      name: 'traduzioni',
+      label: 'Traduzioni',
+      type: 'group',
+      admin: {
+        condition: (_, s) => !s?.completo,
+        description:
+          'Lingue in cui chi ha questo ruolo può tradurre. Per tradurre una voce serve anche "Vede" su quella voce; per l\'italiano vale "Modifica".',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: LINGUE_TRADUCIBILI.map((l) => ({
+            name: l.codice,
+            label: `Traduce in ${l.etichetta.toLowerCase()}`,
+            type: 'checkbox' as const,
+            defaultValue: false,
+          })),
+        },
+      ],
     },
     {
       name: 'permessi',

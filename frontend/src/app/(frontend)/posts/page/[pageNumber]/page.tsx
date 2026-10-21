@@ -5,6 +5,10 @@ import { LowImpactHero } from '@/heros/LowImpact'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
+import { redirect } from 'next/navigation'
+import { LINGUA_PRINCIPALE } from '@/utilities/lingue'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
+import { testi } from '@/utilities/testi'
 import { SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
 import { notFound } from 'next/navigation'
@@ -22,7 +26,9 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   if (!Number.isInteger(sanitizedPageNumber) || sanitizedPageNumber < 1) notFound()
 
-  const posts = await getPosts(sanitizedPageNumber, 12)
+  const lingua = await linguaRichiesta()
+  const posts = await getPosts(sanitizedPageNumber, 12, lingua)
+  if (lingua !== LINGUA_PRINCIPALE && posts.totalDocs === 0) redirect('/posts')
 
   return (
     <div className="pb-24">
@@ -31,7 +37,7 @@ export default async function Page({ params: paramsPromise }: Args) {
           Newsroom
         </p>
         <h1 className="text-[length:var(--titolo-display)] leading-[0.95] font-semibold tracking-[-0.035em]">
-          Notizie
+          {testi(lingua).notizie}
         </h1>
       </LowImpactHero>
 

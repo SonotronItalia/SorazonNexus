@@ -24,6 +24,7 @@ export const Footer: GlobalConfig = {
               name: 'navItems',
               label: 'Voci del menu in fondo',
               type: 'array',
+              localized: true,
               fields: [
                 link({
                   appearances: false,

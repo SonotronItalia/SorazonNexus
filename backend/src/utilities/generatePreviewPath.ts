@@ -1,5 +1,7 @@
 import { PayloadRequest, CollectionSlug } from 'payload'
 
+import { LINGUA_PRINCIPALE } from '@/lingue'
+
 import { getServerSideURL } from './getURL'
 
 // Parametri letti dalla rotta /next/preview del frontend (da ricostruire nella fase 6)
@@ -19,7 +21,7 @@ type Props = {
   req: PayloadRequest
 }
 
-export const generatePreviewPath = ({ collection, slug }: Props) => {
+export const generatePreviewPath = ({ collection, slug, req }: Props) => {
   if (slug === undefined || slug === null) {
     return null
   }
@@ -27,8 +29,11 @@ export const generatePreviewPath = ({ collection, slug }: Props) => {
   // Encode to support slugs with special characters
   const encodedSlug = encodeURIComponent(slug)
 
+  // Lingua scelta nel pannello: l'anteprima di una traduzione si apre con il suo prefisso (/en/…)
+  const lingua = req?.locale && req.locale !== 'all' && req.locale !== LINGUA_PRINCIPALE ? `/${req.locale}` : ''
+
   const encodedParams = new URLSearchParams({
-    path: `${collectionPrefixMap[collection]}/${encodedSlug}`,
+    path: `${lingua}${collectionPrefixMap[collection]}/${encodedSlug}`,
     previewSecret: process.env.PREVIEW_SECRET || '',
   } satisfies PreviewSearchParams)
 

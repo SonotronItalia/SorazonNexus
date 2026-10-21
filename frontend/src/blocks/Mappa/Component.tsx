@@ -8,6 +8,7 @@ import { SezioneSfondo } from '@/components/SezioneSfondo'
 import { Button } from '@/components/ui/button'
 import { useConsenso } from '@/providers/Consenso'
 import { cn } from '@/utilities/ui'
+import { useLingua } from '@/providers/Lingua'
 
 // Le classi stanno scritte per intero: Tailwind non vede quelle costruite al volo
 const ALTEZZE = {
@@ -24,6 +25,7 @@ const ALTEZZE = {
  */
 export const MappaBlock: React.FC<MappaProps> = ({ titolo, indirizzo, altezza, sfondo }) => {
   const [caricata, setCaricata] = useState(false)
+  const { t } = useLingua()
   // Con il consenso ai contenuti esterni (banner dei cookie) la mappa si carica da sola
   const { scelte } = useConsenso()
   const query = encodeURIComponent(indirizzo)
@@ -44,7 +46,7 @@ export const MappaBlock: React.FC<MappaProps> = ({ titolo, indirizzo, altezza, s
         >
           {caricata || scelte.esterni ? (
             <iframe
-              title={`Mappa: ${indirizzo}`}
+              title={`${t.mappaTitolo}: ${indirizzo}`}
               src={`https://www.google.com/maps?q=${query}&output=embed`}
               className="h-full w-full border-0"
               loading="lazy"
@@ -56,17 +58,17 @@ export const MappaBlock: React.FC<MappaProps> = ({ titolo, indirizzo, altezza, s
               <MapPin className="h-8 w-8 text-muted-foreground" aria-hidden />
               <p className="font-medium">{indirizzo}</p>
               <Button type="button" onClick={() => setCaricata(true)}>
-                Mostra la mappa
+                {t.mappaMostra}
               </Button>
               <p className="max-w-sm text-xs text-muted-foreground">
-                La mappa è fornita da Google, che può impostare cookie sul tuo dispositivo.{' '}
+                {t.mappaGoogle}{' '}
                 <a
                   className="underline underline-offset-2"
                   href={`https://www.google.com/maps/search/?api=1&query=${query}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Apri in Google Maps
+                  {t.mappaApri}
                 </a>
               </p>
             </div>

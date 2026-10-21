@@ -4,6 +4,8 @@ import type { CentriListBlock as CentriListProps } from '@/payload-types'
 import { getCentri } from '@/lib/content'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
 import { telefoni } from '@/utilities/telefoni'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
+import { testi } from '@/utilities/testi'
 
 const slugify = (s: string) =>
   s
@@ -28,6 +30,7 @@ export const CentriListBlock: React.FC<CentriListProps> = async ({
   colonne,
 }) => {
   const docs = await getCentri()
+  const t = testi(await linguaRichiesta())
 
   const perRegione = new Map<string, typeof docs>()
   for (const centro of docs) {
@@ -83,13 +86,13 @@ export const CentriListBlock: React.FC<CentriListProps> = async ({
       )}
 
       {regioni.length === 0 && (
-        <p className="mt-8 text-muted-foreground">Nessun centro disponibile al momento.</p>
+        <p className="mt-8 text-muted-foreground">{t.centriNessuno}</p>
       )}
 
       {/* Indice delle regioni: resta sotto l'header mentre si scorre l'elenco */}
       {mostraIndice && regioni.length > 0 && (
         <nav
-          aria-label="Regioni"
+          aria-label={t.centriRegioni}
           className="sticky top-[60px] z-20 -mx-4 mt-10 flex gap-2 overflow-x-auto bg-background/80 px-4 py-3 backdrop-blur-xl backdrop-saturate-150 md:top-[68px]"
         >
           {regioni.map((regione) => (
@@ -164,7 +167,7 @@ export const CentriListBlock: React.FC<CentriListProps> = async ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Sito web
+                        {t.centriSito}
                       </a>
                     )}
                   </div>

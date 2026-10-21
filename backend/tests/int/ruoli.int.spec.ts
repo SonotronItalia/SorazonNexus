@@ -244,3 +244,69 @@ describe('ruoli personalizzati', () => {
     }
   })
 })
+
+describe('traduttori', () => {
+  it('"Traduce in inglese" permette di modificare la versione inglese e non quella italiana', async () => {
+    const ruoloTraduttore = await payload.create({
+      collection: 'ruoli',
+      data: {
+        nome: `Traduttore ${suffisso}`,
+        permessi: { pages: { vede: true } },
+        traduzioni: { en: true },
+      },
+    })
+    const traduttore = await nuovoUtente('traduttore', ruoloTraduttore.id)
+    const pagina = await payload.create({
+      collection: 'pages',
+      data: {
+        title: `Pagina da tradurre ${suffisso}`,
+        slug: `pagina-da-tradurre-${suffisso}`,
+        layout: [{ blockType: 'content', columns: [] }],
+        _status: 'published',
+      } as never,
+      context: { disableRevalidate: true },
+    })
+    try {
+      // Inglese: sì
+      await payload.update({
+        collection: 'pages',
+        id: pagina.id,
+        locale: 'en',
+        data: { title: `Page to translate ${suffisso}`, slug: `page-to-translate-${suffisso}`, inLingua: true },
+        ...come(traduttore),
+        context: { disableRevalidate: true },
+      })
+      const en = await payload.findByID({ collection: 'pages', id: pagina.id, locale: 'en', fallbackLocale: false })
+      expect(en.title).toBe(`Page to translate ${suffisso}`)
+      // Italiano: no (serve "Modifica" sulle pagine)
+      await expect(
+        payload.update({
+          collection: 'pages',
+          id: pagina.id,
+          locale: 'it',
+          data: { title: 'Cambiato' },
+          ...come(traduttore),
+          context: { disableRevalidate: true },
+        }),
+      ).rejects.toThrow()
+      // Un redattore senza "Traduce in inglese" non tocca l'inglese
+      await expect(
+        payload.update({
+          collection: 'pages',
+          id: pagina.id,
+          locale: 'en',
+          data: { title: 'Changed' },
+          ...come(redattore),
+          context: { disableRevalidate: true },
+        }),
+      ).rejects.toThrow()
+      // L'italiano resta com'era
+      const it = await payload.findByID({ collection: 'pages', id: pagina.id, locale: 'it' })
+      expect(it.title).toBe(`Pagina da tradurre ${suffisso}`)
+    } finally {
+      await payload.delete({ collection: 'pages', id: pagina.id, context: { disableRevalidate: true } })
+      await payload.delete({ collection: 'users', id: traduttore.id }).catch(() => {})
+      await payload.delete({ collection: 'ruoli', id: ruoloTraduttore.id }).catch(() => {})
+    }
+  })
+})

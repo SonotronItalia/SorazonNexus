@@ -19,6 +19,8 @@ const HERO_GRANDI = ['banner', 'highImpact']
 export const hero: Field = {
   name: 'hero',
   type: 'group',
+  // Testi, immagini e pulsanti dell'apertura possono cambiare da una lingua all'altra
+  localized: true,
   fields: [
     {
       name: 'type',

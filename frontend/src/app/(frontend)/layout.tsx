@@ -17,7 +17,11 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
-import { getColori, getFooter, getImpostazioni, getSeo, getTornaSu } from '@/lib/content'
+import { getColori, getFooter, getImpostazioni, getLingue, getSeo, getTornaSu } from '@/lib/content'
+import { LinguaProvider } from '@/providers/Lingua'
+import { LINGUE } from '@/utilities/lingue'
+import { lingueAttive } from '@/utilities/lingueAttive'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
 import { AvvisoSito } from '@/components/AvvisoSito'
 import { configGoogle } from '@/utilities/google'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
@@ -37,12 +41,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
   // codice cambiato nell'admin vale subito ovunque. Solo codici validi; se il backend non
   // risponde restano i valori di riserva salvati nel testo.
-  const [colori, tornaSu, footer, impostazioni, seo] = await Promise.all([
+  // Lingua dall'indirizzo (/en/…): testi tradotti di avviso, SEO, menu e piè di pagina
+  const lingua = await linguaRichiesta()
+  const [colori, tornaSu, footer, impostazioni, seo, lingue] = await Promise.all([
     getColori().catch(() => []),
     getTornaSu().catch(() => null),
-    getFooter().catch(() => null),
-    getImpostazioni(),
-    getSeo(),
+    getFooter(lingua).catch(() => null),
+    getImpostazioni(lingua),
+    getSeo(lingua),
+    getLingue(),
   ])
   // ID di Google e modalità del consenso: Impostazioni del sito, con le variabili d'ambiente come
   // riserva (utilities/google.ts). Senza ID nessun tag e nessuna categoria nel banner.
@@ -61,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       className={cn(interTight.variable, GeistMono.variable)}
-      lang="it"
+      lang={lingua}
       suppressHydrationWarning
     >
       <head>
@@ -74,16 +81,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
+          <LinguaProvider lingua={lingua} lingue={lingueAttive(lingue)} stile={lingue?.stile}>
           <PreviewBar />
           {impostazioni?.avviso && (
             <AvvisoSito avviso={impostazioni.avviso} oraServer={oraServer} />
           )}
-          <Header />
+          <Header lingua={lingua} />
           {children}
-          <Footer />
+          <Footer lingua={lingua} />
           {tornaSu && <TornaSu impostazioni={tornaSu} />}
           <CookieBanner google={google} />
           {conGoogle && <GoogleTag google={google} />}
+          </LinguaProvider>
         </Providers>
       </body>
     </html>
@@ -93,7 +102,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 // Funzione e non oggetto: SITE_URL si legge a runtime
 export async function generateMetadata(): Promise<Metadata> {
   // Nome, descrizione, verifiche e "sito nascosto": Avanzate > SEO e motori AI
-  const seo = await getSeo()
+  const lingua = await linguaRichiesta()
+  const seo = await getSeo(lingua)
   const nome = nomeSito(seo)
   const verificaGoogle = seo?.ricerca?.verificaGoogle?.trim()
   const verificaBing = seo?.ricerca?.verificaBing?.trim()
@@ -103,7 +113,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: descrizioneSito(seo),
     applicationName: nome,
     publisher: seo?.azienda?.ragioneSociale?.trim() || 'SONOTRON ITALIA S.R.L.S.',
-    openGraph: mergeOpenGraph(),
+    openGraph: mergeOpenGraph({ locale: LINGUE.find((l) => l.codice === lingua)?.locale }),
     twitter: {
       card: 'summary_large_image',
     },

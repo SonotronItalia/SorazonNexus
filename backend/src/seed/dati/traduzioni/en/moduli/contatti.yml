@@ -1,0 +1,23 @@
+# Modulo Contatti in inglese: stessi campi del modulo italiano, nello stesso ordine; si traducono
+# solo i testi. "title" serve a trovare il modulo e non cambia.
+title: Contatti
+submitButtonLabel: Send your request
+confirmationMessage: |
+  ### Thank you, we have received your request
+
+  We will reply as soon as possible to the email address you gave us.
+fields:
+  - label: Full name
+  - label: Email
+  - label: Phone
+  - label: Subject
+    placeholder: Choose a subject
+    options:
+      - label: Information on the therapy
+      - label: The Sorazon device
+      - label: Becoming a Sorazon centre
+      - label: Other
+  - label: Message
+  - label: I have read the privacy policy
+  - message: |
+      We will only use your data to reply to your request. Details in the [privacy policy](/privacy-policy).

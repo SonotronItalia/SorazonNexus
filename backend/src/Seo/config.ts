@@ -64,6 +64,7 @@ export const Seo: GlobalConfig = {
             },
             {
               name: 'descrizioneSito',
+              localized: true,
               label: 'Descrizione del sito',
               type: 'textarea',
               maxLength: 200,
@@ -167,6 +168,7 @@ export const Seo: GlobalConfig = {
             },
             {
               name: 'llmsPresentazione',
+              localized: true,
               label: 'Presentazione in llms.txt',
               type: 'textarea',
               admin: {

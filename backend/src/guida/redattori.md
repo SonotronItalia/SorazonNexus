@@ -30,7 +30,7 @@ Dopo l'accesso vedi la **schermata iniziale**. Le voci sono divise in gruppi:
 - **Contenuti**: pagine, notizie, centri, immagini e file.
 - **Contatti**: i moduli del sito e i messaggi ricevuti.
 - **Aspetto del sito**: colori, effetti animati, pulsante "torna su".
-- **Impostazioni**: avviso in cima al sito, social, menu e piè di pagina.
+- **Impostazioni**: avviso in cima al sito, social, menu, piè di pagina e lingue.
 
 ![La schermata iniziale del pannello](/guida/r03-home.jpg)
 
@@ -337,6 +337,53 @@ Una voce che porta a una pagina **in bozza** non si vede finché la pagina non �
 
 ![Il piè di pagina](/guida/r28-pie-di-pagina.jpg)
 
+## Le traduzioni
+
+Il sito può essere in più lingue. L'**italiano** è la lingua principale. Le altre lingue hanno un indirizzo con la sigla davanti, per esempio *sorazon.it/en/therapy* per l'inglese.
+
+Per tradurre serve il permesso **Traduce in…** per quella lingua. Te lo dà l'amministratore.
+
+### Scegliere la lingua nel pannello
+
+In alto a destra c'è **Lingua: Italiano**. Premilo e scegli la lingua in cui vuoi lavorare. Vedi solo le lingue che puoi tradurre.
+
+![La scelta della lingua nel pannello](/guida/r33-scelta-lingua.jpg)
+
+Accanto al titolo di ogni campo compare la lingua, per esempio *Titolo — Inglese*. Così sai sempre quale versione stai cambiando.
+
+### Tradurre una pagina
+
+1. Apri la pagina e scegli la lingua in alto (per esempio **Inglese**).
+2. Se la pagina non è mai stata tradotta, parti da una copia dell'italiano: premi i tre puntini **⋮** in alto a destra, poi **Copia in un'altra lingua** e scegli la lingua.
+3. Traduci il **Titolo**, l'**Apertura**, i **blocchi** e la scheda **SEO**.
+4. **Indirizzo**: premi **Sblocca** e scrivi l'indirizzo nella lingua, per esempio *therapy*. Non cambiare gli indirizzi già pubblicati.
+5. Quando la traduzione è pronta, spunta **Pubblicata in questa lingua** a destra.
+6. Premi **Pubblica modifiche**.
+
+![La copia da un'altra lingua](/guida/r35-copia-lingua.jpg)
+
+![Una pagina in inglese nel pannello](/guida/r34-pagina-in-inglese.jpg)
+
+Ogni lingua ha i **suoi blocchi**: puoi togliere o aggiungere blocchi in inglese senza toccare l'italiano.
+
+> **Finché "Pubblicata in questa lingua" non è spuntata** la pagina non compare in quella lingua: chi apre l'indirizzo inglese viene portato alla pagina italiana. Così non si vedono mai pagine tradotte a metà.
+
+L'**anteprima** funziona anche per le traduzioni: con la lingua scelta in alto, l'anteprima mostra la versione in quella lingua, anche se non è ancora pubblicata.
+
+### Tradurre il resto
+
+Nello stesso modo, scegliendo la lingua in alto, si traducono:
+
+- le **notizie** (anche loro con *Pubblicata in questa lingua*);
+- il **Menu principale** e il **Piè di pagina**: ogni lingua ha le sue voci;
+- l'**avviso in cima al sito** (Impostazioni del sito): se non è tradotto, nelle altre lingue non compare;
+- i **moduli**: le etichette dei campi e il messaggio di conferma;
+- le **categorie** delle notizie.
+
+Le scritte fisse del sito (pulsanti, banner dei cookie) sono già in italiano e in inglese. Per altre lingue serve uno sviluppatore; nel frattempo si vedono in inglese.
+
+> **Testi sulla salute.** Anche le traduzioni delle frasi su indicazioni, effetti e sicurezza della terapia vanno **approvate dall'azienda** prima di pubblicarle.
+
 ## Il tuo account
 
 Premi il tondo in alto a destra per aprire il tuo **account**. Qui puoi cambiare nome, email e password.
@@ -373,11 +420,14 @@ Senza consenso, il sito **non** usa cookie di statistica o pubblicità e non car
 
 ![La parte in alto del sito](/guida/s04-header.jpg)
 
+![Il selettore della lingua aperto](/guida/s07-selettore-lingua.jpg)
+
 Da sinistra a destra:
 
 - il **logo**, che porta alla Home;
 - le voci del **menu**;
-- la 🔍 **ricerca** nelle notizie;
+- il **selettore della lingua** con la bandiera: porta alla stessa pagina nell'altra lingua (o alla sua home, se la pagina non è tradotta);
+- la 🔍 **ricerca** nelle notizie (solo in italiano);
 - il fulmine ⚡, che **accende o spegne gli effetti animati**;
 - **Auto / Chiaro / Scuro**: il tema del sito. *Auto* segue l'impostazione del telefono o del computer.
 
@@ -405,6 +455,7 @@ Alcune voci le vede solo l'**amministratore** (gruppo **Avanzate**). Qui ti bast
 - **Reindirizzamenti**: portano i vecchi indirizzi del sito a quelli nuovi.
 - **Categorie** delle notizie e **Tipi di effetto**.
 - La scheda **Analisi e pubblicità** delle impostazioni (Google Analytics e simili).
+- **Lingue e selettore**: quali lingue ha il sito e come appare il selettore.
 
 Se ti serve una di queste cose, chiedi all'amministratore.
 

@@ -2,13 +2,17 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { draftMode } from 'next/headers'
+import { redirect } from 'next/navigation'
 import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
 import { briciole } from '@/utilities/datiStrutturati'
 import { RenderHero } from '@/heros/RenderHero'
-import { getPageBySlug } from '@/lib/content'
+import { getAlternative, getPageBySlug, slugItaliano } from '@/lib/content'
+import { AlternativeLingua } from '@/providers/Lingua'
+import { LINGUA_PRINCIPALE, percorsoDoc } from '@/utilities/lingue'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
 import { generateMeta } from '@/utilities/generateMeta'
 
 // Nessuna pagina pre-generata in build (il backend può non esserci):
@@ -34,9 +38,10 @@ const parse = (segments: string[] = []) => {
   }
 }
 
-// In anteprima (draftMode) legge la bozza, senza cache; altrimenti la versione pubblicata
-const queryPageBySlug = cache(async (slug: string) =>
-  getPageBySlug(slug, (await draftMode()).isEnabled),
+// In anteprima (draftMode) legge la bozza, senza cache; altrimenti la versione pubblicata.
+// Nelle altre lingue solo le pagine tradotte ("Pubblicata in questa lingua")
+const queryPageBySlug = cache(async (slug: string, lingua: string) =>
+  getPageBySlug(slug, (await draftMode()).isEnabled, lingua),
 )
 
 export default async function Page({ params: paramsPromise }: Args) {
@@ -46,11 +51,18 @@ export default async function Page({ params: paramsPromise }: Args) {
   // Vecchi indirizzi a più livelli (es. /index.php/contatti): redirect del CMS, altrimenti 404
   if (!slug) return <PayloadRedirects url={url} />
 
-  const page = await queryPageBySlug(slug)
+  const lingua = await linguaRichiesta()
+  const page = await queryPageBySlug(slug, lingua)
 
   if (!page) {
+    // Traduzione mancante o non pubblicata: la pagina in italiano
+    if (lingua !== LINGUA_PRINCIPALE) {
+      const it = await slugItaliano('pages', slug, lingua)
+      if (it) redirect(percorsoDoc(LINGUA_PRINCIPALE, it))
+    }
     return <PayloadRedirects url={url} />
   }
+  const alternative = await getAlternative('pages', page.id)
 
   const { hero, layout } = page
 
@@ -60,8 +72,11 @@ export default async function Page({ params: paramsPromise }: Args) {
       <PayloadRedirects disableNotFound url={url} />
 
       {slug !== 'home' && (
-        <DatiStrutturati dati={briciole([{ nome: page.title, percorso: `/${slug}` }])} />
+        <DatiStrutturati
+          dati={briciole([{ nome: page.title, percorso: percorsoDoc(lingua, slug) }])}
+        />
       )}
+      <AlternativeLingua raccolta="pages" slug={alternative} />
       <RenderHero {...hero} />
       <RenderBlocks blocks={layout} />
     </article>
@@ -72,9 +87,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug: segments } = await paramsPromise
   const { slug } = parse(segments)
   if (!slug) return {}
+  const lingua = await linguaRichiesta()
+  const page = await queryPageBySlug(slug, lingua)
 
   return generateMeta({
-    doc: await queryPageBySlug(slug),
-    percorso: slug === 'home' ? '/' : `/${slug}`,
+    doc: page,
+    percorso: percorsoDoc(lingua, slug),
+    lingua,
+    alternative: page ? { raccolta: 'pages', slug: await getAlternative('pages', page.id) } : undefined,
   })
 }

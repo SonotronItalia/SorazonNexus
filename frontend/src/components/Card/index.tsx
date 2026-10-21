@@ -7,6 +7,8 @@ import React from 'react'
 import type { Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
+import { useLingua } from '@/providers/Lingua'
+import { percorsoDoc } from '@/utilities/lingue'
 
 export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'> &
   Partial<Pick<Post, 'publishedAt'>>
@@ -39,7 +41,8 @@ export const Card: React.FC<{
     : ''
   const titleToUse = titleFromProps || title
   const sanitizedDescription = description?.replace(/\s/g, ' ') // spazi non separabili -> spazi
-  const href = `/${relationTo}/${slug}`
+  const { lingua } = useLingua()
+  const href = percorsoDoc(lingua, slug ?? '', relationTo === 'posts' ? 'posts' : 'pages')
 
   return (
     <article

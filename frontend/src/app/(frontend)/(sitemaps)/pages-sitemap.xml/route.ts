@@ -1,8 +1,10 @@
 import { getServerSideSitemap } from 'next-sitemap'
 
-import { getPagesForSitemap, getSeo } from '@/lib/content'
-import { nonIndicizzare } from '@/utilities/seo'
+import { getLingue, getPagesForSitemap, getSeo } from '@/lib/content'
 import { getServerSideURL } from '@/utilities/getURL'
+import { conPrefisso } from '@/utilities/lingue'
+import { lingueAttive } from '@/utilities/lingueAttive'
+import { vociSitemap } from '@/utilities/sitemap'
 
 // Non generata in build: dati in cache con il tag "pages-sitemap"
 export const dynamic = 'force-dynamic'
@@ -11,18 +13,13 @@ export async function GET() {
   const SITE_URL = getServerSideURL()
   const dateFallback = new Date().toISOString()
 
-  // Le pagine escluse in SEO e motori AI non vanno nella mappa del sito
-  const [pages, seo] = await Promise.all([getPagesForSitemap(), getSeo()])
+  // Pagine in tutte le lingue attive; le escluse in SEO e motori AI restano fuori
+  const [pages, seo, lingue] = await Promise.all([getPagesForSitemap(), getSeo(), getLingue()])
+  const attive = lingueAttive(lingue).map((l) => l.codice)
 
   const sitemap = [
-    { loc: `${SITE_URL}/posts`, lastmod: dateFallback },
-    ...pages
-      .filter((page) => Boolean(page?.slug))
-      .filter((page) => !nonIndicizzare(page.slug === 'home' ? '/' : `/${page.slug}`, seo))
-      .map((page) => ({
-        loc: page.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page.slug}`,
-        lastmod: page.updatedAt || dateFallback,
-      })),
+    { loc: `${SITE_URL}${conPrefisso('it', '/posts')}`, lastmod: dateFallback },
+    ...vociSitemap(pages, 'pages', attive, seo, SITE_URL, dateFallback),
   ]
 
   return getServerSideSitemap(sitemap)

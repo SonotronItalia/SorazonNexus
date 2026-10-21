@@ -3,11 +3,15 @@ import type { Metadata } from 'next'
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { draftMode } from 'next/headers'
+import { redirect } from 'next/navigation'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
 import { PostHero, heroAPienoSchermo } from '@/heros/PostHero'
-import { getPostBySlug } from '@/lib/content'
+import { getAlternative, getPostBySlug, slugItaliano } from '@/lib/content'
+import { AlternativeLingua } from '@/providers/Lingua'
+import { conPrefisso, LINGUA_PRINCIPALE, percorsoDoc } from '@/utilities/lingue'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { DatiStrutturati } from '@/components/DatiStrutturati'
@@ -25,8 +29,8 @@ type Args = {
 }
 
 // In anteprima (draftMode) legge la bozza, senza cache; altrimenti la versione pubblicata
-const queryPostBySlug = cache(async (slug: string) =>
-  getPostBySlug(slug, (await draftMode()).isEnabled),
+const queryPostBySlug = cache(async (slug: string, lingua: string) =>
+  getPostBySlug(slug, (await draftMode()).isEnabled, lingua),
 )
 
 export default async function Post({ params: paramsPromise }: Args) {
@@ -34,9 +38,18 @@ export default async function Post({ params: paramsPromise }: Args) {
   // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const url = '/posts/' + decodedSlug
-  const post = await queryPostBySlug(decodedSlug)
+  const lingua = await linguaRichiesta()
+  const post = await queryPostBySlug(decodedSlug, lingua)
 
-  if (!post) return <PayloadRedirects url={url} />
+  if (!post) {
+    // Notizia non tradotta: la versione italiana
+    if (lingua !== LINGUA_PRINCIPALE) {
+      const it = await slugItaliano('posts', decodedSlug, lingua)
+      if (it) redirect(percorsoDoc(LINGUA_PRINCIPALE, it, 'posts'))
+    }
+    return <PayloadRedirects url={url} />
+  }
+  const alternative = await getAlternative('posts', post.id)
 
   return (
     <article className="pt-16 pb-16">
@@ -49,11 +62,12 @@ export default async function Post({ params: paramsPromise }: Args) {
         dati={[
           datiNotizia(post),
           briciole([
-            { nome: 'Notizie', percorso: '/posts' },
+            { nome: 'Notizie', percorso: conPrefisso(lingua, '/posts') },
             { nome: post.title, percorso: url },
           ]),
         ]}
       />
+      <AlternativeLingua raccolta="posts" slug={alternative} />
       <PostHero post={post} />
 
       <div className="flex flex-col items-center gap-4 pt-8">
@@ -73,7 +87,14 @@ export default async function Post({ params: paramsPromise }: Args) {
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '' } = await paramsPromise
-  const post = await queryPostBySlug(decodeURIComponent(slug))
+  const lingua = await linguaRichiesta()
+  const post = await queryPostBySlug(decodeURIComponent(slug), lingua)
 
-  return generateMeta({ doc: post, percorso: `/posts/${slug}`, tipo: 'article' })
+  return generateMeta({
+    doc: post,
+    percorso: percorsoDoc(lingua, slug, 'posts'),
+    tipo: 'article',
+    lingua,
+    alternative: post ? { raccolta: 'posts', slug: await getAlternative('posts', post.id) } : undefined,
+  })
 }

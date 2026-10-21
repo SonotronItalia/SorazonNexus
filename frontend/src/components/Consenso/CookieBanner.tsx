@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NESSUNA_SCELTA, type Scelte, useConsenso } from '@/providers/Consenso'
 import { categorieGoogle, type ConfigGoogle } from '@/utilities/google'
+import { useLingua } from '@/providers/Lingua'
 
 type Categoria = { chiave: keyof Scelte; titolo: string; descrizione: string }
 
@@ -21,17 +22,18 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
   const { stato, scelte, salva, preferenzeAperte, chiudiPreferenze } = useConsenso()
   const [dettaglio, setDettaglio] = useState(false)
   const [bozza, setBozza] = useState<Scelte>(NESSUNA_SCELTA)
+  const { t } = useLingua()
 
   const categorie: Categoria[] = [
     ...(statistiche
       ? [
           {
             chiave: 'statistiche' as const,
-            titolo: 'Statistiche',
+            titolo: t.cookieStatistiche,
             descrizione:
               google.gtmId
-                ? 'Strumenti di misura di Google (Analytics, tramite Google Tag Manager): conteggio delle visite e delle pagine viste, per migliorare il sito.'
-                : 'Google Analytics: conteggio anonimo delle visite e delle pagine viste, per migliorare il sito.',
+                ? t.cookieStatisticheGtm
+                : t.cookieStatisticheGa,
           },
         ]
       : []),
@@ -39,19 +41,19 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
       ? [
           {
             chiave: 'marketing' as const,
-            titolo: 'Marketing',
+            titolo: t.cookieMarketing,
             descrizione:
               google.gtmId
-                ? 'Strumenti pubblicitari di Google (tramite Google Tag Manager): misura delle campagne e annunci personalizzati.'
-                : 'Google Ads: misura dei risultati delle campagne pubblicitarie e annunci personalizzati.',
+                ? t.cookieMarketingGtm
+                : t.cookieMarketingAds,
           },
         ]
       : []),
     {
       chiave: 'esterni',
-      titolo: 'Contenuti esterni',
+      titolo: t.cookieEsterni,
       descrizione:
-        'Video di YouTube e mappe di Google Maps incorporati nelle pagine: questi servizi possono impostare propri cookie.',
+        t.cookieEsterniTesto,
     },
   ]
 
@@ -74,28 +76,26 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
   return (
     <section
       role="region"
-      aria-label="Preferenze sui cookie"
+      aria-label={t.cookieRegione}
       className="fixed inset-x-0 bottom-0 z-50 p-4 md:p-6"
     >
       <div className="relative mx-auto max-w-3xl rounded-lg border bg-card p-5 text-card-foreground shadow-xl md:p-6">
         <button
           type="button"
           onClick={() => (stato === 'dato' ? chiudiPreferenze() : rifiuta())}
-          aria-label={stato === 'dato' ? 'Chiudi' : 'Chiudi e rifiuta i cookie facoltativi'}
+          aria-label={stato === 'dato' ? t.cookieChiudi : t.cookieChiudiRifiuta}
           className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-muted"
         >
           <X className="h-4 w-4" />
         </button>
 
-        <h2 className="pr-8 text-lg font-semibold">Questo sito usa i cookie</h2>
+        <h2 className="pr-8 text-lg font-semibold">{t.cookieTitolo}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Usiamo cookie tecnici, necessari al funzionamento del sito, e, solo con il tuo consenso,
-          cookie facoltativi per {categorie.map((c) => c.titolo.toLowerCase()).join(', ')}. Puoi
-          accettarli, rifiutarli o scegliere per categoria; chiudendo con la X li rifiuti. Puoi
-          cambiare idea in qualsiasi momento da &ldquo;Preferenze cookie&rdquo; in fondo alla
-          pagina. Dettagli nella{' '}
-          <Link href="/cookie-policy" className="underline underline-offset-2">
-            cookie policy
+          {t.cookieTesto1} {categorie.map((c) => c.titolo.toLowerCase()).join(', ')}.{' '}
+          {t.cookieTesto2}{' '}
+          {/* La cookie policy è in italiano (testo legale del consulente) */}
+          <Link href="/cookie-policy" hrefLang="it" className="underline underline-offset-2">
+            {t.cookiePolicy}
           </Link>
           .
         </p>
@@ -104,12 +104,10 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
           <ul className="mt-4 space-y-3 border-t pt-4">
             <li className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-medium">Necessari</p>
-                <p className="text-sm text-muted-foreground">
-                  Tema chiaro/scuro, effetti grafici e questa scelta. Sempre attivi.
-                </p>
+                <p className="text-sm font-medium">{t.cookieNecessari}</p>
+                <p className="text-sm text-muted-foreground">{t.cookieNecessariTesto}</p>
               </div>
-              <input type="checkbox" checked disabled aria-label="Necessari, sempre attivi" className="mt-1 h-4 w-4" />
+              <input type="checkbox" checked disabled aria-label={t.cookieNecessariSempre} className="mt-1 h-4 w-4" />
             </li>
             {categorie.map((c) => (
               <li key={c.chiave} className="flex items-start justify-between gap-4">
@@ -132,19 +130,19 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
         <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           {dettaglio ? (
             <Button type="button" variant="outline" onClick={() => conferma(bozza)}>
-              Salva le scelte
+              {t.cookieSalva}
             </Button>
           ) : (
             <Button type="button" variant="outline" onClick={apriDettaglio}>
-              Personalizza
+              {t.cookiePersonalizza}
             </Button>
           )}
           {/* Stesso peso visivo per rifiutare e accettare */}
           <Button type="button" onClick={rifiuta}>
-            Rifiuta
+            {t.cookieRifiuta}
           </Button>
           <Button type="button" onClick={accettaTutto}>
-            Accetta tutti
+            {t.cookieAccetta}
           </Button>
         </div>
       </div>
@@ -155,9 +153,10 @@ export const CookieBanner: React.FC<{ google: ConfigGoogle }> = ({ google }) => 
 // Collegamento nel footer per riaprire le preferenze
 export const PreferenzeCookie: React.FC<{ className?: string }> = ({ className }) => {
   const { apriPreferenze } = useConsenso()
+  const { t } = useLingua()
   return (
     <button type="button" onClick={apriPreferenze} className={className}>
-      Preferenze cookie
+      {t.cookiePreferenze}
     </button>
   )
 }

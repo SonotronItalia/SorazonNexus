@@ -1,5 +1,6 @@
 'use client'
 
+import { useLingua } from '@/providers/Lingua'
 import {
   Select,
   SelectContent,
@@ -22,6 +23,7 @@ export const ThemeSelector: React.FC = () => {
   // Letto da localStorage; setTheme avvisa del cambio e il valore si aggiorna da solo
   const value = useSyncExternalStore(subscribeTheme, getThemePreference, getServerPreference)
 
+  const { t } = useLingua()
   const onThemeChange = (themeToSet: Theme & 'auto') => {
     setTheme(themeToSet === 'auto' ? null : themeToSet)
   }
@@ -29,15 +31,15 @@ export const ThemeSelector: React.FC = () => {
   return (
     <Select onValueChange={onThemeChange} value={value}>
       <SelectTrigger
-        aria-label="Select a theme"
+        aria-label={t.tema}
         className="w-auto bg-transparent gap-2 pl-0 md:pl-3 border-none"
       >
-        <SelectValue placeholder="Theme" />
+        <SelectValue placeholder={t.tema} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="auto">Auto</SelectItem>
-        <SelectItem value="light">Light</SelectItem>
-        <SelectItem value="dark">Dark</SelectItem>
+        <SelectItem value="auto">{t.temaAuto}</SelectItem>
+        <SelectItem value="light">{t.temaChiaro}</SelectItem>
+        <SelectItem value="dark">{t.temaScuro}</SelectItem>
       </SelectContent>
     </Select>
   )

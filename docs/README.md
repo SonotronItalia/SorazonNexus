@@ -19,6 +19,7 @@ Come aggiornarli: [manuali/README.md](manuali/README.md).
 | [Sviluppo](tecnica/sviluppo.md) | Requisiti, avvio, comandi, migrazioni, contenuti di partenza, convenzioni |
 | [CMS (backend)](tecnica/cms.md) | Collezioni, globali, blocchi, ruoli e permessi, hook, plugin |
 | [Sito (frontend)](tecnica/frontend.md) | Rendering, design, animazioni, effetti, consenso, SEO e GEO |
+| [Lingue e traduzioni](tecnica/lingue.md) | Indirizzi /en, campi tradotti, selettore con bandiere, permessi dei traduttori |
 | [Sicurezza](tecnica/sicurezza.md) | Difese nel codice, nel proxy e nei container |
 | [Test e CI](tecnica/test-e-ci.md) | Test unitari, di integrazione, end-to-end, API e GitHub Actions |
 | [Rilascio e gestione](tecnica/rilascio-e-gestione.md) | Stack, proxy HTTPS, variabili, backup e ripristino, tunnel, CD |

@@ -9,15 +9,15 @@ import { Logo } from '@/components/Logo/Logo'
 import { PreferenzeCookie } from '@/components/Consenso/CookieBanner'
 import { Social } from '@/components/Social'
 
-export async function Footer() {
+export async function Footer({ lingua }: { lingua: string }) {
   // Se il backend non risponde il sito resta in piedi, con la navigazione vuota
-  const footerData = await getFooter().catch((e): FooterType => {
+  const footerData = await getFooter(lingua).catch((e): FooterType => {
     console.error('Footer non disponibile:', e)
     return { id: 0, navItems: [] }
   })
 
   // Profili social: Impostazioni del sito > Social
-  const impostazioni = await getImpostazioni()
+  const impostazioni = await getImpostazioni(lingua)
 
   const navItems = footerData?.navItems || []
   const legali = footerData?.datiLegali

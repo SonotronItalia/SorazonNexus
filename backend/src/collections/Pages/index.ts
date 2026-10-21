@@ -61,6 +61,7 @@ export const Pages: CollectionConfig<'pages'> = {
       name: 'title',
       label: 'Titolo',
       type: 'text',
+      localized: true,
       required: true,
     },
     {
@@ -75,6 +76,8 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               label: 'Blocchi della pagina',
+              // Ogni lingua ha i suoi blocchi ("Copia in un'altra lingua" per partire dall'italiano)
+              localized: true,
               labels: { singular: 'Blocco', plural: 'Blocchi' },
               type: 'blocks',
               // Riferimenti per nome ai blocchi di config.blocks (payload.config.ts): gli stessi
@@ -95,6 +98,7 @@ export const Pages: CollectionConfig<'pages'> = {
         {
           name: 'meta',
           label: 'SEO',
+          localized: true,
           fields: [
             OverviewField({
               titlePath: 'meta.title',
@@ -129,7 +133,21 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
     },
+    {
+      // Le lingue diverse dall'italiano compaiono sul sito solo con questa spunta (traduzione pronta)
+      name: 'inLingua',
+      label: 'Pubblicata in questa lingua',
+      type: 'checkbox',
+      localized: true,
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description:
+          "Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la pagina si vede sempre.",
+      },
+    },
     slugField({
+      localized: true,
       // Parte finale dell'indirizzo della pagina, es. /terapia
       overrides: (campo) => {
         const slug = campo.fields.find((f) => 'name' in f && f.name === 'slug')

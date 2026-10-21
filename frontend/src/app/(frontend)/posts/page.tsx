@@ -5,6 +5,10 @@ import { LowImpactHero } from '@/heros/LowImpact'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
 import { getPosts } from '@/lib/content'
+import { redirect } from 'next/navigation'
+import { LINGUA_PRINCIPALE } from '@/utilities/lingue'
+import { linguaRichiesta } from '@/utilities/linguaRichiesta'
+import { testi } from '@/utilities/testi'
 import { immagineOg, mergeOpenGraph, SITE_NAME } from '@/utilities/mergeOpenGraph'
 import React from 'react'
 
@@ -13,7 +17,10 @@ import React from 'react'
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const posts = await getPosts(1, 12)
+  // Nelle altre lingue solo le notizie tradotte; se non ce n'è nessuna, le notizie in italiano
+  const lingua = await linguaRichiesta()
+  const posts = await getPosts(1, 12, lingua)
+  if (lingua !== LINGUA_PRINCIPALE && posts.totalDocs === 0) redirect('/posts')
 
   return (
     <div className="pb-24">
@@ -22,7 +29,7 @@ export default async function Page() {
           Newsroom
         </p>
         <h1 className="text-[length:var(--titolo-display)] leading-[0.95] font-semibold tracking-[-0.035em]">
-          Notizie
+          {testi(lingua).notizie}
         </h1>
       </LowImpactHero>
 

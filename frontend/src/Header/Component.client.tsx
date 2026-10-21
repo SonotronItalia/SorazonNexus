@@ -11,6 +11,9 @@ import { EffectsToggle } from '@/components/EffectsToggle'
 import { Logo } from '@/components/Logo/Logo'
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { HeaderNav } from './Nav'
+import { SelettoreLingua } from '@/components/SelettoreLingua'
+import { useLingua } from '@/providers/Lingua'
+import { conPrefisso } from '@/utilities/lingue'
 import { cn } from '@/utilities/ui'
 
 // Vero quando la pagina è scorsa di poco: header compatto e in vetro (false sul server)
@@ -30,6 +33,7 @@ interface HeaderClientProps {
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const [menuAperto, setMenuAperto] = useState(false)
+  const { lingua, t } = useLingua()
   // Tema imposto da un hero che sta sotto l'header; null = segue il tema del sito
   const { headerTheme } = useHeaderTheme()
   const pathname = usePathname()
@@ -60,13 +64,14 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             scorso ? 'py-2 md:py-3' : 'py-6 md:py-8',
           )}
         >
-          <Link href="/" aria-label="Sorazon, vai alla home">
+          <Link href={conPrefisso(lingua, '/')} aria-label={t.vaiAllaHome}>
             <Logo loading="eager" priority="high" altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
           </Link>
 
           {/* Schermi larghi */}
           <div className="hidden items-center gap-4 text-foreground md:flex">
             <HeaderNav data={data} />
+            <SelettoreLingua />
             <EffectsToggle />
             <ThemeSelector />
           </div>
@@ -79,7 +84,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               onClick={() => setMenuAperto((v) => !v)}
               aria-expanded={menuAperto}
               aria-controls="menu-mobile"
-              aria-label={menuAperto ? 'Chiudi il menu' : 'Apri il menu'}
+              aria-label={menuAperto ? t.chiudiMenu : t.apriMenu}
               className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted"
             >
               {menuAperto ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -94,6 +99,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           >
             <div className="flex flex-col items-start gap-6 [&_nav]:flex-col [&_nav]:items-start [&_nav]:gap-4">
               <HeaderNav data={data} />
+              <SelettoreLingua inLinea />
               <ThemeSelector />
             </div>
           </div>

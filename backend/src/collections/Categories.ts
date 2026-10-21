@@ -24,6 +24,7 @@ export const Categories: CollectionConfig = {
       name: 'title',
       label: 'Nome',
       type: 'text',
+      localized: true,
       required: true,
     },
     slugField({

@@ -136,12 +136,18 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale:
+    | ('false' | 'none' | 'null')
+    | false
+    | null
+    | ('it' | 'en' | 'de' | 'fr' | 'es' | 'pt' | 'nl' | 'pl' | 'ro' | 'cs' | 'el' | 'sv')
+    | ('it' | 'en' | 'de' | 'fr' | 'es' | 'pt' | 'nl' | 'pl' | 'ro' | 'cs' | 'el' | 'sv')[];
   globals: {
     'torna-su': TornaSu;
     impostazioni: Impostazioni;
     header: Header;
     footer: Footer;
+    lingue: Lingue;
     seo: Seo;
   };
   globalsSelect: {
@@ -149,9 +155,10 @@ export interface Config {
     impostazioni: ImpostazioniSelect<false> | ImpostazioniSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    lingue: LingueSelect<false> | LingueSelect<true>;
     seo: SeoSelect<false> | SeoSelect<true>;
   };
-  locale: null;
+  locale: 'it' | 'en' | 'de' | 'fr' | 'es' | 'pt' | 'nl' | 'pl' | 'ro' | 'cs' | 'el' | 'sv';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -370,6 +377,10 @@ export interface Page {
   };
   publishedAt?: string | null;
   /**
+   * Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la pagina si vede sempre.
+   */
+  inLingua?: boolean | null;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
@@ -419,6 +430,10 @@ export interface Post {
         name?: string | null;
       }[]
     | null;
+  /**
+   * Per le traduzioni: spunta quando la versione in questa lingua è pronta. In italiano la notizia si vede sempre.
+   */
+  inLingua?: boolean | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -616,6 +631,22 @@ export interface Ruoli {
    * Vede e può modificare tutto, compresi utenti e ruoli.
    */
   completo?: boolean | null;
+  /**
+   * Lingue in cui chi ha questo ruolo può tradurre. Per tradurre una voce serve anche "Vede" su quella voce; per l'italiano vale "Modifica".
+   */
+  traduzioni?: {
+    en?: boolean | null;
+    de?: boolean | null;
+    fr?: boolean | null;
+    es?: boolean | null;
+    pt?: boolean | null;
+    nl?: boolean | null;
+    pl?: boolean | null;
+    ro?: boolean | null;
+    cs?: boolean | null;
+    el?: boolean | null;
+    sv?: boolean | null;
+  };
   permessi?: {
     pages?: {
       vede?: boolean | null;
@@ -679,6 +710,10 @@ export interface Ruoli {
       modifica?: boolean | null;
     };
     footer?: {
+      vede?: boolean | null;
+      modifica?: boolean | null;
+    };
+    lingue?: {
       vede?: boolean | null;
       modifica?: boolean | null;
     };
@@ -1948,6 +1983,7 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
       };
   publishedAt?: T;
+  inLingua?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -1979,6 +2015,7 @@ export interface PostsSelect<T extends boolean = true> {
         id?: T;
         name?: T;
       };
+  inLingua?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -2338,6 +2375,21 @@ export interface RuoliSelect<T extends boolean = true> {
   nome?: T;
   descrizione?: T;
   completo?: T;
+  traduzioni?:
+    | T
+    | {
+        en?: T;
+        de?: T;
+        fr?: T;
+        es?: T;
+        pt?: T;
+        nl?: T;
+        pl?: T;
+        ro?: T;
+        cs?: T;
+        el?: T;
+        sv?: T;
+      };
   permessi?:
     | T
     | {
@@ -2427,6 +2479,12 @@ export interface RuoliSelect<T extends boolean = true> {
               modifica?: T;
             };
         footer?:
+          | T
+          | {
+              vede?: T;
+              modifica?: T;
+            };
+        lingue?:
           | T
           | {
               vede?: T;
@@ -2806,6 +2864,61 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Le lingue del sito oltre all'italiano. Attivandone una compare nel selettore con la bandiera; le pagine appaiono in quella lingua solo quando sono tradotte.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lingue".
+ */
+export interface Lingue {
+  id: number;
+  stile: 'bandiera-nome' | 'bandiera-sigla' | 'bandiera';
+  /**
+   * L'ordine qui è l'ordine nel selettore, dopo l'italiano. Trascina per cambiarlo. Una lingua che non c'è nell'elenco va aggiunta da uno sviluppatore.
+   */
+  elenco?:
+    | {
+        codice: 'en' | 'de' | 'fr' | 'es' | 'pt' | 'nl' | 'pl' | 'ro' | 'cs' | 'el' | 'sv';
+        /**
+         * Vuota: quella tipica della lingua.
+         */
+        bandiera?:
+          | (
+              | 'it'
+              | 'ch'
+              | 'gb'
+              | 'us'
+              | 'ie'
+              | 'de'
+              | 'at'
+              | 'fr'
+              | 'be'
+              | 'es'
+              | 'mx'
+              | 'ar'
+              | 'pt'
+              | 'br'
+              | 'nl'
+              | 'pl'
+              | 'ro'
+              | 'md'
+              | 'cz'
+              | 'gr'
+              | 'cy'
+              | 'se'
+              | 'fi'
+            )
+          | null;
+        /**
+         * Spenta: si può tradurre ma non compare nel selettore.
+         */
+        attiva?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Come il sito si presenta a Google, ai social e agli assistenti AI. Le modifiche valgono entro pochi secondi; un errore qui può far sparire il sito dalle ricerche.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3004,6 +3117,24 @@ export interface FooterSelect<T extends boolean = true> {
         pec?: T;
         telefono?: T;
         email?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lingue_select".
+ */
+export interface LingueSelect<T extends boolean = true> {
+  stile?: T;
+  elenco?:
+    | T
+    | {
+        codice?: T;
+        bandiera?: T;
+        attiva?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;

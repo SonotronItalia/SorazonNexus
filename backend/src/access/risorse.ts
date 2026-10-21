@@ -43,6 +43,7 @@ export const RISORSE: Risorsa[] = [
   },
   { slug: 'header', chiave: 'header', etichetta: 'Menu principale', azioni: GLOBALE, redattore: GLOBALE },
   { slug: 'footer', chiave: 'footer', etichetta: 'Piè di pagina', azioni: GLOBALE, redattore: GLOBALE },
+  { slug: 'lingue', chiave: 'lingue', etichetta: 'Lingue e selettore', azioni: GLOBALE, redattore: [] },
   { slug: 'seo', chiave: 'seo', etichetta: 'SEO e motori AI', azioni: GLOBALE, redattore: [] },
   { slug: 'categories', chiave: 'categories', etichetta: 'Categorie', azioni: TUTTE, redattore: [] },
   { slug: 'tipi-effetto', chiave: 'tipiEffetto', etichetta: 'Tipi di effetto (codice)', azioni: TUTTE, redattore: [] },
@@ -51,6 +52,19 @@ export const RISORSE: Risorsa[] = [
   { slug: 'users', chiave: 'users', etichetta: 'Utenti', azioni: TUTTE, redattore: [] },
   { slug: 'ruoli', chiave: 'ruoli', etichetta: 'Ruoli e permessi', azioni: TUTTE, redattore: [] },
 ]
+
+// Voci con testi traducibili: in una lingua diversa dall'italiano si modificano con il permesso
+// "Traduce in …" del ruolo, non con "Modifica"
+export const TRADUCIBILI = new Set([
+  'pages',
+  'posts',
+  'header',
+  'footer',
+  'impostazioni',
+  'seo',
+  'categories',
+  'forms',
+])
 
 export const risorsa = (slug: string): Risorsa => {
   const r = RISORSE.find((x) => x.slug === slug)

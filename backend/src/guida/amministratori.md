@@ -12,6 +12,7 @@ Oltre alle voci dei redattori, l'amministratore vede il gruppo **Avanzate**:
 
 - **Utenti** e **Ruoli e permessi**.
 - **SEO e motori AI**.
+- **Lingue e selettore** (nel gruppo Impostazioni).
 - **Reindirizzamenti**, **Categorie**, **Tipi di effetto**, **Indice di ricerca**.
 
 In più vede la scheda **Analisi e pubblicità** in Impostazioni del sito.
@@ -90,6 +91,39 @@ Le protezioni dei ruoli:
 
 - Un ruolo **assegnato a qualcuno non si può eliminare**: prima cambia il ruolo di quelle persone.
 - Non puoi togliere l'accesso completo **al tuo stesso ruolo**: è un modo sicuro per non restare chiusi fuori.
+
+## Lingue e traduttori
+
+### Le lingue del sito
+
+In **Impostazioni › Lingue e selettore** decidi in quali lingue è il sito, oltre all'italiano.
+
+![Lingue e selettore](/guida/a18-lingue.jpg)
+
+- **Aspetto del selettore**: bandiera e nome della lingua (consigliato), bandiera e sigla, oppure solo la bandiera.
+- **Lingue**: premi **Aggiungi Lingua** e scegli la lingua dall'elenco (inglese, tedesco, francese, spagnolo, portoghese, olandese, polacco, rumeno, ceco, greco, svedese).
+- **Bandiera**: per l'inglese, per esempio, Regno Unito o Stati Uniti. Vuota: quella tipica della lingua.
+- **Attiva sul sito**: accesa, la lingua compare nel selettore. Spenta, si può già tradurre nel pannello ma i visitatori non la vedono: utile per preparare una lingua nuova con calma.
+- L'**ordine** delle righe è l'ordine nel selettore, dopo l'italiano. Trascinale per cambiarlo.
+
+Una lingua che non c'è nell'elenco va aggiunta da uno sviluppatore. Lo stesso vale per le scritte fisse del sito (pulsanti, banner dei cookie), oggi in italiano e in inglese.
+
+Le singole pagine compaiono in una lingua solo quando qualcuno le ha tradotte e ha spuntato **Pubblicata in questa lingua** (vedi la Guida per redattori, capitolo *Le traduzioni*). Le altre portano alla versione italiana.
+
+### I traduttori
+
+Nei **Ruoli e permessi** c'è la sezione **Traduzioni**, con una casella **Traduce in…** per ogni lingua.
+
+![Le caselle delle traduzioni in un ruolo](/guida/a19-ruolo-traduzioni.jpg)
+
+- In una lingua diversa dall'italiano si modifica una voce solo con **Traduce in** quella lingua. **Modifica** vale per l'italiano.
+- Così un traduttore non tocca l'italiano e un redattore non tocca le traduzioni, a meno che tu non gli dia entrambi i permessi.
+- Chi ha l'**Accesso completo** (gli amministratori) può tradurre in tutte le lingue.
+- Per tradurre una voce serve anche **Vede** su quella voce, altrimenti non compare nel menu.
+
+Esempio di ruolo **Traduttore inglese**: **Vede** su Pagine, Notizie, Moduli, Impostazioni del sito, Menu principale e Piè di pagina, più **Traduce in inglese**. Nessun'altra casella.
+
+Nel pannello, il selettore **Lingua** in alto mostra a ogni persona solo le lingue che può tradurre.
 
 ## SEO e motori AI
 

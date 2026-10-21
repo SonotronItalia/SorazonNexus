@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowUp, ArrowUpToLine, ChevronsUp, ChevronUp } from 'lucide-react'
+import { useLingua } from '@/providers/Lingua'
 import React, { useSyncExternalStore } from 'react'
 
 import type { TornaSu as Impostazioni } from '@/payload-types'
@@ -45,6 +46,7 @@ const useOltre = (frazione: number) =>
  * focus all'inizio della pagina per chi usa la tastiera. Il banner dei cookie gli sta sopra.
  */
 export const TornaSu: React.FC<{ impostazioni: Impostazioni }> = ({ impostazioni: i }) => {
+  const { t } = useLingua()
   const visibile = useOltre(SOGLIA[i.comparsa ?? 'schermo'])
   const riduciMovimento = useRiduciMovimento()
   if (i.attivo === false) return null
@@ -64,8 +66,8 @@ export const TornaSu: React.FC<{ impostazioni: Impostazioni }> = ({ impostazioni
     <button
       type="button"
       onClick={vaiSu}
-      aria-label="Torna in cima alla pagina"
-      title="Torna in cima"
+      aria-label={t.tornaSu}
+      title={t.tornaSuBreve}
       aria-hidden={!visibile}
       tabIndex={visibile ? 0 : -1}
       className={cn(

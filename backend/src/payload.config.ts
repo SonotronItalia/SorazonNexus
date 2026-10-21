@@ -21,6 +21,9 @@ import { BLOCCHI_PAGINA } from './blocks/blocchiPagina'
 import { TornaSu } from './TornaSu/config'
 import { Impostazioni } from './Impostazioni/config'
 import { Seo } from './Seo/config'
+import { Lingue } from './Lingue/config'
+import { LINGUA_PRINCIPALE, LINGUE } from './lingue'
+import { linguePerIlPannello } from './utilities/linguePerIlPannello'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -127,6 +130,30 @@ export default buildConfig({
   i18n: {
     supportedLanguages: { it, en },
     fallbackLanguage: 'it',
+    // Le voci delle traduzioni dette "lingua" (Payload in italiano dice "locale" e "località")
+    translations: {
+      it: {
+        general: {
+          locale: 'Lingua',
+          locales: 'Lingue',
+          allLocales: 'Tutte le lingue',
+          fallbackToDefaultLocale: "Usa l'italiano se manca la traduzione",
+        },
+        localization: {
+          cannotCopySameLocale: 'Non si può copiare nella stessa lingua',
+          copyToLocale: "Copia in un'altra lingua",
+          localeToPublish: 'Lingua da pubblicare',
+          selectedLocales: 'Lingue scelte',
+          selectLocaleToCopy: 'Scegli la lingua in cui copiare',
+          selectLocaleToDuplicate: 'Scegli le lingue da duplicare',
+        },
+        version: {
+          publishAllLocales: 'Pubblica tutte le lingue',
+          showLocales: 'Mostra le lingue:',
+          selectLocales: 'Scegli le lingue da mostrare',
+        },
+      },
+    },
   },
   // GraphQL non serve (il sito usa le API REST): spento, meno superficie esposta
   graphQL: { disable: true },
@@ -141,7 +168,15 @@ export default buildConfig({
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
   collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users, Ruoli],
-  globals: [Impostazioni, Header, Footer, TornaSu, Seo],
+  globals: [Impostazioni, Header, Footer, TornaSu, Seo, Lingue],
+  // Traduzioni: italiano principale, le altre lingue di src/lingue.ts. Nel pannello compaiono
+  // solo quelle attive in "Lingue e selettore" (e, per un traduttore, quelle che può tradurre)
+  localization: {
+    locales: LINGUE.map((l) => ({ code: l.codice, label: l.etichetta })),
+    defaultLocale: LINGUA_PRINCIPALE,
+    fallback: true,
+    filterAvailableLocales: linguePerIlPannello,
+  },
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

@@ -11,6 +11,7 @@ import type { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
 
 import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
+import { useLingua } from '@/providers/Lingua'
 
 // Campo trappola contro lo spam: invisibile ai visitatori, il backend scarta gli invii che lo
 // compilano (stesso nome di CAMPO_TRAPPOLA in backend/src/hooks/controllaModulo.ts)
@@ -30,6 +31,7 @@ export const FormBlock: React.FC<
     id?: string
   } & FormBlockType
 > = (props) => {
+  const { t } = useLingua()
   const {
     enableIntro,
     form: formFromProps,
@@ -141,7 +143,7 @@ export const FormBlock: React.FC<
               hasSubmitted &&
               confirmationType === 'message' &&
               confirmationMessage && <RichText data={confirmationMessage} />}
-            {isLoading && !hasSubmitted && <p>Invio in corso...</p>}
+            {isLoading && !hasSubmitted && <p>{t.moduloInvio}</p>}
             {error && (
               <p role="alert" className="mb-4 text-sm text-red-500">
                 {error.message}

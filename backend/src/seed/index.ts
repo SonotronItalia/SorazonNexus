@@ -25,7 +25,7 @@ import {
   OrderedListFeature,
   UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
-import { getPayload, type RequiredDataFromCollectionSlug } from 'payload'
+import { getPayload, type RequiredDataFromCollectionSlug, type TypedLocale } from 'payload'
 import { parse } from 'yaml'
 
 import type { Centri, Media, Page } from '@/payload-types'
@@ -363,6 +363,86 @@ if (Object.keys(mancanti).length) {
   await payload.updateGlobal({ slug: 'seo', data: mancanti, context })
   log(`SEO e motori AI: impostati ${Object.keys(mancanti).join(', ')}`)
 } else log('SEO e motori AI già compilati: non toccati')
+
+// Lingue e selettore (dati/lingue.yml): solo se nel CMS non c'è ancora nessuna lingua
+const lingueAttuali = await payload.findGlobal({ slug: 'lingue', depth: 0 })
+if (!lingueAttuali.elenco?.length) {
+  await payload.updateGlobal({ slug: 'lingue', data: parse(fs.readFileSync(dati('lingue.yml'), 'utf8')), context })
+  log('lingue del sito impostate')
+} else log('lingue del sito già impostate: non toccate')
+
+// Traduzioni (dati/traduzioni/<lingua>/): pagine (Markdown come quelle italiane, con "pagina:"
+// = slug italiano e "pubblicata:" = visibile in quella lingua), menu, modulo e SEO
+for (const lingua of fs.existsSync(dati('traduzioni')) ? fs.readdirSync(dati('traduzioni')).sort() : []) {
+  const locale = lingua as TypedLocale
+  const cartella = (...parti: string[]) => dati('traduzioni', lingua, ...parti)
+  // Pagine
+  for (const f of fs.existsSync(cartella('pagine')) ? fs.readdirSync(cartella('pagine')).filter((f) => f.endsWith('.md')).sort() : []) {
+    const p = leggiPagina(f, fs.readFileSync(cartella('pagine', f), 'utf8'))
+    const { pagina, pubblicata, ...resto } = p.dati as { pagina?: string; pubblicata?: boolean }
+    const id = pagina ? idPagine.get(pagina) : undefined
+    if (!id) throw new Error(`traduzioni/${lingua}/pagine/${f}: "pagina: ${pagina}" non esiste`)
+    const data = risolvi(resto, risolutori) as RequiredDataFromCollectionSlug<'pages'>
+    await payload.update({ collection: 'pages', id, locale, data: { ...data, inLingua: Boolean(pubblicata), _status: 'published' }, context })
+    log(`pagina /${lingua}/${p.slug} (da /${pagina}) ${pubblicata ? 'pubblicata' : 'da rivedere, non visibile'}`)
+  }
+  // Menu dell'header nella lingua
+  if (fs.existsSync(cartella('menu.csv'))) {
+    const righe = leggiCsv(fs.readFileSync(cartella('menu.csv'), 'utf8'))
+    await payload.updateGlobal({
+      slug: 'header',
+      locale,
+      data: {
+        navItems: righe.map(({ etichetta, pagina, url }) => ({
+          link: pagina
+            ? { type: 'reference' as const, reference: risolvi(`pagina:${pagina}`, risolutori) as never, label: etichetta }
+            : { type: 'custom' as const, url, label: etichetta },
+        })),
+      },
+      context,
+    })
+    log(`menu in ${lingua} aggiornato`)
+  }
+  // Moduli: stessi campi dell'italiano (per posizione), testi tradotti
+  for (const f of fs.existsSync(cartella('moduli')) ? fs.readdirSync(cartella('moduli')).filter((f) => f.endsWith('.yml')).sort() : []) {
+    const t = risolvi(parse(fs.readFileSync(cartella('moduli', f), 'utf8')), risolutoriModuli) as {
+      title: string
+      fields?: Record<string, unknown>[]
+      emails?: Record<string, unknown>[]
+    } & Record<string, unknown>
+    const { docs } = await payload.find({ collection: 'forms', where: { title: { equals: t.title } }, limit: 1, depth: 0 })
+    if (!docs[0]) throw new Error(`traduzioni/${lingua}/moduli/${f}: modulo "${t.title}" non trovato`)
+    const unisci = (base: Record<string, unknown>[] | null | undefined, tradotti?: Record<string, unknown>[]) =>
+      (base ?? []).map((b, i) => {
+        const tr = tradotti?.[i] ?? {}
+        const opzioni = (b.options as Record<string, unknown>[] | undefined)?.map((o, j) => ({
+          ...o,
+          ...((tr.options as Record<string, unknown>[] | undefined)?.[j] ?? {}),
+        }))
+        return { ...b, ...tr, ...(opzioni ? { options: opzioni } : {}) }
+      })
+    const { title: _titolo, fields, emails, ...testi } = t
+    await payload.update({
+      collection: 'forms',
+      id: docs[0].id,
+      locale,
+      data: {
+        ...testi,
+        fields: unisci(docs[0].fields as never, fields),
+        emails: unisci(docs[0].emails as never, emails),
+      } as never,
+      context,
+    })
+    log(`modulo "${t.title}" tradotto in ${lingua}`)
+  }
+  // SEO: descrizione del sito e presentazione per llms.txt nella lingua (solo se vuote)
+  if (fs.existsSync(cartella('seo.yml'))) {
+    const attuale = (await payload.findGlobal({ slug: 'seo', locale, fallbackLocale: false, depth: 0 })) as unknown as Record<string, unknown>
+    const voci = parse(fs.readFileSync(cartella('seo.yml'), 'utf8')) as Record<string, string>
+    const vuote = Object.fromEntries(Object.entries(voci).filter(([k]) => !String(attuale[k] ?? '').trim()))
+    if (Object.keys(vuote).length) await payload.updateGlobal({ slug: 'seo', locale, data: vuote, context })
+  }
+}
 
 // Durante il seed gli avvisi al frontend sono spenti: uno solo alla fine, con tutti i tag
 await revalidateFrontend(

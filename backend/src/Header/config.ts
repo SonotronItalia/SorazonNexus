@@ -22,6 +22,8 @@ export const Header: GlobalConfig = {
       name: 'navItems',
       label: 'Voci del menu',
       type: 'array',
+      // Ogni lingua ha il suo menu
+      localized: true,
       fields: [
         link({
           appearances: false,
