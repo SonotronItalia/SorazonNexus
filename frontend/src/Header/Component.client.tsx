@@ -14,6 +14,7 @@ import { HeaderNav } from './Nav'
 import { SelettoreLingua } from '@/components/SelettoreLingua'
 import { useLingua } from '@/providers/Lingua'
 import { conPrefisso } from '@/utilities/lingue'
+import type { Loghi } from '@/utilities/marchio'
 import { cn } from '@/utilities/ui'
 
 // Vero quando la pagina è scorsa di poco: header compatto e in vetro (false sul server)
@@ -29,9 +30,10 @@ const useScorso = () =>
 
 interface HeaderClientProps {
   data: Header
+  loghi: Loghi
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, loghi }) => {
   const [menuAperto, setMenuAperto] = useState(false)
   const { lingua, t } = useLingua()
   // Tema imposto da un hero che sta sotto l'header; null = segue il tema del sito
@@ -72,7 +74,23 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             )}
           >
             <Link href={conPrefisso(lingua, '/')} aria-label={t.vaiAllaHome}>
-              <Logo altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
+              {loghi.compatto ? (
+                // Logo compatto (se caricato): barra ridotta e telefoni; altrimenti il logo intero
+                <>
+                  <Logo
+                    logo={loghi.barra}
+                    altezza="h-[76px]"
+                    className={scorso ? 'hidden' : 'hidden md:block'}
+                  />
+                  <Logo
+                    logo={loghi.compatto}
+                    altezza={scorso ? 'h-[44px]' : 'h-[76px]'}
+                    className={scorso ? undefined : 'md:hidden'}
+                  />
+                </>
+              ) : (
+                <Logo logo={loghi.barra} altezza={scorso ? 'h-[44px]' : 'h-[76px]'} />
+              )}
             </Link>
 
             {/* Schermi larghi (da 1280 px: con meno spazio le voci non ci stanno e la pagina scorreva di lato) */}

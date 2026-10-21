@@ -323,6 +323,19 @@ Nella scheda **Social** aggiungi i profili dell'azienda (Facebook, Instagram, Li
 
 ![I profili social](/guida/r26-social.jpg)
 
+### Logo e icona del sito
+
+Nella scheda **Marchio** scegli il logo e l'icona del sito. Il sito decide da solo quanto grandi mostrarli: tu carichi il file intero, senza spazio vuoto attorno.
+
+- **Logo per sfondo chiaro** e **Logo per sfondo scuro**: in alto nella pagina, con il tema chiaro e con quello scuro.
+- **Logo compatto** (facoltativo): una versione piccola, per esempio solo il simbolo. Compare quando la barra in alto si rimpicciolisce e sui telefoni.
+- **Logo del piè di pagina** (facoltativo): il fondo della pagina è nero. Se lo lasci vuoto, si usa il logo per sfondo scuro.
+- **Icona del sito**: l'immagine quadrata che si vede nella scheda del browser e sul telefono quando si aggiunge il sito alla schermata Home. Il sito prepara da solo tutte le misure.
+
+I formati sono **SVG** (il migliore: è nitido a ogni misura), PNG o WebP. Se un file SVG contiene parti che potrebbero essere pericolose, il pannello lo rifiuta: chiedi a chi ha disegnato il logo di esportarlo di nuovo come immagine semplice. Un campo vuoto usa il logo Sorazon.
+
+![Logo e icona del sito](/guida/r36-marchio.jpg)
+
 ### Menu principale
 
 **Menu principale** contiene le voci del menu in cima al sito. Puoi aggiungerle, toglierle e cambiarne l'ordine trascinandole.

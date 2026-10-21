@@ -32,6 +32,7 @@ import type { Centri, Media, Page } from '@/payload-types'
 import { revalidateFrontend } from '@/hooks/notifyFrontend'
 
 import { leggiCsv } from './csv'
+import { cartellaMarchio, seedMarchio } from './marchio'
 import { leggiPagina, risolvi } from './pagine'
 
 const dir = path.dirname(fileURLToPath(import.meta.url))
@@ -373,6 +374,9 @@ if (Object.keys(mancanti).length) {
   await payload.updateGlobal({ slug: 'seo', data: mancanti, context })
   log(`SEO e motori AI: impostati ${Object.keys(mancanti).join(', ')}`)
 } else log('SEO e motori AI già compilati: non toccati')
+
+// Marchio (Impostazioni del sito > Marchio): loghi e icona Sorazon solo se la scheda è vuota
+log(`marchio: ${await seedMarchio(payload, cartellaMarchio(dir))}`)
 
 // Lingue e selettore (dati/lingue.yml): solo se nel CMS non c'è ancora nessuna lingua
 const lingueAttuali = await payload.findGlobal({ slug: 'lingue', depth: 0 })

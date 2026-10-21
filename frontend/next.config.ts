@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
     return [
       // Le immagini passano dal dominio del sito: il browser non conosce mai l'indirizzo del backend
       { source: '/media/:path*', destination: `${INTERNAL}/api/media/file/:path*` },
+      // Loghi e icona (Impostazioni del sito > Marchio): file della raccolta "marchio"
+      { source: '/marchio/:path*', destination: `${INTERNAL}/api/marchio/file/:path*` },
+      // I browser chiedono /favicon.ico anche senza link: l'icona del sito in PNG
+      { source: '/favicon.ico', destination: '/icone/32.png' },
       // L'invio dei moduli del sito (blocco Form) arriva da qui al backend
       { source: '/api/form-submissions', destination: `${INTERNAL}/api/form-submissions` },
     ]

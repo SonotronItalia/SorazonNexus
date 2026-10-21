@@ -176,14 +176,16 @@
   }
 }
 
-/* Marchio Sorazon (components/admin/Marchio): versione negativa con il tema scuro */
+/* Marchio (components/admin/Marchio): file di Impostazioni > Marchio nelle variabili, altrimenti
+   i loghi Sorazon in backend/public; versione per sfondo scuro con il tema scuro del pannello */
 .marchio-sorazon {
   display: block;
   width: 240px;
+  max-width: 100%;
   aspect-ratio: 842.25 / 254.25;
-  background: url('/logo_sorazon.svg') left center / contain no-repeat;
+  background: var(--marchio-chiaro, url('/logo_sorazon.svg')) left center / contain no-repeat;
 }
 
 html[data-theme='dark'] .marchio-sorazon {
-  background-image: url('/logo_sorazon_neg.svg');
+  background-image: var(--marchio-scuro, url('/logo_sorazon_neg.svg'));
 }

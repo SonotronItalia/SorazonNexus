@@ -8,6 +8,7 @@ import { it } from '@payloadcms/translations/languages/it'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { Marchio } from './collections/Marchio'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
@@ -167,7 +168,7 @@ export default buildConfig({
   }),
   // Blocchi delle pagine, usati per nome dalle pagine e dal Contenitore (vedi blocks/blocchiPagina.ts)
   blocks: BLOCCHI_PAGINA,
-  collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Categories, Users, Ruoli],
+  collections: [Pages, Posts, Centri, Colori, Effetti, TipiEffetto, Media, Marchio, Categories, Users, Ruoli],
   globals: [Impostazioni, Header, Footer, TornaSu, Seo, Lingue],
   // Traduzioni: italiano principale, le altre lingue di src/lingue.ts. Nel pannello compaiono
   // solo quelle attive in "Lingue e selettore" (e, per un traduttore, quelle che può tradurre)

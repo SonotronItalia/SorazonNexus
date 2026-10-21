@@ -33,7 +33,8 @@ Ispirato alle pagine prodotto di Apple: alternanza di sezioni chiare e nere con 
 - **Sezioni**: `utilities/sezione.ts` (nero, bianco, grigio chiarissimo) e `components/SezioneSfondo` (fascia a tutta larghezza per Modulo e Mappa).
 - **Colori**: solo dalla tavolozza del CMS; il layout scrive le variabili `--colore-ID`; `utilities/sfondo.ts` sceglie il testo chiaro o scuro.
 - **Tema chiaro/scuro** con `ThemeSelector`; l'hero Sorazon resta scuro (`data-theme="dark"`).
-- **Logo** (`components/Logo`): immagine di sfondo, così il browser scarica solo la versione mostrata; `logo_sorazon_neg.svg` (fornito dall'azienda; contiene un'immagine, ridotta a 1008 px senza perdita: 130 KB invece di 388) con il tema scuro, sotto un hero scuro e sempre nel piè di pagina nero (`scuro`). Nel pannello lo stesso con `.marchio-sorazon` in `custom.scss`.
+- **Logo** (`components/Logo`): file di **Impostazioni › Marchio** letti da `utilities/marchio.ts` (`loghi()`), con i loghi Sorazon in `public` come riserva per i campi vuoti; serviti dal sito con il rewrite `/marchio/*` verso il backend. Immagine di sfondo con variabili CSS (`--logo`, `--logo-scuro`): il browser scarica solo la versione mostrata; proporzioni dal file caricato. Versione scura con il tema scuro e sotto un hero scuro; logo compatto (se c'è) con la barra ridotta e sotto `md`; piè di pagina nero con il suo logo o quello per sfondo scuro.
+- **Icone** (`app/icone/[file]/route.ts`): dall'icona di Impostazioni › Marchio (o `public/favicon.svg`, la Z Sorazon) con sharp: `icona.svg`, `32.png`, `180.png` (iPhone, su fondo bianco), `192.png` e `512.png` (manifest Android, `app/manifest.ts`), varianti `scura-` per il tema scuro del browser; `/favicon.ico` è un rewrite verso `32.png`. Con `?v=<data di modifica>` restano in cache un anno.
 
 ## Animazioni
 

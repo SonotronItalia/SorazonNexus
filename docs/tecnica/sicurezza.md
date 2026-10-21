@@ -18,7 +18,7 @@ Difese a più livelli, tutte senza costi aggiuntivi. **Non indebolirle.**
 
 ## CMS
 
-- Caricamenti limitati a immagini, PDF e video (niente SVG, HTML o eseguibili).
+- Caricamenti limitati a immagini, PDF e video (niente SVG, HTML o eseguibili). Unica eccezione: i **file del marchio** (loghi e icona) accettano SVG, controllati da Payload, senza riferimenti esterni e serviti con CSP `sandbox` (dettagli in `cms.md`).
 - Accesso bloccato 15 minuti dopo 5 password sbagliate; sessione di 8 ore; cookie `secure` in HTTPS e `SameSite=Lax`.
 - Niente chiavi API, **GraphQL spento**.
 - In produzione il backend non parte con segreti deboli (`payload.config.ts`).

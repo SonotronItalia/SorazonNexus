@@ -1,0 +1,73 @@
+import fs from 'fs'
+import path from 'path'
+import { APIError, type CollectionConfig } from 'payload'
+import { fileURLToPath } from 'url'
+
+import { permesso } from '@/access/ruoli'
+
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Riferimenti a indirizzi esterni dentro un SVG (href, src, url(...)): un logo non ne ha bisogno e
+// aperto da solo il file potrebbe caricare risorse di altri siti. Le immagini incorporate (data:)
+// restano ammesse
+export const RIFERIMENTO_ESTERNO = /(?:href|src)\s*=\s*["']\s*(?:https?:)?\/\/|url\(\s*["']?\s*(?:https?:)?\/\//i
+
+/**
+ * File del marchio: loghi e icona del sito, scelti in Impostazioni del sito > Marchio.
+ * È l'unico posto del pannello che accetta SVG (i loghi lo sono quasi sempre), con tre difese:
+ * 1. Payload rifiuta gli SVG con script, gestori di eventi, foreignObject, link javascript:,
+ *    entità XML (controllo integrato sugli upload);
+ * 2. qui si rifiutano anche i riferimenti a indirizzi esterni;
+ * 3. i file si servono con una Content-Security-Policy "sandbox" che non lascia eseguire nulla
+ *    nemmeno aprendo il file da solo nel browser.
+ * Un file pericoloso viene rifiutato, non modificato: il logo che compare è quello caricato.
+ */
+export const Marchio: CollectionConfig = {
+  slug: 'marchio',
+  labels: { singular: 'File del marchio', plural: 'File del marchio' },
+  // Si gestisce dalla scheda Marchio delle Impostazioni, non dal menu
+  admin: { group: 'Impostazioni', hidden: true },
+  access: {
+    read: () => true,
+    create: permesso('impostazioni', 'modifica'),
+    update: permesso('impostazioni', 'modifica'),
+    delete: permesso('impostazioni', 'modifica'),
+  },
+  fields: [{ name: 'alt', label: 'Descrizione (testo alternativo)', type: 'text' }],
+  upload: {
+    mimeTypes: ['image/svg+xml', 'image/png', 'image/webp'],
+    staticDir: process.env.MEDIA_DIR
+      ? path.join(process.env.MEDIA_DIR, 'marchio')
+      : path.resolve(dirname, '../../public/marchio'),
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set(
+        'Content-Security-Policy',
+        "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox",
+      )
+      headers.set('X-Content-Type-Options', 'nosniff')
+      return headers
+    },
+  },
+  hooks: {
+    beforeValidate: [
+      ({ req }) => {
+        const file = req.file
+        if (!file || !/svg/i.test(file.mimetype ?? '') && !/\.svg$/i.test(file.name ?? '')) return
+        const contenuto =
+          file.data && file.data.length > 0
+            ? file.data.toString('utf8')
+            : file.tempFilePath
+              ? fs.readFileSync(file.tempFilePath, 'utf8')
+              : ''
+        if (RIFERIMENTO_ESTERNO.test(contenuto)) {
+          throw new APIError(
+            "L'SVG contiene collegamenti a indirizzi esterni: esportalo di nuovo con le immagini incorporate.",
+            400,
+            null,
+            true,
+          )
+        }
+      },
+    ],
+  },
+}

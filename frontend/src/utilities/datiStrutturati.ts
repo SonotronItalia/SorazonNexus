@@ -2,6 +2,7 @@ import type { Footer, Impostazioni, Media, Post, Seo } from '@/payload-types'
 
 import { mediaSrc } from '@/lib/api'
 import { getServerSideURL } from './getURL'
+import { loghi } from './marchio'
 import { descrizioneSito, nomeSito as nomeDelSito } from './seo'
 
 /**
@@ -64,7 +65,8 @@ export function datiAziendaESito(
     name: a?.ragioneSociale || d?.ragioneSociale || 'SONOTRON ITALIA S.R.L.S.',
     brand: { '@type': 'Brand', name: nomeSito },
     url: `${sito()}/`,
-    logo: urlImmagine(a?.logo) ?? `${sito()}/logo_sorazon.svg`,
+    // Logo di SEO > Dati dell'azienda, altrimenti quello di Impostazioni > Marchio (o Sorazon)
+    logo: urlImmagine(a?.logo) ?? `${sito()}${loghi(impostazioni).barra.chiaro.url}`,
     ...(partitaIva
       ? { vatID: `IT${partitaIva}`, taxID: a?.codiceFiscale || d?.codiceFiscale || partitaIva }
       : {}),

@@ -38,9 +38,19 @@ const idGoogle = (
   },
 })
 
+// Un file della raccolta "marchio" (loghi e icona, anche SVG)
+const fileMarchio = (name: string, label: string, description: string): Field => ({
+  name,
+  label,
+  type: 'upload',
+  relationTo: 'marchio',
+  admin: { description, width: '50%' },
+})
+
 /**
  * Impostazioni generali del sito, a schede: Google
- * (Tag Manager, Analytics, Ads, Consent Mode), avviso in cima alle pagine, profili social.
+ * (Tag Manager, Analytics, Ads, Consent Mode), avviso in cima alle pagine, profili social, marchio
+ * (loghi e icona del sito).
  */
 export const Impostazioni: GlobalConfig = {
   slug: 'impostazioni',
@@ -208,6 +218,62 @@ export const Impostazioni: GlobalConfig = {
         {
           label: 'Social',
           fields: [campoSocial],
+        },
+        {
+          // Loghi e icona: file della raccolta "marchio" (l'unica che accetta SVG, controllati).
+          // Vuoti: il sito usa i file del marchio Sorazon nel codice (frontend/public)
+          name: 'marchio',
+          label: 'Marchio',
+          description:
+            "Logo e icona del sito. Le dimensioni a schermo le decide il sito: carica il file intero, senza margini attorno. Formati: SVG (consigliato), PNG o WebP di almeno 1000 px di larghezza. Un campo vuoto usa il logo Sorazon predefinito.",
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                fileMarchio('positivo', 'Logo per sfondo chiaro', 'Barra in alto con il tema chiaro.'),
+                fileMarchio(
+                  'negativo',
+                  'Logo per sfondo scuro',
+                  'Barra in alto con il tema scuro e sopra le aperture scure.',
+                ),
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                fileMarchio(
+                  'compatto',
+                  'Logo compatto (facoltativo)',
+                  'Una versione più piccola, per esempio solo il simbolo: barra ridotta durante lo scorrimento e telefoni. Vuoto: il logo intero.',
+                ),
+                fileMarchio(
+                  'compattoNegativo',
+                  'Logo compatto per sfondo scuro (facoltativo)',
+                  'Vuoto: il logo compatto (o il logo per sfondo scuro).',
+                ),
+              ],
+            },
+            fileMarchio(
+              'piede',
+              'Logo del piè di pagina (facoltativo)',
+              'Il piè di pagina è nero. Vuoto: il logo per sfondo scuro.',
+            ),
+            {
+              type: 'row',
+              fields: [
+                fileMarchio(
+                  'icona',
+                  'Icona del sito',
+                  "Quadrata, SVG o PNG di almeno 512 × 512 px. Il sito ne ricava tutte le misure: scheda del browser, iPhone (Aggiungi a Home), Android.",
+                ),
+                fileMarchio(
+                  'iconaScura',
+                  'Icona per il tema scuro del browser (facoltativa)',
+                  'Per la scheda del browser quando il sistema è in tema scuro (per esempio se l\'icona è nera). Vuoto: la stessa icona.',
+                ),
+              ],
+            },
+          ],
         },
       ],
     },

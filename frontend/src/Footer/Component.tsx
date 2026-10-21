@@ -8,6 +8,7 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { PreferenzeCookie } from '@/components/Consenso/CookieBanner'
 import { Social } from '@/components/Social'
+import { loghi } from '@/utilities/marchio'
 
 export async function Footer({ lingua }: { lingua: string }) {
   // Se il backend non risponde il sito resta in piedi, con la navigazione vuota
@@ -19,6 +20,7 @@ export async function Footer({ lingua }: { lingua: string }) {
   // Profili social: Impostazioni del sito > Social
   const impostazioni = await getImpostazioni(lingua)
 
+  const logoPiede = loghi(impostazioni).piede
   const navItems = footerData?.navItems || []
   const legali = footerData?.datiLegali
 
@@ -30,7 +32,9 @@ export async function Footer({ lingua }: { lingua: string }) {
       (legali.codiceFiscale === legali.partitaIva
         ? `P.IVA e C.F. ${legali.partitaIva}`
         : `P.IVA ${legali.partitaIva}`),
-    legali?.codiceFiscale && legali.codiceFiscale !== legali.partitaIva && `C.F. ${legali.codiceFiscale}`,
+    legali?.codiceFiscale &&
+      legali.codiceFiscale !== legali.partitaIva &&
+      `C.F. ${legali.codiceFiscale}`,
     legali?.rea && `REA ${legali.rea}`,
     legali?.pec && `PEC ${legali.pec}`,
   ].filter(Boolean)
@@ -40,7 +44,8 @@ export async function Footer({ lingua }: { lingua: string }) {
       <div className="container py-8 gap-8 flex flex-col md:flex-row md:justify-between">
         <div className="flex flex-col gap-6">
           <Link className="flex items-center" href="/">
-            <Logo scuro />
+            {/* Piè di pagina nero: logo del piè di pagina o, se manca, quello per sfondo scuro */}
+            <Logo logo={{ chiaro: logoPiede, scuro: logoPiede }} />
           </Link>
           <Social profili={impostazioni?.social} />
         </div>

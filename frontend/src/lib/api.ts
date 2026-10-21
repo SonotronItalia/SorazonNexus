@@ -17,6 +17,16 @@ export async function api<T>(path: string, { tags, revalidate = REVALIDATE_FALLB
   return res.json() as Promise<T>
 }
 
+// File binario del backend (es. l'icona del sito da ridimensionare), in cache come i dati
+export async function apiFile(path: string, { tags }: Opts = {}): Promise<Buffer> {
+  const res = await fetch(`${INTERNAL}/api${path}`, {
+    cache: 'force-cache',
+    next: { tags, revalidate: REVALIDATE_FALLBACK },
+  })
+  if (!res.ok) throw new Error(`Backend ${res.status} su ${path}`)
+  return Buffer.from(await res.arrayBuffer())
+}
+
 // Bozza per l'anteprima (endpoint "anteprima" del backend): mai in cache, null se non esiste.
 // L'autorizzazione è il segreto interno tra i due server, non un utente del CMS.
 export async function apiDraft<T>(path: string): Promise<T | null> {

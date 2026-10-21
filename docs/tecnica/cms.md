@@ -39,7 +39,7 @@ L'ordine dei gruppi è fissato in `plugins/ordineMenu.ts`. Ogni voce compare sol
 |---|---|---|
 | `header` | Menu principale | Voci del menu (le pagine in bozza non compaiono) |
 | `footer` | Piè di pagina | Collegamenti e dati legali obbligatori |
-| `impostazioni` | Impostazioni del sito | Analisi e pubblicità (Google Tag Manager, GA4, Ads, Consent Mode), avviso in cima al sito, social |
+| `impostazioni` | Impostazioni del sito | Analisi e pubblicità (Google Tag Manager, GA4, Ads, Consent Mode), avviso in cima al sito, social, marchio (logo per sfondo chiaro e scuro, compatto, piè di pagina, icona del sito e variante per il tema scuro del browser) |
 | `torna-su` | Pulsante torna su | Icona, posizione, forma, dimensione, colore |
 | `seo` | SEO e motori AI | Nome e descrizione del sito, modello del titolo, immagine di condivisione; nascondi sito, verifiche Google e Bing, pagine escluse; assistenti AI ammessi, `llms.txt`; dati dell'azienda per il JSON-LD |
 
@@ -98,3 +98,13 @@ redirects, nested-docs (categorie), SEO (scheda SEO di pagine e notizie), form-b
 ## Rich text
 
 Editor Lexical con titoli, grassetto, corsivo, sottolineato, link, elenchi, allineamento e **Stile testo** (A±): dimensioni fisse e responsive (`--testo-*`) e colori dalla tavolozza, salvati come `var(--colore-ID, #codice)` così un colore cambiato vale ovunque. Funzionalità in `components/admin/StileTesto`, registrata in `fields/defaultLexical.ts`.
+
+## File del marchio
+
+Raccolta `marchio` (`collections/Marchio.ts`), nascosta dal menu: si usa dalla scheda **Marchio** delle Impostazioni. È l'**unico** caricamento che accetta SVG (più PNG e WebP), con tre difese:
+
+1. il controllo integrato di Payload rifiuta gli SVG con script, gestori di eventi, `foreignObject`, link `javascript:`, entità XML;
+2. l'hook `beforeValidate` rifiuta i riferimenti a indirizzi esterni (`href`/`src`/`url()` verso `http(s)://` o `//`), regola `RIFERIMENTO_ESTERNO`;
+3. `upload.modifyResponseHeaders` serve i file con `Content-Security-Policy: default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox` e `nosniff`: aperto da solo nel browser, un SVG non esegue nulla.
+
+Un file pericoloso viene **rifiutato**, non modificato. Permessi: lettura pubblica, caricamento e modifica con "Modifica" su Impostazioni del sito. File in `MEDIA_DIR/marchio` (nello stack, volume dei media). Il seed (`seed/marchio.ts`) carica loghi e icona Sorazon da `seed/media/marchio` solo se la scheda è tutta vuota. Nel pannello, `components/admin/Marchio` usa gli stessi file (accesso e menu) con i loghi Sorazon in `backend/public` come riserva.

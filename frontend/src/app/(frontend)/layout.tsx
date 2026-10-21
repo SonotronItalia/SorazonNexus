@@ -28,6 +28,8 @@ import { DatiStrutturati } from '@/components/DatiStrutturati'
 import { datiAziendaESito } from '@/utilities/datiStrutturati'
 import { descrizioneSito, nomeSito } from '@/utilities/seo'
 import { TornaSu } from '@/components/TornaSu'
+import type { Impostazioni } from '@/payload-types'
+import { icone } from '@/utilities/marchio'
 
 // Carattere dei titoli e dei testi: Inter Tight, scaricato in build e servito dal nostro server
 // (nessuna richiesta a Google dal browser, quindi niente consenso)
@@ -40,6 +42,41 @@ const interTight = Inter_Tight({
 // Tutte le pagine si disegnano a ogni richiesta: la lingua arriva dall'intestazione x-lingua
 // (proxy.ts). I dati del CMS restano in cache con i tag, quindi resta veloce
 export const dynamic = 'force-dynamic'
+
+// Icone del sito (Impostazioni del sito > Marchio, ricavate dalla route /icone): SVG se l'icona lo
+// è, PNG per i browser che non lo usano, iPhone; varianti per il tema scuro del browser
+const IconeSito: React.FC<{ impostazioni: Impostazioni | null }> = ({ impostazioni }) => {
+  const { icona, scura } = icone(impostazioni)
+  const q = (v?: string) => (v ? `?v=${encodeURIComponent(v)}` : '')
+  const svg = !icona || icona.svg
+  const scuro = '(prefers-color-scheme: dark)'
+  return (
+    <>
+      {svg && (
+        <link href={`/icone/icona.svg${q(icona?.versione)}`} rel="icon" type="image/svg+xml" />
+      )}
+      <link href={`/icone/32.png${q(icona?.versione)}`} rel="icon" sizes="32x32" type="image/png" />
+      {scura?.svg && (
+        <link
+          href={`/icone/scura-icona.svg${q(scura.versione)}`}
+          media={scuro}
+          rel="icon"
+          type="image/svg+xml"
+        />
+      )}
+      {scura && (
+        <link
+          href={`/icone/scura-32.png${q(scura.versione)}`}
+          media={scuro}
+          rel="icon"
+          sizes="32x32"
+          type="image/png"
+        />
+      )}
+      <link href={`/icone/180.png${q(icona?.versione)}`} rel="apple-touch-icon" />
+    </>
+  )
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Colori della tavolozza come variabili CSS: il testo colorato nell'editor le usa, così un
@@ -79,23 +116,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <InitTheme />
         {conGoogle && <ConsentModeScript />}
         {variabiliColori && <style>{`:root{${variabiliColori}}`}</style>}
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <IconeSito impostazioni={impostazioni} />
         <DatiStrutturati dati={datiAziendaESito(footer, impostazioni, seo)} />
       </head>
       <body>
         <Providers>
           <LinguaProvider lingua={lingua} lingue={lingueAttive(lingue)} stile={lingue?.stile}>
-          <PreviewBar />
-          {impostazioni?.avviso && (
-            <AvvisoSito avviso={impostazioni.avviso} oraServer={oraServer} />
-          )}
-          <Header lingua={lingua} />
-          {children}
-          <Footer lingua={lingua} />
-          {tornaSu && <TornaSu impostazioni={tornaSu} />}
-          <CookieBanner google={google} />
-          {conGoogle && <GoogleTag google={google} />}
+            <PreviewBar />
+            {impostazioni?.avviso && (
+              <AvvisoSito avviso={impostazioni.avviso} oraServer={oraServer} />
+            )}
+            <Header lingua={lingua} />
+            {children}
+            <Footer lingua={lingua} />
+            {tornaSu && <TornaSu impostazioni={tornaSu} />}
+            <CookieBanner google={google} />
+            {conGoogle && <GoogleTag google={google} />}
           </LinguaProvider>
         </Providers>
       </body>

@@ -93,6 +93,7 @@ export interface Config {
     'form-submissions': FormSubmission;
     colori: Colori;
     effetti: Effetti;
+    marchio: Marchio;
     'tipi-effetto': TipiEffetto;
     categories: Category;
     users: User;
@@ -120,6 +121,7 @@ export interface Config {
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     colori: ColoriSelect<false> | ColoriSelect<true>;
     effetti: EffettiSelect<false> | EffettiSelect<true>;
+    marchio: MarchioSelect<false> | MarchioSelect<true>;
     'tipi-effetto': TipiEffettoSelect<false> | TipiEffettoSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -1649,6 +1651,25 @@ export interface FormSubmission {
   createdAt: string;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "marchio".
+ */
+export interface Marchio {
+  id: number;
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * Vecchi indirizzi del sito che portano a quelli nuovi (es. dal vecchio sito Joomla).
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1854,6 +1875,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'effetti';
         value: number | Effetti;
+      } | null)
+    | ({
+        relationTo: 'marchio';
+        value: number | Marchio;
       } | null)
     | ({
         relationTo: 'tipi-effetto';
@@ -2308,6 +2333,24 @@ export interface EffettiSelect<T extends boolean = true> {
   posizione?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "marchio_select".
+ */
+export interface MarchioSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2787,6 +2830,36 @@ export interface Impostazioni {
         id?: string | null;
       }[]
     | null;
+  marchio?: {
+    /**
+     * Barra in alto con il tema chiaro.
+     */
+    positivo?: (number | null) | Marchio;
+    /**
+     * Barra in alto con il tema scuro e sopra le aperture scure.
+     */
+    negativo?: (number | null) | Marchio;
+    /**
+     * Una versione più piccola, per esempio solo il simbolo: barra ridotta durante lo scorrimento e telefoni. Vuoto: il logo intero.
+     */
+    compatto?: (number | null) | Marchio;
+    /**
+     * Vuoto: il logo compatto (o il logo per sfondo scuro).
+     */
+    compattoNegativo?: (number | null) | Marchio;
+    /**
+     * Il piè di pagina è nero. Vuoto: il logo per sfondo scuro.
+     */
+    piede?: (number | null) | Marchio;
+    /**
+     * Quadrata, SVG o PNG di almeno 512 × 512 px. Il sito ne ricava tutte le misure: scheda del browser, iPhone (Aggiungi a Home), Android.
+     */
+    icona?: (number | null) | Marchio;
+    /**
+     * Per la scheda del browser quando il sistema è in tema scuro (per esempio se l'icona è nera). Vuoto: la stessa icona.
+     */
+    iconaScura?: (number | null) | Marchio;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3059,6 +3132,17 @@ export interface ImpostazioniSelect<T extends boolean = true> {
         piattaforma?: T;
         url?: T;
         id?: T;
+      };
+  marchio?:
+    | T
+    | {
+        positivo?: T;
+        negativo?: T;
+        compatto?: T;
+        compattoNegativo?: T;
+        piede?: T;
+        icona?: T;
+        iconaScura?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -1,6 +1,7 @@
 import { HeaderClient } from './Component.client'
 import type { Header as HeaderType } from '@/payload-types'
-import { getHeader } from '@/lib/content'
+import { getHeader, getImpostazioni } from '@/lib/content'
+import { loghi } from '@/utilities/marchio'
 import React from 'react'
 
 export async function Header({ lingua }: { lingua: string }) {
@@ -10,5 +11,8 @@ export async function Header({ lingua }: { lingua: string }) {
     return { id: 0, navItems: [] }
   })
 
-  return <HeaderClient data={headerData} />
+  // Loghi da Impostazioni del sito > Marchio (stessa richiesta in cache del layout)
+  const impostazioni = await getImpostazioni(lingua)
+
+  return <HeaderClient data={headerData} loghi={loghi(impostazioni)} />
 }

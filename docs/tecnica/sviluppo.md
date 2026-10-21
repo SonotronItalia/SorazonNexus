@@ -80,6 +80,7 @@ Regole imparate sul campo:
 - notizie in `dati/notizie/*.md` (`bozza: true` per non pubblicarle);
 - centri in `dati/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel; chiave città + indirizzo);
 - SEO in `dati/seo.yml` (solo i valori ancora vuoti);
+- marchio (loghi e icona Sorazon in `seed/media/marchio`) solo se la scheda Marchio è vuota;
 - immagini in `seed/media/` con il testo alternativo in `dati/media.csv`: un file sostituito con un altro (dimensione diversa) aggiorna l'immagine già caricata, con lo stesso nome.
 
 Nuovi contenuti di partenza si aggiungono **come file**, non nel codice. Il seed aggiorna e non cancella; sovrascrive però le pagine del seed: sul database di produzione si aggiorna solo quello che serve.
