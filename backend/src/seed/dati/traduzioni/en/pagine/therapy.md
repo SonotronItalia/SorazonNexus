@@ -26,7 +26,7 @@ layout:
         titolo: Sonic pressure waves
         richText: SONIC PRESSURE WAVES spread rapidly in the tissues. By resonance they ease the penetration of the OZONE in the skin through the ION CHANNELS.
       - occhiello: "02"
-        titolo: Radio frequency with ionising electromagnetic field
+        titolo: Radio frequency with non ionising electromagnetic field
         richText: |-
           Radio Frequency, also known as RF, is generally a high frequency electric signal or electromagnetic wave. It travels through air or in a coaxial cable.
 

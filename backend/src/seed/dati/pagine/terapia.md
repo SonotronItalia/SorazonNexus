@@ -33,7 +33,7 @@ layout:
         titolo: Ad onde soniche pressorie
         richText: Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.
       - occhiello: "02"
-        titolo: A radiofrequenza con campo elettromagnetico ionizzante
+        titolo: "A radiofrequenza con campo elettromagnetico non ionizzante "
         richText: |-
           La RADIOFREQUENZA, nota anche con l'acronimo RF indica generalmente un segnale elettrico o un'onda elettromagnetica ad alta frequenza che si propaga nell'etere o in un cavo coassiale.
 
