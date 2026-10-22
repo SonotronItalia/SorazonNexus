@@ -26,6 +26,7 @@ const BLOCCHI_INTERNI: BlockSlug[] = [
   'numeriEvidenza',
   'carosello',
   'schede',
+  'schedaPersona',
   // Non dentro le colonne: "prodottoScorrimento" (occupa tutto lo schermo) e "barraProdotto"
   // (fissa sotto l'header, va come primo blocco della pagina)
 ]

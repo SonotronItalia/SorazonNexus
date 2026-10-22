@@ -66,6 +66,7 @@ Configurazione in `backend/src/blocks/*/config.ts`, registrazione in `blocchiPag
 | `prodottoScorrimento` | Prodotto guidato dallo scorrimento | Immagini a strati o video guidato (pronto per un render 3D) |
 | `barraProdotto` | Barra prodotto | Barra fissa sotto l'header |
 | `schede` | Schede in evidenza | 2/3 colonne, immagine facoltativa; struttura le pagine di testo senza cambiarne le parole |
+| `schedaPersona` | Scheda persona | foto grande verticale (4:5) a sinistra o a destra, ruolo, nome, testo formattato; sfondo nessuno/sezione. In Risultati: il Dr. Bartolucci (foto provvisoria `persona-segnaposto.jpg`) |
 | `contenitore`, `contenitore2`, `contenitore3` | Contenitore | Colonne con dentro altri blocchi; 3 livelli (Payload va in ciclo con un blocco che contiene se stesso) |
 
 Sfondi di sezione (`fields/sfondoSezione.ts`): nero profondo, bianco, grigio chiarissimo (più "nessuno" per Modulo e Mappa).

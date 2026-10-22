@@ -9,7 +9,7 @@ BACKUP       := backup
 DB_VOLUME    := sorazon_pgdata
 MEDIA_VOLUME := sorazon_media
 
-.PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed \
+.PHONY: help setup doctor db db-wait db-running stop down ps logs controlla-stack dev dev-backend dev-frontend allinea-media types migrate-create migrate seed esporta \
         stack stack-proxy pulisci tunnel backup backup-media restore reset-db test test-int test-e2e test-api audit
 
 help: ## Mostra i comandi disponibili
@@ -91,6 +91,11 @@ seed: ## Contenuti di partenza (pagine, centri, media, menu). Ripetibile, non ca
 	else \
 	  $(MAKE) --no-print-directory migrate && pnpm -C backend payload run src/seed/index.ts; \
 	fi
+
+# Legge le pagine pubblicate via REST dal CMS acceso (make dev o stack): non scrive nel database
+esporta: ## Pagine attuali del CMS (italiano e traduzioni) nei file di make seed, da rivedere con git diff
+	@$(FX) run "Esporto le pagine del CMS nei contenuti di partenza" pnpm -C backend payload run src/seed/esporta.ts
+	@git status --short backend/src/seed
 
 allinea-media: ## Copia le immagini mancanti tra il Mac (make dev) e lo stack Docker, nei due sensi
 	@bash scripts/allinea-media.sh

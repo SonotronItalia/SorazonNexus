@@ -2,77 +2,68 @@
 # Dati ufficiali di sonotronitalia.com (pagina Dispositivi); monitor da 7" a colori per entrambi
 # (indicazione dell'azienda, 19/10/2026). Le due unità base usano lo stesso manipolo trasduttore.
 # "Marchio CE" è pronto ma nascosto (visibile: false) finché la certificazione non è conclusa.
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 title: Dispositivi
 slug: dispositivo
-# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 meta:
-  title: "Dispositivi Sorazon Studio e Sorazon Maxi"
-  description: "Sorazon Studio e Sorazon Maxi: unità base con monitor 7\" a colori, generatori di radiofrequenza e onde soniche, manipolo con camera di ionizzazione e ozono."
+  title: Dispositivi Sorazon Studio e Sorazon Maxi
+  description: 'Sorazon Studio e Sorazon Maxi: unità base con monitor 7" a colori, generatori di radiofrequenza e onde soniche, manipolo con camera di ionizzazione e ozono.'
 hero:
-  type: lowImpact
-  richText: '# Dispositivi Sorazon'
+  richText: "# Dispositivi Sorazon"
+  media: media:sorazon-maxi.webp
+  bordoImmagine: false
+  effetti:
+    - effetto: effetto:Scarica di Tesla
 layout:
-  # Barra fissa sotto l'header, come nelle pagine prodotto (va per prima)
   - blockType: barraProdotto
     nome: Sorazon
     sottotitolo: Studio · Maxi
     link:
-      type: reference
       reference: pagina:centri
       label: Trova un centro
   - blockType: numeriEvidenza
     sfondo: chiaro
     voci:
-      - tipo: manuale
-        valore: 7
-        conta: true
-        suffisso: '″'
+      - valore: 7
+        suffisso: ″
         etichetta: monitor a colori, su Studio e Maxi
-      - tipo: manuale
-        valore: 14
-        conta: true
-        suffisso: ' kg'
+      - valore: 14
+        suffisso: " kg"
         etichetta: Sorazon Maxi, portatile a valigia
-      - tipo: manuale
-        valore: 200
-        conta: true
-        suffisso: ' W'
+      - valore: 200
+        suffisso: " W"
         etichetta: potenza assorbita
   - blockType: prodottoScorrimento
     occhiello: Sorazon Maxi
     titolo: Tutta la terapia, in una valigia.
-    sfondo: scuro
-    tipo: immagini
     passaggi:
-      - occhiello: Unità base a valigia
+      - immagine: media:sorazon-maxi-fronte.webp
+        occhiello: Unità base a valigia
         titolo: Chiusa, si porta ovunque.
-        testo: 'H 16 cm × L 45 cm × P 33 cm, 14 kg.'
-        immagine: media:sorazon-maxi-fronte.webp
-      - occhiello: Monitor 7" a colori
+        testo: H 16 cm × L 45 cm × P 33 cm, 14 kg.
+      - immagine: media:sorazon-maxi.webp
+        occhiello: Monitor 7" a colori
         titolo: Aperta, è pronta.
         testo: Generatore di radiofrequenza e generatore di onde soniche nell'unità base.
-        immagine: media:sorazon-maxi.webp
-      - occhiello: Manipolo trasduttore
+      - immagine: media:manipolo-trasduttore-bianco.webp
+        occhiello: Manipolo trasduttore
         titolo: Lo stesso manipolo della versione Studio.
         testo: Camera di ionizzazione e generatore di ozono.
-        immagine: media:manipolo-trasduttore-bianco.webp
   - blockType: schedaProdotto
     titolo: Sorazon Studio
     descrizione: Apparecchio elettromedicale da studio, composto da unità base con monitor da 7" a colori e manipolo trasduttore.
     immagine: media:sorazon-studio.webp
-    posizioneImmagine: sinistra
-    sfondo: nessuno
-    colonneComponenti: '2'
+    colonneComponenti: "2"
     gruppi:
       - titolo: Dati tecnici
         voci:
-          - testo: 'Tensione di lavoro: 220 Vac'
-          - testo: 'Potenza assorbita: 200 W'
+          - testo: "Tensione di lavoro: 220 Vac"
+          - testo: "Potenza assorbita: 200 W"
       - titolo: Dimensioni apparecchio
         voci:
           - testo: H 30,5 cm × L 49 cm × P 49 cm
           - testo: 'Monitor: 7" a colori'
-          - testo: 'Peso apparecchio: 18 kg'
+          - testo: "Peso apparecchio: 18 kg"
       - titolo: Omologazione
         voci:
           - testo: Marchio CE
@@ -98,18 +89,18 @@ layout:
     descrizione: Versione portatile a valigia, con monitor da 7" a colori e lo stesso manipolo trasduttore della versione Studio.
     immagine: media:sorazon-maxi.webp
     posizioneImmagine: destra
+    colonneComponenti: "2"
     sfondo: tenue
-    colonneComponenti: '2'
     gruppi:
       - titolo: Dati tecnici
         voci:
-          - testo: 'Tensione di lavoro: 220 Vac'
-          - testo: 'Potenza assorbita: 200 W'
+          - testo: "Tensione di lavoro: 220 Vac"
+          - testo: "Potenza assorbita: 200 W"
       - titolo: Dimensioni apparecchio
         voci:
           - testo: H 16 cm × L 45 cm × P 33 cm
           - testo: 'Monitor: 7" a colori'
-          - testo: 'Peso apparecchio: 14 kg'
+          - testo: "Peso apparecchio: 14 kg"
       - titolo: Omologazione
         voci:
           - testo: Marchio CE

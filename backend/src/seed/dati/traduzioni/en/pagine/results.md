@@ -2,20 +2,42 @@
 # Testo della pagina inglese del vecchio sito (sorazon.it/en/results) alla lettera, disposto come
 # la pagina italiana. Dati clinici: da far rivedere all'azienda come quelli italiani.
 pagina: risultati
-pubblicata: true
 title: Results
 slug: results
 meta:
-  title: "Sorazon clinical results in Italy since 1992"
+  title: Sorazon clinical results in Italy since 1992
   description: "Clinical results of the Sorazon therapy: calcification, coxarthrosis, C-spine and L-spine, knee arthrosis, foot arthrosis and tennis elbow."
 hero:
-  type: banner
-  richText: '# Results in Italy since 1992'
-  media: media:hero-risultati.webp
+  richText: "# Results in Italy since 1992"
+  media: media:Screenshot 2026-10-22 alle 02.48.16.png
+  sfondoMedia: video
+  video:
+    sorgente: youtube
+    url: https://www.youtube.com/watch?v=eTI3nUMGCkw
+  overlay: leggera
+  coloreOverlay: colore:nero
 layout:
+  - blockType: numeriEvidenza
+    titolo: Clinical review between 2003 and 2010
+    voci:
+      - valore: 7000
+        prefisso: +
+        etichetta: Sample examined
+      - valore: 3199
+        etichetta: men
+      - valore: 4136
+        etichetta: women
+  - blockType: content
+  - blockType: schedaPersona
+    ruolo: Health Director
+    nome: Dr. GUALFARDO BARTOLUCCI
+    richText: |-
+      *MSc in Orthopaedic and Trauma medicine - Physiotherapy and Rehabilitation*
+
+      *former Head of Orthopaedic and Trauma medicine unit at Cagli (PU) Hospital*
+    foto: media:persona-segnaposto.jpg
   - blockType: content
   - blockType: galleriaRisultati
-    colonne: '2'
     larghezza: schermo
     sfondo: colore
     colore: colore:Celeste Sorazon
@@ -45,11 +67,7 @@ layout:
 
 carried out at CENTRO MEDICO ARCADIA - FANO (PU)
 
-Health Director Dr. GUALFARDO BARTOLUCCI
-
-*MSc in Orthopaedic and Trauma medicine - Physiotherapy and Rehabilitation*
-
-*former Head of Orthopaedic and Trauma medicine unit at Cagli (PU) Hospital*
+<!-- blocco -->
 
 **The following have undergone therapy:** No. 3199 men, No. 4136 women
 

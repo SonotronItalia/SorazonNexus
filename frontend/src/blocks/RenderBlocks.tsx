@@ -18,6 +18,7 @@ import { CaroselloBlock } from '@/blocks/Carosello/Component'
 import { ProdottoScorrimentoBlock } from '@/blocks/ProdottoScorrimento/Component'
 import { BarraProdottoBlock } from '@/blocks/BarraProdotto/Component'
 import { SchedeBlock } from '@/blocks/Schede/Component'
+import { SchedaPersonaBlock } from '@/blocks/SchedaPersona/Component'
 import { conSfondo } from '@/components/SezioneSfondo'
 
 const blockComponents = {
@@ -35,6 +36,7 @@ const blockComponents = {
   prodottoScorrimento: ProdottoScorrimentoBlock,
   barraProdotto: BarraProdottoBlock,
   schede: SchedeBlock,
+  schedaPersona: SchedaPersonaBlock,
 }
 
 // Blocchi con un'animazione propria (o fissi in alto): niente comparsa morbida attorno

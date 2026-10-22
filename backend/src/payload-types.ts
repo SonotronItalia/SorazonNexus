@@ -80,6 +80,7 @@ export interface Config {
     prodottoScorrimento: ProdottoScorrimentoBlock;
     barraProdotto: BarraProdottoBlock;
     schede: SchedeBlock;
+    schedaPersona: SchedaPersonaBlock;
     contenitore: ContenitoreBlock;
     contenitore2: Contenitore2Block;
     contenitore3: Contenitore3Block;
@@ -367,6 +368,7 @@ export interface Page {
     | ProdottoScorrimentoBlock
     | BarraProdottoBlock
     | SchedeBlock
+    | SchedaPersonaBlock
     | ContenitoreBlock
   )[];
   meta?: {
@@ -1437,6 +1439,44 @@ export interface SchedeBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SchedaPersonaBlock".
+ */
+export interface SchedaPersonaBlock {
+  /**
+   * Riga piccola sopra il nome, es. Direttore Sanitario
+   */
+  ruolo?: string | null;
+  nome: string;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Meglio verticale (proporzione 4:5): viene ritagliata al centro.
+   */
+  foto?: (number | null) | Media;
+  posizioneFoto?: ('sinistra' | 'destra') | null;
+  /**
+   * Alternare sezioni chiare e scure dà ritmo alla pagina.
+   */
+  sfondo?: ('nessuno' | 'scuro' | 'chiaro' | 'tenue') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'schedaPersona';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContenitoreBlock".
  */
 export interface ContenitoreBlock {
@@ -1478,6 +1518,7 @@ export interface ContenitoreBlock {
           | NumeriEvidenzaBlock
           | CaroselloBlock
           | SchedeBlock
+          | SchedaPersonaBlock
           | Contenitore2Block
         )[]
       | null;
@@ -1530,6 +1571,7 @@ export interface Contenitore2Block {
           | NumeriEvidenzaBlock
           | CaroselloBlock
           | SchedeBlock
+          | SchedaPersonaBlock
           | Contenitore3Block
         )[]
       | null;
@@ -1582,6 +1624,7 @@ export interface Contenitore3Block {
           | NumeriEvidenzaBlock
           | CaroselloBlock
           | SchedeBlock
+          | SchedaPersonaBlock
         )[]
       | null;
     id?: string | null;

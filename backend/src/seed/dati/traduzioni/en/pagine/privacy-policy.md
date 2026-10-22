@@ -5,11 +5,12 @@ pagina: privacy-policy
 title: Privacy
 slug: privacy-policy
 meta:
-  title: "Privacy policy"
+  title: Privacy policy
   description: "How Sonotron Italia processes the data of people who visit or contact the Sorazon website: purposes, legal bases, retention periods and GDPR rights."
 hero:
-  type: lowImpact
-  richText: '# Privacy policy'
+  richText: "# Privacy policy"
+layout:
+  - blockType: content
 ---
 Information pursuant to articles 13 and 14 of Regulation (EU) 2016/679 (GDPR) for visitors to this website.
 

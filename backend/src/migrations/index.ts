@@ -30,6 +30,7 @@ import * as migration_20261021_134119_marchio from './20261021_134119_marchio';
 import * as migration_20261021_154652_tema_pannello from './20261021_154652_tema_pannello';
 import * as migration_20261021_164822_cestino from './20261021_164822_cestino';
 import * as migration_20261021_234744_cestino_marchio from './20261021_234744_cestino_marchio';
+import * as migration_20261022_070643_scheda_persona from './20261022_070643_scheda_persona';
 
 export const migrations = [
   {
@@ -190,6 +191,11 @@ export const migrations = [
   {
     up: migration_20261021_234744_cestino_marchio.up,
     down: migration_20261021_234744_cestino_marchio.down,
-    name: '20261021_234744_cestino_marchio'
+    name: '20261021_234744_cestino_marchio',
+  },
+  {
+    up: migration_20261022_070643_scheda_persona.up,
+    down: migration_20261022_070643_scheda_persona.down,
+    name: '20261022_070643_scheda_persona'
   },
 ];

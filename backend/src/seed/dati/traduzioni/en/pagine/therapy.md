@@ -2,41 +2,34 @@
 # Testo della pagina inglese del vecchio sito (sorazon.it/en/therapy) riportato alla lettera,
 # disposto come la pagina italiana. Testi sanitari: da far rivedere all'azienda come quelli italiani.
 pagina: terapia
-pubblicata: true
 title: Therapy
 slug: therapy
 meta:
   title: "Sorazon therapy: how it works"
   description: "Non-invasive, no contact anti inflammatory therapy: sonic pressure waves, radio frequency with ionising electromagnetic field and ozone's oxygenation energy."
 hero:
-  type: lowImpact
   occhiello: Therapy
-  richText: '# Therapy'
+  richText: "# Therapy"
 layout:
   - blockType: schede
     occhiello: How it works
     titolo: Three actions.
     sfondo: scuro
-    colonne: '3'
     schede:
-      - occhiello: '01'
+      - occhiello: "01"
         titolo: Sonic pressure waves
-        richText: |
-          SONIC PRESSURE WAVES spread rapidly in the tissues. By resonance they ease the penetration of the OZONE in the skin through the ION CHANNELS.
-      - occhiello: '02'
+        richText: SONIC PRESSURE WAVES spread rapidly in the tissues. By resonance they ease the penetration of the OZONE in the skin through the ION CHANNELS.
+      - occhiello: "02"
         titolo: Radio frequency with ionising electromagnetic field
-        richText: |
+        richText: |-
           Radio Frequency, also known as RF, is generally a high frequency electric signal or electromagnetic wave. It travels through air or in a coaxial cable.
 
           By generating high frequency in the ionisation chamber, radio frequency creates an anti inflammatory ionising electromagnetic field that opens ion channels and polarises tissues.
-      - occhiello: '03'
+      - occhiello: "03"
         titolo: Ozone’s oxygenation energy
-        richText: |
-          A voltage booster generates a corona discharge that produces ozone’s oxygenation energy in the ionisation chamber. This is channelled through the ion channels in the skin into the parts treated.
+        richText: A voltage booster generates a corona discharge that produces ozone’s oxygenation energy in the ionisation chamber. This is channelled through the ion channels in the skin into the parts treated.
   - blockType: schede
     titolo: Therapeutic action
-    sfondo: chiaro
-    colonne: '3'
     schede:
       - titolo: Degenerative joint disease (arthrosis)
         richText: Joint cartilage - Synovial fluid

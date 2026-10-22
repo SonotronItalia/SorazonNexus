@@ -35,6 +35,7 @@ SorazonNexus/
 | `make types` | Rigenera i tipi di Payload e li copia nel frontend |
 | `make migrate-create NAME=…` / `make migrate` | Crea / applica le migrazioni |
 | `make seed` | Contenuti di partenza (ripetibile, aggiorna senza duplicare) |
+| `make esporta` | Pagine attuali del CMS nei file del seed (italiano e traduzioni) |
 | `make stack` / `make stack-proxy` | I container come in produzione, con o senza nginx; alla fine pulizia automatica (vedi sotto) |
 | `make pulisci` | Libera spazio: immagini vecchie senza nome del progetto e cache di build oltre 5 GB (`scripts/pulisci-docker.sh`, `CACHE_MAX=…` per un altro limite). Mai volumi, container o immagini in uso |
 | `make test` / `make test-int` / `make test-e2e` / `make test-api` / `make audit` | Test (vedi [Test e CI](test-e-ci.md)) |
@@ -86,6 +87,8 @@ Regole imparate sul campo:
 - SEO in `dati/seo.yml` (solo i valori ancora vuoti);
 - marchio (loghi e icona Sorazon in `seed/media/marchio`) solo se la scheda Marchio è vuota;
 - immagini in `seed/media/` con il testo alternativo in `dati/media.csv`: un file sostituito con un altro (dimensione diversa) aggiorna l'immagine già caricata, con lo stesso nome.
+
+**Dal pannello ai file:** `make esporta` (`seed/esporta.ts`) legge via REST le pagine pubblicate del CMS acceso, in italiano e nelle traduzioni, e le riscrive in `dati/pagine/` e `dati/traduzioni/<lingua>/pagine/` nello stesso formato: gli id diventano `media:`, `pagina:`, `colore:`, `effetto:`, `modulo:`; il rich text diventa Markdown quando il passaggio avanti e indietro non perde nulla, altrimenti resta nel formato di Payload (es. testo con "Stile testo"); i valori uguali al predefinito si omettono; immagini e colori usati e non ancora nel seed finiscono in `seed/media/`, `media.csv` e `colori.csv`. Le pagine solo in bozza non si esportano. Si rivede il risultato con `git diff` e si fa il commit: così le pagine sistemate dal pannello diventano quelle di partenza.
 
 Nuovi contenuti di partenza si aggiungono **come file**, non nel codice. Il seed aggiorna e non cancella; sovrascrive però le pagine del seed e le loro traduzioni: sul database reale non si rilancia il seed completo (cancellerebbe le modifiche fatte dal pannello), si aggiorna solo quello che serve con uno script mirato.
 

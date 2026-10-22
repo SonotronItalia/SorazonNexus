@@ -1,47 +1,42 @@
 ---
 # Testo del vecchio sito riportato alla lettera. Testi sanitari rivisti e approvati
 # dall'azienda (19/10/2026).
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
+# Struttura a sezioni (stile pagina prodotto): stesse frasi del testo approvato, solo disposte
+# in schede. Il testo lungo sull'ozono resta sotto, in colonna di lettura.
 title: Terapia
 slug: terapia
-# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 meta:
   title: "Terapia Sorazon: come funziona"
   description: "Terapia antinfiammatoria non invasiva, non a contatto e non dolorosa, a tripla azione: onde soniche pressorie, radiofrequenza ionizzante ed energia di ozono."
-bozza: false
 hero:
-  type: lowImpact
   occhiello: Terapia
-  richText: |
+  richText: |-
     # Terapia intensiva antinfiammatoria
 
-    Mirata > infiltrante > profonda. Non invasiva, non a contatto, non dolorosa.
-# Struttura a sezioni (stile pagina prodotto): stesse frasi del testo approvato, solo disposte
-# in schede. Il testo lungo sull'ozono resta sotto, in colonna di lettura.
+    Mirata > infiltrante > profonda. 
+
+    Non invasiva, non a contatto, non dolorosa.
 layout:
   - blockType: schede
     occhiello: Meccanismo d'azione
     titolo: A tripla azione.
     sfondo: scuro
-    colonne: '3'
     schede:
-      - occhiello: '01'
+      - occhiello: "01"
         titolo: Ad onde soniche pressorie
-        richText: |
-          Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.
-      - occhiello: '02'
+        richText: Le ONDE SONICHE pressorie si irradiano nei tessuti in rapida sequenza. Agiscono per risonanza favorendo la penetrazione dell'OZONO a livello transdermico tramite I CANALI IONICI.
+      - occhiello: "02"
         titolo: A radiofrequenza con campo elettromagnetico ionizzante
-        richText: |
+        richText: |-
           La RADIOFREQUENZA, nota anche con l'acronimo RF indica generalmente un segnale elettrico o un'onda elettromagnetica ad alta frequenza che si propaga nell'etere o in un cavo coassiale.
 
           La radiofrequenza emettendo l'alta frequenza modulata nella camera di ionizzazione, crea un campo elettromagnetico ionizzante antinfiammatorio che a distanza va a polarizzare i tessuti aprendo i canali ionici.
-      - occhiello: '03'
+      - occhiello: "03"
         titolo: Ad energia ossigenatoria di OZONO
-        richText: |
-          Un elevatore di tensione genera una scarica a corona che produce nella camera di ionizzazione un'energia ossigenatoria di ozono che si va ad incanalare nelle parti che stiamo trattando a livello transdermico, tramite i canali ionici.
+        richText: Un elevatore di tensione genera una scarica a corona che produce nella camera di ionizzazione un'energia ossigenatoria di ozono che si va ad incanalare nelle parti che stiamo trattando a livello transdermico, tramite i canali ionici.
   - blockType: schede
     titolo: Azione terapeutica
-    sfondo: chiaro
-    colonne: '3'
     schede:
       - titolo: Stato degenerativo articolare (artrosi)
         richText: cartilagine articolare, liquido sinoviale

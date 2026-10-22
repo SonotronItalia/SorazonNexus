@@ -13,18 +13,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import config from '@payload-config'
-import {
-  BoldFeature,
-  convertMarkdownToLexical,
-  editorConfigFactory,
-  HeadingFeature,
-  ItalicFeature,
-  LinkFeature,
-  ParagraphFeature,
-  UnderlineFeature,
-  OrderedListFeature,
-  UnorderedListFeature,
-} from '@payloadcms/richtext-lexical'
+import { convertMarkdownToLexical } from '@payloadcms/richtext-lexical'
 import { getPayload, type RequiredDataFromCollectionSlug, type TypedLocale } from 'payload'
 import { parse } from 'yaml'
 
@@ -33,6 +22,7 @@ import { revalidateFrontend } from '@/hooks/notifyFrontend'
 
 import { leggiCsv } from './csv'
 import { cartellaMarchio, seedMarchio } from './marchio'
+import { editorMarkdown as configEditorMarkdown } from './markdown'
 import { leggiPagina, risolvi } from './pagine'
 
 const dir = path.dirname(fileURLToPath(import.meta.url))
@@ -46,19 +36,7 @@ const dati = (...parti: string[]) => path.join(dir, 'dati', ...parti)
 const leggiTabella = (file: string) => leggiCsv(fs.readFileSync(dati(file), 'utf8'))
 
 // Markdown -> rich text di Payload, con le stesse funzioni di testo dei campi del sito
-const editorMarkdown = await editorConfigFactory.fromFeatures({
-  config: payload.config,
-  features: [
-    ParagraphFeature(),
-    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-    BoldFeature(),
-    ItalicFeature(),
-    UnderlineFeature(),
-    LinkFeature(),
-    UnorderedListFeature(),
-    OrderedListFeature(),
-  ],
-})
+const editorMarkdown = await configEditorMarkdown(payload.config)
 const markdown = (testo: string) => convertMarkdownToLexical({ editorConfig: editorMarkdown, markdown: testo })
 
 // --- Utente amministratore di sviluppo ---

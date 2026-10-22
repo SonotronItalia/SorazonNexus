@@ -1,28 +1,26 @@
 ---
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 title: Distribuzione
 slug: distribuzione
-# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 meta:
-  title: "Distribuzione dei dispositivi Sorazon"
+  title: Distribuzione dei dispositivi Sorazon
   description: "Sorazon Studio e Maxi sono prodotti e distribuiti da Sonotron Italia di Fano: acquisto, preventivi, assistenza e informazioni per diventare centro di riferimento."
 hero:
-  type: lowImpact
   occhiello: Sonotron Italia
-  richText: '# Distribuzione'
+  richText: "# Distribuzione"
 layout:
   - blockType: content
   - blockType: cta
-    richText: |
+    richText: |-
       ### Acquisto e informazioni commerciali
 
       Preventivi, condizioni di vendita e assistenza sono curati da Sonotron Italia.
     links:
       - link:
           type: custom
-          url: http://www.sonotronitalia.com
           newTab: true
+          url: http://www.sonotronitalia.com
           label: Vai al sito di Sonotron Italia
-          appearance: default
 ---
 ## Produzione e distribuzione
 

@@ -1,15 +1,16 @@
 ---
 # Informativa approvata dall'azienda per la messa online (19/10/2026). Da far rivedere a un
 # consulente privacy quando possibile, e da aggiornare se si aggiungono moduli o servizi.
+# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 title: Privacy
 slug: privacy-policy
-# Titolo e descrizione per Google e gli assistenti AI (descrizione: 120-160 caratteri)
 meta:
-  title: "Informativa sulla privacy"
+  title: Informativa sulla privacy
   description: "Come Sonotron Italia tratta i dati di chi visita il sito Sorazon o lo contatta: finalità, basi giuridiche, tempi di conservazione e diritti previsti dal GDPR."
 hero:
-  type: lowImpact
-  richText: '# Informativa sulla privacy'
+  richText: "# Informativa sulla privacy"
+layout:
+  - blockType: content
 ---
 Informativa ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR) per chi visita questo sito.
 

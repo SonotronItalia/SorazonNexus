@@ -108,6 +108,7 @@ Per **aggiungere un blocco** premi **Aggiungi Blocco** in fondo. Si apre l'elenc
 | **Invito all'azione** | Un riquadro con una frase e un pulsante (es. *Trova il centro più vicino*). |
 | **Immagine o video** | Una foto o un video a tutta larghezza. |
 | **Schede in evidenza** | Riquadri arrotondati con titolo e testo, in 2 o 3 colonne. Possono avere un'immagine. |
+| **Scheda persona** | Foto grande di una persona con accanto ruolo, nome e un testo (qualifiche, incarichi). La foto va a sinistra o a destra; meglio verticale. Per cambiare la foto, carica quella nuova nel campo **Foto**. |
 | **Numeri in evidenza** | Numeri grandi che contano da soli (es. *37 centri*). Centri e regioni si aggiornano da soli. |
 | **Carosello** | Schede con immagine che si scorrono di lato. |
 | **Prodotto guidato dallo scorrimento** | Il prodotto resta fermo e, scorrendo, cambiano immagine e testo. |

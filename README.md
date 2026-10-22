@@ -14,7 +14,7 @@ Contesto, regole e decisioni: [CLAUDE.md](CLAUDE.md) e [docs/decisioni.md](docs/
 ## Cosa c'è
 
 **Sito**
-- Pagine composte a blocchi dal pannello (stile pagine prodotto), notizie, elenco dei centri per regione, moduli di contatto.
+- Pagine composte a blocchi dal pannello (stile pagine prodotto, schede persona con foto), notizie, elenco dei centri per regione, moduli di contatto.
 - Italiano e inglese (`/en/...`), con selettore a bandiere. Le pagine inglesi pubblicate sono sempre visibili.
 - Tema chiaro e scuro, effetti animati spegnibili (fulmine), banner dei cookie con Consent Mode v2.
 - Google Tag Manager, Analytics e Ads (Microsoft Clarity tramite Tag Manager).
@@ -53,6 +53,7 @@ password generata nello stesso file.
 | `make migrate-create NAME=...` | Crea una migrazione dopo aver cambiato collezioni o blocchi |
 | `make migrate` | Applica le migrazioni |
 | `make seed` | Contenuti di partenza (ripetibile, non cancella nulla) |
+| `make esporta` | Copia le pagine attuali del pannello nei contenuti di partenza (da rivedere con `git diff` e salvare con un commit) |
 | `make stack` | I tre container come in produzione (alla fine pulisce la cache di Docker) |
 | `make stack-proxy` | Come `stack`, più il proxy nginx con HTTPS (in locale certificato autofirmato) |
 | `make tunnel` | Rende lo stack acceso visibile da internet (Cloudflare, gratis, indirizzi nuovi a ogni avvio; Ctrl+C per chiudere) |
