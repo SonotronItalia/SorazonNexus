@@ -16,4 +16,6 @@ I manuali si scrivono in **Markdown** in `backend/src/guida/` e si leggono nel p
 3. I titoli `##` diventano i capitoli dell'indice.
 4. PDF: apri la Guida nel pannello e premi **Stampa o salva in PDF** (la stampa nasconde menu e pulsanti e va a capo a ogni capitolo). Sostituisci i PDF in questa cartella.
 
+Le schermate attuali mostrano il pannello con l'aspetto standard di Payload. Quando l'aspetto Sorazon del pannello sarà definitivo andranno rifatte in **due versioni** (Sorazon e standard), mostrate secondo l'aspetto scelto nelle Impostazioni.
+
 Regole di scrittura: frasi brevi, un passo per riga, parole del pannello in **grassetto**, nessun termine tecnico non spiegato. Le affermazioni sulla terapia non si scrivono nei manuali.

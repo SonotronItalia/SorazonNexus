@@ -59,9 +59,11 @@ Le pagine non si pre-generano in build (`generateStaticParams` restituisce `[]`)
 Il browser non conosce l'indirizzo del backend. Il frontend riscrive (`next.config.ts`):
 
 - `/media/:path*` → `{backend}/api/media/file/:path*` (la funzione `mediaSrc()` converte gli URL);
+- `/marchio/:path*` → `{backend}/api/marchio/file/:path*` (loghi e icona di Impostazioni › Marchio, `marchioSrc()`);
+- `/favicon.ico` → `/icone/32.png` (icone del sito ricavate dall'icona del Marchio, `app/icone/[file]/route.ts`);
 - `/api/form-submissions` → backend (invio dei moduli).
 
-I file caricati stanno nel volume `media` (`MEDIA_DIR=/data/media`). In sviluppo senza Docker stanno in `backend/public/media`.
+I file caricati stanno nel volume `media` (`MEDIA_DIR=/data/media`, i file del marchio nella sottocartella `marchio`). In sviluppo senza Docker stanno in `backend/public/media` e `backend/public/marchio`: tra le due posizioni si allineano con `make allinea-media`. Cache: vedi [Rilascio e gestione](rilascio-e-gestione.md#cache-dei-file-e-cdn).
 
 ## Email
 

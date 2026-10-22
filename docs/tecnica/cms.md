@@ -6,12 +6,13 @@ Payload **3.91** dentro un'app Next.js **16** minimale (`backend/`). Solo config
 
 | Gruppo | Voci |
 |---|---|
+| (in cima) | Logo piccolo del marchio (`LogoMenu`), Sfoglia per cartella |
 | Contenuti | Pagine, Notizie, Centri, Immagini e file |
 | Contatti | Moduli, Richieste ricevute |
 | Aspetto del sito | Colori del sito, Effetti, Pulsante torna su |
+| Impostazioni | File del marchio, Impostazioni del sito, Menu principale, Piè di pagina, Lingue e selettore |
 | Avanzate | Tipi di effetto, Categorie, Utenti, Ruoli e permessi, Reindirizzamenti, Indice di ricerca, SEO e motori AI |
-| Impostazioni | Impostazioni del sito, Menu principale, Piè di pagina |
-| (in fondo) | **Guida** (manuali) ed **Esci** |
+| (in fondo) | **Cestino** (tutte le raccolte con il cestino), **Guida** (manuali) ed **Esci** |
 
 L'ordine dei gruppi è fissato in `plugins/ordineMenu.ts`. Ogni voce compare solo a chi ha il permesso **Vede**.
 
@@ -19,17 +20,18 @@ L'ordine dei gruppi è fissato in `plugins/ordineMenu.ts`. Ogni voce compare sol
 
 | Slug | Nel pannello | Note |
 |---|---|---|
-| `pages` | Pagine | Bozze con salvataggio automatico, pubblicazione programmata, 50 versioni. Schede: Apertura, Contenuto (blocchi), SEO. Anteprima e anteprima dal vivo |
-| `posts` | Notizie | Come le pagine; categorie, notizie correlate, autori. Indicizzate dalla ricerca |
-| `centri` | Centri | Dati pubblici; `coordinate` è un campo `point` (PostGIS) |
-| `media` | Immagini e file | Solo immagini, PDF e video; formati ridimensionati automatici; `staticDir` da `MEDIA_DIR` |
+| `pages` | Pagine | Bozze con salvataggio automatico, pubblicazione programmata, 50 versioni. Schede: Apertura, Contenuto (blocchi), SEO. Anteprima e anteprima dal vivo. Localizzate (vedi `lingue.md`), cestino |
+| `posts` | Notizie | Come le pagine; categorie, notizie correlate, autori. Indicizzate dalla ricerca (escono dall'indice nel cestino) |
+| `centri` | Centri | Dati pubblici; `coordinate` è un campo `point` (PostGIS); cestino |
+| `media` | Immagini e file | Solo immagini, PDF e video; formati ridimensionati automatici; `staticDir` da `MEDIA_DIR`; cache di una settimana; cestino |
+| `marchio` | File del marchio (Impostazioni) | Loghi e icone, anche SVG controllati; vedi sotto; cestino |
 | `categories` | Categorie | Annidabili (plugin nested-docs) |
 | `colori` | Colori del sito | Tavolozza: nome + codice esadecimale |
 | `effetti` | Effetti | Istanze configurate degli effetti animati |
 | `tipi-effetto` | Tipi di effetto | Codice CSS/JS personalizzato, eseguito in un iframe isolato |
 | `users` | Utenti | Autenticazione; campo `profilo` (il ruolo) |
 | `ruoli` | Ruoli e permessi | Vedi sotto |
-| `forms`, `form-submissions` | Moduli, Richieste ricevute | Plugin form-builder |
+| `forms`, `form-submissions` | Moduli, Richieste ricevute | Plugin form-builder (cestino sui moduli) |
 | `redirects` | Reindirizzamenti | Plugin redirects; applicati da `frontend/src/proxy.ts` |
 | `search` | Indice di ricerca | Plugin search, sincronizzato con le notizie |
 
@@ -41,6 +43,7 @@ L'ordine dei gruppi è fissato in `plugins/ordineMenu.ts`. Ogni voce compare sol
 | `footer` | Piè di pagina | Collegamenti e dati legali obbligatori |
 | `impostazioni` | Impostazioni del sito | Analisi e pubblicità (Google Tag Manager, GA4, Ads, Consent Mode), avviso in cima al sito, social, marchio (logo per sfondo chiaro e scuro, compatto, piè di pagina, icona del sito e variante per il tema scuro del browser) |
 | `torna-su` | Pulsante torna su | Icona, posizione, forma, dimensione, colore |
+| `lingue` | Lingue e selettore | Lingue attive, ordine, bandiera, stile del selettore (vedi `lingue.md`) |
 | `seo` | SEO e motori AI | Nome e descrizione del sito, modello del titolo, immagine di condivisione; nascondi sito, verifiche Google e Bing, pagine escluse; assistenti AI ammessi, `llms.txt`; dati dell'azienda per il JSON-LD |
 
 ## Blocchi delle pagine
@@ -86,6 +89,10 @@ Sfondi di sezione (`fields/sfondoSezione.ts`): nero profondo, bianco, grigio chi
 | `controllaModulo` | prima di ogni invio di modulo | Campo trappola `_sito`, obbligatori, email valida, lunghezza, solo campi del modulo |
 | protezioni dei ruoli | `ruoli`, `users` | Vedi sopra |
 | `populatePublishedAt`, `populateAuthors` | pagine, notizie | Data di pubblicazione e autori pubblici |
+| `soloAdminEliminaDefinitivo` | raccolte con il cestino | L'eliminazione definitiva solo con l'accesso completo |
+| controllo degli SVG | `marchio` | Rifiuta i riferimenti a indirizzi esterni (oltre al controllo di Payload) |
+
+Endpoint: `GET /api/<pages\|posts>/anteprima/:slug` (bozze per l'anteprima del sito, con il segreto interno) e `GET /api/icona-pannello` (favicon del pannello).
 
 ## Plugin
 

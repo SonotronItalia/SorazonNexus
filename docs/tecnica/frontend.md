@@ -9,13 +9,14 @@ frontend/src/
 ├── app/(frontend)/      layout, pagine ([[...slug]]), notizie, ricerca, anteprima, sitemap, llms.txt
 ├── app/api/revalidate   invalidazione della cache su richiesta del backend
 ├── app/og               immagine di condivisione generata
+├── app/icone, manifest.ts  icone del sito ricavate dall'icona del Marchio, manifest per Android
 ├── app/robots.ts        robots.txt dalle scelte di "SEO e motori AI"
-├── blocks/              un Component.tsx per blocco + RenderBlocks.tsx (mappa slug → componente)
+├── blocks/              un Component.tsx per blocco (+ Pigro.tsx se caricato in differita) e RenderBlocks.tsx
 ├── heros/               aperture delle pagine (Semplice, Media, Grande, Banner, Sorazon)
-├── components/          Effetti, Consenso, TornaSu, AvvisoSito, DatiStrutturati, Rivela, Parallasse, Card…
-├── providers/           tema, effetti, consenso, movimento (Motion)
-├── utilities/           metadati, SEO, dati strutturati, sfondi, stile del testo, telefoni…
-└── proxy.ts             reindirizzamenti del CMS (una sola risposta 308)
+├── components/          Logo, Effetti, Consenso, TornaSu, AvvisoSito, SelettoreLingua, DatiStrutturati, Rivela, Parallasse, Card…
+├── providers/           tema, effetti, consenso, lingua, movimento (Motion)
+├── utilities/           metadati, SEO, dati strutturati, lingue, marchio, Clarity, sfondi, stile del testo, telefoni…
+└── proxy.ts             lingua dal prefisso (/en) e reindirizzamenti del CMS (una sola risposta 308)
 ```
 
 ## Rendering e cache

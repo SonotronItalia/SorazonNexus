@@ -23,7 +23,7 @@ Server previsto: **Aruba Cloud Server** (VPS con Docker Compose); costi approvat
 4. DNS dei due nomi verso il server; porte 80 e 443 aperte.
 5. `make stack-proxy`. Al primo avvio certbot crea certificati provvisori, chiede quelli veri a Let's Encrypt (verifica sulla porta 80) e li rinnova ogni 12 ore; nginx si ricarica da solo.
 6. Il job `migrate` applica le migrazioni prima che parta il backend.
-7. Contenuti: ripristinare un backup (`make restore`) e i file media, oppure `make seed` su un database vuoto.
+7. Contenuti: ripristinare un backup (`make restore`) e i file caricati (media e marchio), oppure `make seed` su un database vuoto.
 8. In **SEO e motori AI** controllare che "Nascondi il sito" sia spento e inserire i codici di verifica di Google e Bing.
 
 ## Aggiornare il sito

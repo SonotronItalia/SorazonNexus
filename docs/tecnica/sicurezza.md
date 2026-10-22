@@ -26,6 +26,8 @@ Difese a più livelli, tutte senza costi aggiuntivi. **Non indebolirle.**
 - Ruoli e permessi verificati sul server (non basta nascondere le voci): vedi [CMS](cms.md).
 - Moduli: l'API degli invii è pubblica, quindi ogni invio è controllato sul server (`controllaModulo`: campo trappola, obbligatori, email, lunghezze, solo i campi del modulo).
 - Le bozze si leggono solo con il segreto interno; le richieste del sito sono anonime.
+- Cestino: eliminare sposta nel cestino; la cancellazione definitiva è solo per gli amministratori (`hooks/cestino.ts`).
+- I file caricati appartengono all'utente del backend (`make allinea-media` rimette il proprietario dopo il seed, che gira come root).
 
 ## Sito
 

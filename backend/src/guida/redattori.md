@@ -30,14 +30,15 @@ Dopo l'accesso vedi la **schermata iniziale**. Le voci sono divise in gruppi:
 - **Contenuti**: pagine, notizie, centri, immagini e file.
 - **Contatti**: i moduli del sito e i messaggi ricevuti.
 - **Aspetto del sito**: colori, effetti animati, pulsante "torna su".
-- **Impostazioni**: avviso in cima al sito, social, menu, piè di pagina e lingue.
+- **Impostazioni**: avviso in cima al sito, social, logo e icona (Marchio), file del marchio, menu, piè di pagina e lingue.
 
 ![La schermata iniziale del pannello](/guida/r03-home.jpg)
 
 Il simbolo **+** accanto a una voce crea subito un elemento nuovo.
 
-Il **menu** a sinistra si apre con il pulsante ☰ in alto a sinistra. In fondo al menu trovi:
+Il **menu** a sinistra si apre con il pulsante ☰ in alto a sinistra. In cima c'è il logo (porta alla schermata iniziale). In fondo al menu trovi:
 
+- **Cestino**: tutto quello che è stato eliminato, diviso per tipo, da recuperare.
 - **Guida**: questa guida, sempre a portata di mano.
 - **Esci**: per uscire dal pannello. Usalo sempre su un computer condiviso.
 

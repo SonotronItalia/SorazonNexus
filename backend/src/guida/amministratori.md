@@ -15,7 +15,7 @@ Oltre alle voci dei redattori, l'amministratore vede il gruppo **Avanzate**:
 - **Lingue e selettore** (nel gruppo Impostazioni).
 - **Reindirizzamenti**, **Categorie**, **Tipi di effetto**, **Indice di ricerca**.
 
-In più vede la scheda **Analisi e pubblicità** in Impostazioni del sito.
+In più vede la scheda **Analisi e pubblicità** in Impostazioni del sito, decide l'**aspetto del pannello** (Impostazioni › Marchio) ed è l'unico che può **eliminare definitivamente** dal Cestino.
 
 ![Il pannello visto da un amministratore](/guida/a01-home.jpg)
 

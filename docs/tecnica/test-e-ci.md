@@ -4,8 +4,8 @@
 
 | Comando | Cosa prova | Dove | Servizi necessari |
 |---|---|---|---|
-| `make test` | Unitari (Vitest): permessi, filtri, SEO, metadati, dati strutturati, telefoni, moduli, CSV, seed | `backend/tests/unit`, `frontend/tests/unit` | Nessuno |
-| `make test-int` | Integrazione: Payload vero su un PostGIS **usa e getta** in memoria (porta 55433): ruoli e permessi, ruoli personalizzati e protezioni, SEO, caricamenti, moduli | `backend/tests/int`, `scripts/test-int.sh` | Docker |
+| `make test` | Unitari (Vitest): permessi, filtri, SEO, metadati, dati strutturati, telefoni, lingue e collegamenti, Clarity, marchio, guida, moduli, CSV, seed | `backend/tests/unit`, `frontend/tests/unit` | Nessuno |
+| `make test-int` | Integrazione: Payload vero su un PostGIS **usa e getta** in memoria (porta 55433): ruoli e permessi, ruoli personalizzati e protezioni, traduttori, SEO, caricamenti, file del marchio (SVG), moduli, cestino | `backend/tests/int`, `scripts/test-int.sh` | Docker |
 | `make test-e2e` | Il sito nel browser (Playwright), desktop, telefono Android e iPhone (WebKit, il motore di Safari): pagine, logo, h1, dati strutturati, menu, cookie, mappa, torna su, avviso, modulo, SEO, sicurezza | `frontend/tests/e2e` | Sito acceso (`BASE_URL`) |
 | `make test-api` | Le API REST del CMS via HTTP: permessi da anonimo, bozze, moduli, CORS, GraphQL spento, anteprima | `frontend/tests/api` | CMS acceso (`BACKEND_URL`) |
 | `make audit` | Vulnerabilità note nelle dipendenze di produzione | — | Rete |
@@ -32,6 +32,6 @@ Prima di consegnare una modifica visiva: aprire le pagine coinvolte su desktop e
 2. **Migrazioni**: applica tutte le migrazioni su un PostGIS vuoto, esegue i test di integrazione e fallisce se la configurazione è cambiata **senza migrazione**.
 3. **Immagini Docker** (solo su `main`): build di backend, migrate e frontend.
 
-Un nuovo push annulla il giro in corso sullo stesso branch. Piano gratuito: 2.000 minuti al mese per repository privato.
+I test end-to-end e delle API non girano nella CI: servono il sito o il CMS accesi. Un nuovo push annulla il giro in corso sullo stesso branch. Piano gratuito: 2.000 minuti al mese per repository privato.
 
 Da fare: CD (immagini su GHCR, SSH sul server, `docker compose pull && up -d`, migrazioni prima dell'avvio). Vedi [Rilascio e gestione](rilascio-e-gestione.md).

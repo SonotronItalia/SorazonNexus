@@ -18,7 +18,7 @@ Obiettivo: una piattaforma digitale come **strumento di lancio della terapia e d
 
 Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bianca sulle scelte tecniche** ma ogni **costo** va autorizzato dall'azienda. Il progetto è anche un caso di studio per un profilo da responsabile IT/project manager: quando si prende una decisione architetturale, annotarla in `docs/decisioni.md` (una riga: decisione, alternative, motivo).
 
-**Documentazione** (indice in `docs/README.md`): tecnica in `docs/tecnica/` (architettura, sviluppo, CMS, frontend, sicurezza, test e CI, rilascio e gestione) e **manuali d'uso** in `backend/src/guida/` (Markdown, schermate in `backend/public/guida/`), mostrati nel pannello alla voce **Guida** (`/admin/guida`, manuale per amministratori solo con accesso completo) e in PDF in `docs/manuali/`. Quando cambia una funzione, aggiornare il documento e il manuale che la descrivono (e la schermata se cambia l'aspetto). Niente altra documentazione oltre a questa.
+**Documentazione** (indice in `docs/README.md`): tecnica in `docs/tecnica/` (architettura, sviluppo, CMS, frontend, lingue, sicurezza, test e CI, rilascio e gestione) e **manuali d'uso** in `backend/src/guida/` (Markdown, schermate in `backend/public/guida/`), mostrati nel pannello alla voce **Guida** (`/admin/guida`, manuale per amministratori solo con accesso completo) e in PDF in `docs/manuali/`. Quando cambia una funzione, aggiornare il documento e il manuale che la descrivono (e la schermata se cambia l'aspetto), **questo file e il `README.md` della radice** (funzioni e comandi). Niente altra documentazione oltre a questa.
 
 ## 2. Architettura (decisione vincolante)
 
@@ -49,7 +49,7 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 
 **Moduli del sito** (plugin form-builder): definiti in `backend/src/seed/dati/moduli/*.yml` e inseriti nelle pagine con il blocco `formBlock` (`form: modulo:Contatti`). Ogni invio passa da `backend/src/hooks/controllaModulo.ts` (campo trappola `_sito`, obbligatori, email valida, lunghezza, solo i campi del modulo): l'API `/api/form-submissions` è pubblica, i controlli del browser non bastano. Gli invii restano nell'admin (Form Submissions); l'email parte solo se c'è `SMTP_HOST`.
 
-**Immagini e moduli**: il browser non conosce l'indirizzo del backend. `frontend/next.config.ts` ha rewrite `/media/:path*` → `{backend}/api/media/file/:path*` e `/api/form-submissions` → backend. La funzione `mediaSrc()` in `lib/api.ts` converte gli URL dei media.
+**Immagini e moduli**: il browser non conosce l'indirizzo del backend. `frontend/next.config.ts` ha rewrite `/media/:path*` → `{backend}/api/media/file/:path*`, `/marchio/:path*` → `{backend}/api/marchio/file/:path*`, `/favicon.ico` → `/icone/32.png` e `/api/form-submissions` → backend. Le funzioni `mediaSrc()` in `lib/api.ts` e `marchioSrc()` in `utilities/marchio.ts` convertono gli URL. I rewrite si fissano in build: in Docker l'indirizzo interno è sempre `http://backend:3000`.
 
 **Build senza backend**: il frontend non deve pre-generare pagine che richiedono il backend. `generateStaticParams` restituisce `[]` e le pagine si costruiscono alla prima richiesta (ISR con tag). Così `next build` e `docker build` non hanno bisogno di backend né database.
 
@@ -57,8 +57,8 @@ Chi lavora: lo sviluppatore è anche il responsabile di progetto, ha **carta bia
 
 | File | Variabili principali |
 |---|---|
-| `.env` (radice, per Compose) | `POSTGRES_USER/PASSWORD/DB`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `FRONTEND_PUBLIC_URL`, `BACKEND_PUBLIC_URL`, `FRONTEND_HOST`, `BACKEND_HOST` |
-| `backend/.env` (sviluppo senza Docker) | `DATABASE_URL`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `BACKEND_PUBLIC_URL`, `FRONTEND_PUBLIC_URL`, `FRONTEND_INTERNAL_URL` |
+| `.env` (radice, per Compose) | `POSTGRES_USER/PASSWORD/DB`, `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `FRONTEND_PUBLIC_URL`, `BACKEND_PUBLIC_URL`, `FRONTEND_HOST`, `BACKEND_HOST`; facoltative `SMTP_*`, `EMAIL_FROM`, `EMAIL_INFO`, `CERTBOT_EMAIL`, `GA_MEASUREMENT_ID`, `GOOGLE_ADS_ID` |
+| `backend/.env` (sviluppo senza Docker) | `DATABASE_URL` (punta al database **reale**: gli script sul database di prova passano `DATABASE_URL` esplicito), `PAYLOAD_SECRET`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `BACKEND_PUBLIC_URL`, `FRONTEND_PUBLIC_URL`, `FRONTEND_INTERNAL_URL`, `SEED_ADMIN_EMAIL/PASSWORD` |
 | `frontend/.env` (sviluppo senza Docker) | `PAYLOAD_INTERNAL_URL`, `SITE_URL`, `REVALIDATE_SECRET`, `PREVIEW_SECRET`, `BACKEND_PUBLIC_URL` |
 
 Gli indirizzi interni in Docker sono costanti nel compose (`http://backend:3000`, `http://frontend:3000`). Le variabili vanno lette **a runtime** (non `NEXT_PUBLIC_*`, che verrebbero fissate in build): una sola immagine per ogni ambiente.
@@ -72,13 +72,20 @@ SorazonNexus/
 ├── Makefile                 # comandi del progetto (ricette con TAB!)
 ├── docker-compose.yml       # db, migrate (job), backend, frontend, nginx + certbot (profilo "proxy")
 ├── docker-compose.dev.yml   # solo sviluppo: porta 5432 del db sul Mac (make db); mai con lo stack
-├── nginx/                 # proxy: modello di configurazione, script dei certificati (certbot)
+├── nginx/                   # proxy: modello di configurazione, certificati (certbot), tunnel.conf per make tunnel
+├── .github/workflows/ci.yml # CI (vedi sezione 9)
 ├── .env.example  requisiti.txt  README.md
+├── docs/                    # documentazione tecnica, manuali in PDF, registro delle decisioni
 ├── scripts/
 │   ├── fx.sh                # effetti da terminale (spinner, banner, conferme); EFFECTS=0 li disattiva
 │   ├── dev.sh               # backend + frontend insieme con output prefissato; Ctrl+C li ferma
 │   ├── env.sh               # crea .env (radice, backend, frontend) con segreti casuali coerenti
-│   ├── setup.sh             # verifica/installa strumenti e prepara il progetto (DA AGGIORNARE, vedi sotto)
+│   ├── setup.sh             # verifica/installa strumenti, .env, dipendenze, database e seed (make setup)
+│   ├── allinea-media.sh     # file caricati tra make dev e stack (media e marchio) + permessi del volume
+│   ├── pulisci-docker.sh    # immagini vecchie del progetto e cache di build (make pulisci, dopo make stack)
+│   ├── tunnel.sh            # stack visibile da internet con Cloudflare quick tunnel (make tunnel)
+│   ├── test-int.sh          # test di integrazione su un PostGIS usa e getta (make test-int)
+│   ├── controlla-stack.sh   # prima di make dev: se lo stack è acceso avvisa e, con conferma, ne ferma backend e frontend
 │   └── split-vetrina.sh     # script una tantum già usato per dividere vetrina/ (ora solo nel tag monolite-v1)
 ├── backend/                 # SOLO Payload
 └── frontend/                # SOLO Next.js
@@ -87,9 +94,9 @@ SorazonNexus/
 
 Contenuti di partenza (`make seed`): dati in `backend/src/seed/dati/` (tabelle CSV e pagine in Markdown con intestazione YAML, formato spiegato in `seed/pagine.ts`), immagini in `seed/media/`; `seed/index.ts` contiene solo la logica. Nuovi contenuti di partenza si aggiungono come file, non nel codice. Le notizie stanno in `dati/notizie/*.md` (intestazione con title, slug, publishedAt, categorie, heroImage, meta; sotto il testo in Markdown; `bozza: true` per non pubblicarle); i PDF si caricano come media e si collegano con `/media/nomefile.pdf`. Il menu (`dati/menu.csv`) può già elencare pagine in bozza: il sito le mostra solo quando sono pubblicate (il collegamento a una bozza resta vuoto e non viene disegnato) e la pubblicazione di una pagina rinfresca anche la cache del menu.
 
-Nel backend: `src/{access,collections,fields,hooks,plugins,search,Header,Footer,heros,blocks,utilities}`, `src/app/(payload)`, `src/payload.config.ts`, `src/payload-types.ts` (generato). I blocchi e l'hero nel backend contengono **solo `config.ts`**.
+Nel backend: `src/{access,collections,fields,hooks,endpoints,plugins,search,blocks,heros,utilities,components,seed,guida,migrations}`, le globali in `src/{Header,Footer,Impostazioni,Seo,Lingue,TornaSu}`, `src/lingue.ts`, `src/app/(payload)` (con `custom.scss`), `src/payload.config.ts`, `src/payload-types.ts` (generato). `components/admin` contiene solo le personalizzazioni del pannello (marchio, tema, guida, cestino, esci, stile testo). I blocchi e l'hero nel backend contengono **solo `config.ts`**.
 
-Nel frontend: `src/{app,blocks,components,heros,Header,Footer,providers,lib,utilities}`; i blocchi hanno solo `Component.tsx`.
+Nel frontend: `src/{app,blocks,components,heros,Header,Footer,providers,lib,utilities}` e `src/proxy.ts` (lingue e redirect); i blocchi hanno solo `Component.tsx` (più `Pigro.tsx` per quelli caricati in differita).
 
 **Contratto tra le due metà**: il campo `layout` delle pagine è un array di blocchi con `blockType`; il frontend li disegna in `RenderBlocks.tsx` con una mappa `slug → componente`. Ogni nuovo blocco richiede: `config.ts` nel backend + registrazione in `backend/src/blocks/blocchiPagina.ts` (finisce in `config.blocks`, le pagine lo usano per nome) e in `BLOCCHI_INTERNI` del Contenitore + migrazione + `Component.tsx` nel frontend + voce in `RenderBlocks.tsx` + `make types`. La disposizione interna di un blocco (colonne, affiancamenti) usa le **container query** (`@container` sul `.container` del blocco, varianti `@xl:`/`@2xl:`/`@4xl:` al posto di `sm:`/`md:`/`lg:`), così il blocco si adatta anche dentro una colonna del Contenitore.
 
@@ -101,7 +108,7 @@ I tipi si generano nel backend e si copiano nel frontend: `make types`.
 
 Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra o sinistra, sfondo nessuno/tenue/scuro), mappate su classi Tailwind **scritte per intero** (Tailwind non vede le classi costruite al volo). Mai font o dimensioni liberi; i **colori** solo dalla tavolozza del sito (collezione "Colori del sito": nome + codice esadecimale, salvati una volta e scelti dai blocchi con sfondo; il testo chiaro o scuro lo decide il sito in base al colore, `frontend/src/utilities/sfondo.ts`). L'editor di testo ha titoli, grassetto, corsivo, sottolineato, link, elenchi puntati e numerati, allineamento e **"Stile testo"** (pulsante A±): dimensione a scelta fissa e responsiva (piccolo, grande, molto grande, enorme, sottotitolo; variabili `--testo-*` in `globals.css`) e colore dalla tavolozza, con aggiunta e modifica dei colori dall'editor. Nel testo si salva `var(--colore-ID, #codice)`: il layout scrive le variabili `--colore-ID` dalla tavolozza, quindi un codice cambiato vale subito ovunque. Il sito applica solo gli stili ammessi (`frontend/src/utilities/stileTesto.ts`). Funzionalità in `backend/src/components/admin/StileTesto`, registrata in `fields/defaultLexical.ts` (tutti i campi la ereditano).
 
-## 5. Funzioni già realizzate (da verificare dopo la migrazione)
+## 5. Funzioni realizzate
 
 **Blocchi** (config nel backend, componente nel frontend): `CallToAction`, `Content`, `MediaBlock`, `ArchiveBlock`, `FormBlock` (dal template), più i nostri:
 
@@ -144,11 +151,11 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 **SEO e motori di risposta AI (GEO)**: tutto configurabile in **Avanzate › SEO e motori AI** (Global `seo`, `backend/src/Seo/config.ts`, letto con `getSeo()`; regole in `frontend/src/utilities/seo.ts` con i valori di riserva nel codice). Schede: *Sito* (nome, descrizione, modello del titolo `{pagina} | {sito}`, immagine di condivisione predefinita), *Motori di ricerca* (nascondi tutto il sito: robots `Disallow: /`, `noindex` e niente llms.txt; codici di verifica Google e Bing; pagine escluse: robots, `noindex`, fuori da sitemap e llms.txt), *Motori AI* (assistenti ammessi o bloccati nel robots.txt, crawler in `CRAWLER_AI`; presentazione, centri e notizie in `/llms.txt`), *Dati dell'azienda* (per il JSON-LD, con il Piè di pagina come riserva). La migrazione `seo_e_motori_ai` ha copiato nome e descrizione dalle Impostazioni e i dati legali dal Piè di pagina; il seed (`dati/seo.yml`) scrive solo i valori ancora vuoti. Restano nel codice: metadati in `utilities/generateMeta.ts`, immagine generata in `app/og/route.tsx`, dati strutturati (`components/DatiStrutturati` + `utilities/datiStrutturati.ts`: solo fatti dal CMS, mai affermazioni sanitarie). Titoli e descrizioni delle pagine nel seed (`meta:`).
 
-**Tema chiaro/scuro**: `ThemeSelector` del template, ora anche nell'header; logo per sfondo scuro con il tema scuro e sotto un hero scuro, come immagine di sfondo (si scarica solo quella mostrata); `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
+**Tema chiaro/scuro**: `ThemeSelector` con tre icone (automatico, chiaro, scuro; senza librerie), nell'header e nel piè di pagina; logo per sfondo scuro con il tema scuro e sotto un hero scuro, come immagine di sfondo (si scarica solo quella mostrata); `InitTheme` usa un normale `<script>` (non `next/script`, che dava un avviso in console).
 
 **Header responsive**: sotto `xl` (1280 px) compaiono fulmine e menu a comparsa (navigazione + selettore tema a tre icone): con meno spazio le voci non ci stanno e la pagina scorreva di lato. L'header è fisso in alto: trasparente in cima, in vetro (sfocatura) e più basso dopo 24 px di scorrimento, con il logo che si riduce. Lo spazio nella pagina resta sempre quello della barra grande (`h-[124px] md:h-[140px]`, parte in più trasparente e `pointer-events-none`): se cambiasse, la correzione dello scorrimento del browser farebbe ingrandire e ridurre la barra di continuo.
 
-**Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Colori` ("Colori del sito", tavolozza per gli sfondi dei blocchi: Galleria risultati, Scheda prodotto, Invito all'azione), `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Header`, `Footer`. Plugin: redirects, nested-docs, SEO, form-builder, search.
+**Collezioni**: `Pages`, `Posts` (etichetta "Notizie"), `Colori` ("Colori del sito", tavolozza per gli sfondi dei blocchi e per lo "Stile testo"), `Effetti`, `TipiEffetto`, `Marchio` ("File del marchio"), `Ruoli`, `Centri` (etichetta "Centro/Centri"; campi: `nome_struttura`, `regione` (testo libero), `provincia`, `citta`, `indirizzo`, `telefoni`, `email`, `sito`, `professionisti` (textarea), `coordinate` (`point`, richiede PostGIS)), `Media` (`staticDir` da `MEDIA_DIR`), `Categories`, `Users`. Globali: `Impostazioni`, `Header` ("Menu principale"), `Footer` ("Piè di pagina"), `TornaSu`, `Seo`, `Lingue`. Plugin: redirects, nested-docs, SEO, form-builder (moduli e invii), search (solo le notizie). Cestino (`trash`) su pagine, notizie, centri, moduli, media e marchio.
 
 ## 6. Comandi del progetto (Makefile)
 
@@ -158,7 +165,7 @@ Ogni blocco espone poche opzioni a elenco (es. 2 o 3 colonne, immagine a destra 
 
 Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le animazioni da terminale.
 
-**Test** (girano anche nella CI): `make test` (unitari Vitest di backend e frontend, nessun servizio: `backend/tests/unit`, `frontend/tests/unit`) · `make test-int` (Payload vero su un PostGIS usa e getta in memoria, `scripts/test-int.sh`: permessi, caricamenti, moduli; `vitest.setup.ts` rifiuta di partire senza `TEST_DATABASE_URL` e non carica mai `backend/.env`) · `make test-e2e` (Playwright, desktop, telefono Android e iPhone con WebKit, sul sito acceso: `BASE_URL=...` per un altro indirizzo, anche quello online; `E2E_SCRITTURA=1` per inviare davvero il modulo; `frontend/tests/e2e`) · `make test-api` (Playwright, le API REST del CMS via HTTP su `BACKEND_URL`: permessi da anonimo, bozze, moduli, CORS, GraphQL spento, anteprima; con `E2E_EMAIL`/`E2E_PASSWORD` di un utente di prova anche cookie e CSRF, con `E2E_BLOCCO=1` il blocco dopo 5 tentativi; `frontend/tests/api`) · `make audit` (vulnerabilità delle dipendenze). Limite noto di Payload: un corpo JSON che non è un oggetto (es. `"ciao"`) dà 500 generico, senza dettagli interni. Nuove funzioni: aggiungere il test accanto. **Velocità**: componenti client pesanti e rari da caricare in differita con un file `Pigro.tsx` (`'use client'` + `next/dynamic`; da un componente server il `dynamic()` non divide il codice), come Form, HighImpact e Code.
+**Test** (girano anche nella CI): `make test` (unitari Vitest di backend e frontend, nessun servizio: `backend/tests/unit`, `frontend/tests/unit`) · `make test-int` (Payload vero su un PostGIS usa e getta in memoria, `scripts/test-int.sh`: permessi, ruoli e traduttori, caricamenti, file del marchio, moduli, cestino; `vitest.setup.ts` rifiuta di partire senza `TEST_DATABASE_URL` e non carica mai `backend/.env`) · `make test-e2e` (Playwright, desktop, telefono Android e iPhone con WebKit, sul sito acceso: `BASE_URL=...` per un altro indirizzo, anche quello online; `E2E_SCRITTURA=1` per inviare davvero il modulo; `frontend/tests/e2e`) · `make test-api` (Playwright, le API REST del CMS via HTTP su `BACKEND_URL`: permessi da anonimo, bozze, moduli, CORS, GraphQL spento, anteprima; con `E2E_EMAIL`/`E2E_PASSWORD` di un utente di prova anche cookie e CSRF, con `E2E_BLOCCO=1` il blocco dopo 5 tentativi; `frontend/tests/api`) · `make audit` (vulnerabilità delle dipendenze). Limite noto di Payload: un corpo JSON che non è un oggetto (es. `"ciao"`) dà 500 generico, senza dettagli interni. Nuove funzioni: aggiungere il test accanto. **Velocità**: componenti client pesanti e rari da caricare in differita con un file `Pigro.tsx` (`'use client'` + `next/dynamic`; da un componente server il `dynamic()` non divide il codice), come Form, HighImpact e Code.
 
 **Sicurezza** (non indebolire): caricamenti solo immagini/PDF/video (`Media.upload.mimeTypes`, niente SVG o HTML), tranne i file del marchio (SVG controllati da Payload, senza riferimenti esterni, serviti con CSP `sandbox`: `collections/Marchio.ts`); login bloccato dopo 5 tentativi, cookie `secure` in HTTPS, niente chiavi API; GraphQL spento; il backend in produzione non parte con segreti deboli (`payload.config.ts`); nginx con HSTS, CSP `frame-ancestors`, limiti di frequenza su login e moduli, `/api/revalidate` e l'endpoint delle bozze bloccati da fuori; container Node con `cap_drop: ALL` e `no-new-privileges`; redirect del CMS in `frontend/src/proxy.ts` (una sola risposta 308). Override di sicurezza delle dipendenze in `pnpm-workspace.yaml`.
 
@@ -184,7 +191,7 @@ Le ricette del Makefile devono iniziare con **TAB**. `EFFECTS=0` disattiva le an
 
 ## 9. Roadmap tecnica successiva (non ora)
 
-- **CI/CD con GitHub Actions**: la CI c'è (`.github/workflows/ci.yml`: typecheck, lint non bloccante finché restano gli errori react-hooks del frontend, build, migrazioni su PostGIS vuoto e controllo delle migrazioni dimenticate, build delle immagini su `main`). Da fare: CD (immagini su GHCR, SSH sul server, `docker compose pull && up -d`, migrazioni prima dell'avvio). Limiti del piano gratuito: 2.000 minuti/mese e 500 MB di Packages per repository privato.
+- **CI/CD con GitHub Actions**: la CI c'è (`.github/workflows/ci.yml`: per backend e frontend typecheck, lint, test unitari, audit delle dipendenze (alte e critiche), build; migrazioni su PostGIS vuoto, test di integrazione e controllo delle migrazioni dimenticate; build delle immagini su `main`). I test end-to-end non girano nella CI: servono il sito acceso (`make test-e2e`). Da fare: CD (immagini su GHCR, SSH sul server, `docker compose pull && up -d`, migrazioni prima dell'avvio). Limiti del piano gratuito: 2.000 minuti/mese e 500 MB di Packages per repository privato.
 - **Altri servizi** come container con lo stesso schema (rete interna, database separato): Moodle (immagine da costruire, PHP), Keycloak/Authentik per SSO quando i servizi riservati sono almeno due, servizi **Python** (FastAPI) per CRM/portale con AI, Discourse (ha un proprio launcher Docker).
 - **Visualizzatore 3D** (dopo la vetrina): React Three Fiber, file GLB con parti separate e nome chiaro; vista esplosa generica (ogni parte si sposta dal centro del modello), involucro trasparente per prefisso nel nome (`case_`), hotspot agganciati al nome della parte; vista 3D caricata in differita con immagine di anteprima; fallback alla vista classica. I dati del prodotto andranno in una collezione `Prodotti` condivisa tra le due viste.
 - **Modulo "diventa centro"** e mappa delle regioni scoperte.

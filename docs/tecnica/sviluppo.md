@@ -40,7 +40,9 @@ SorazonNexus/
 | `make test` / `make test-int` / `make test-e2e` / `make test-api` / `make audit` | Test (vedi [Test e CI](test-e-ci.md)) |
 | `make backup` / `make backup-media` / `make restore FILE=…` | Copie di sicurezza |
 | `make reset-db` | ⚠ Svuota il database (conferma e backup automatico) |
-| `make tunnel` | Stack visibile da internet con un tunnel Cloudflare temporaneo |
+| `make tunnel` | Stack visibile da internet con un tunnel Cloudflare temporaneo (con il tunnel acceso non usare `make stack`) |
+| `make allinea-media` | Copia i file caricati (media e marchio) mancanti tra `make dev` e lo stack e ne sistema i permessi |
+| `make stop` / `make down` / `make ps` / `make logs SERVICE=…` | Gestione dei container (i dati restano) |
 
 `EFFECTS=0` toglie le animazioni del terminale. Lo stack Docker e `make dev` usano le stesse porte: `make dev` avvisa e chiede di fermare lo stack.
 
@@ -80,25 +82,26 @@ Regole imparate sul campo:
 - pagine in Markdown con intestazione YAML (`dati/pagine/*.md`, formato spiegato in `seed/pagine.ts`): `media:file.jpg`, `pagina:slug`, `colore:Nome`, `effetto:Nome`, `modulo:Titolo`;
 - notizie in `dati/notizie/*.md` (`bozza: true` per non pubblicarle);
 - centri in `dati/centri.csv` (separatore `;`, UTF-8 con BOM, si apre con Excel; chiave città + indirizzo);
+- traduzioni in `dati/traduzioni/<lingua>/` (pagine con `pagina:` = slug italiano, menu, moduli, SEO; pubblicate e visibili, vedi [Lingue](lingue.md));
 - SEO in `dati/seo.yml` (solo i valori ancora vuoti);
 - marchio (loghi e icona Sorazon in `seed/media/marchio`) solo se la scheda Marchio è vuota;
 - immagini in `seed/media/` con il testo alternativo in `dati/media.csv`: un file sostituito con un altro (dimensione diversa) aggiorna l'immagine già caricata, con lo stesso nome.
 
-Nuovi contenuti di partenza si aggiungono **come file**, non nel codice. Il seed aggiorna e non cancella; sovrascrive però le pagine del seed: sul database di produzione si aggiorna solo quello che serve.
+Nuovi contenuti di partenza si aggiungono **come file**, non nel codice. Il seed aggiorna e non cancella; sovrascrive però le pagine del seed e le loro traduzioni: sul database reale non si rilancia il seed completo (cancellerebbe le modifiche fatte dal pannello), si aggiorna solo quello che serve con uno script mirato.
 
 ## Aggiungere un blocco
 
 1. `backend/src/blocks/<Nome>/config.ts` (solo configurazione).
 2. Registrarlo in `backend/src/blocks/blocchiPagina.ts` e in `BLOCCHI_INTERNI` del Contenitore.
 3. `make migrate-create NAME=…`, `make migrate`, `make types`.
-4. `frontend/src/blocks/<Nome>/Component.tsx` e la voce in `RenderBlocks.tsx`.
+4. `frontend/src/blocks/<Nome>/Component.tsx` e la voce in `RenderBlocks.tsx`. Se è un componente client pesante e poco usato, passa da un `Pigro.tsx` (`'use client'` + `next/dynamic`) per non appesantire tutte le pagine.
 5. Disposizione interna con le **container query** (`@container`, varianti `@xl:` `@2xl:` `@4xl:`), così il blocco funziona anche dentro una colonna del Contenitore.
 
 Principio: l'utente sceglie **cosa** e **quale variante** (poche opzioni a elenco); il codice decide **come appare**. Classi Tailwind scritte per intero (Tailwind non vede quelle costruite al volo); colori solo dalla tavolozza del sito.
 
 ## Aggiungere una voce dell'admin
 
-Una nuova collezione o globale va aggiunta anche in `backend/src/access/risorse.ts` (permessi Vede/Crea/Modifica/Elimina nei ruoli), con `permesso()` negli `access` e `nascostaSenzaPermesso()` in `admin.hidden`. Serve una migrazione: aggiunge le colonne dei permessi alla tabella dei ruoli.
+Una nuova collezione o globale va aggiunta anche in `backend/src/access/risorse.ts` (permessi Vede/Crea/Modifica/Elimina nei ruoli), con `permesso()` negli `access` e `nascostaSenzaPermesso()` in `admin.hidden`. Serve una migrazione: aggiunge le colonne dei permessi alla tabella dei ruoli. Se i suoi elementi si possono perdere con un clic, attivare anche il cestino (`trash: true` e l'hook `soloAdminEliminaDefinitivo` in `beforeDelete`): comparirà da solo nella pagina Cestino.
 
 ## Convenzioni
 
