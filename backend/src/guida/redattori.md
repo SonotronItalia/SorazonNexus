@@ -80,7 +80,7 @@ Poi compili:
 
 - **Occhiello**: una parola piccola sopra il titolo, per esempio *Terapia*.
 - **Il testo**: la prima riga scritta come *Titolo 1* è il titolo della pagina. La riga sotto è il sottotitolo.
-- **Pulsanti**: fino a due pulsanti, per esempio *Trova un centro*.
+- **Pulsanti**: fino a due pulsanti, per esempio *Trova un centro*. Ogni pulsante porta a una pagina del sito oppure a un indirizzo scritto a mano (per una notizia, copia il suo indirizzo). Ogni lingua ha i suoi pulsanti.
 
 ![La scheda Apertura](/guida/r06-pagina-apertura.jpg)
 

@@ -5,7 +5,7 @@
 | Comando | Cosa prova | Dove | Servizi necessari |
 |---|---|---|---|
 | `make test` | Unitari (Vitest): permessi, filtri, SEO, metadati, dati strutturati, telefoni, lingue e collegamenti, Clarity, marchio, guida, moduli, CSV, seed | `backend/tests/unit`, `frontend/tests/unit` | Nessuno |
-| `make test-int` | Integrazione: Payload vero su un PostGIS **usa e getta** in memoria (porta 55433): ruoli e permessi, ruoli personalizzati e protezioni, traduttori, SEO, caricamenti, file del marchio (SVG), moduli, cestino | `backend/tests/int`, `scripts/test-int.sh` | Docker |
+| `make test-int` | Integrazione: Payload vero su un PostGIS **usa e getta** in memoria (porta 55433): ruoli e permessi, ruoli personalizzati e protezioni, traduttori, SEO, caricamenti, file del marchio (SVG), moduli, cestino, pulsanti dell'hero nelle due lingue | `backend/tests/int`, `scripts/test-int.sh` | Docker |
 | `make test-e2e` | Il sito nel browser (Playwright), desktop, telefono Android e iPhone (WebKit, il motore di Safari): pagine, logo, h1, dati strutturati, menu, cookie, mappa, torna su, avviso, modulo, SEO, sicurezza | `frontend/tests/e2e` | Sito acceso (`BASE_URL`) |
 | `make test-api` | Le API REST del CMS via HTTP: permessi da anonimo, bozze, moduli, CORS, GraphQL spento, anteprima | `frontend/tests/api` | CMS acceso (`BACKEND_URL`) |
 | `make audit` | Vulnerabilità note nelle dipendenze di produzione | — | Rete |

@@ -72,7 +72,7 @@ alle collezioni esegui `make migrate-create NAME=...`, `make migrate` e `make ty
 | Comando | Cosa verifica |
 |---|---|
 | `make test` | Test unitari di backend e frontend (pochi secondi, nessun servizio) |
-| `make test-int` | Payload vero su un database usa e getta: permessi, caricamenti, moduli, cestino |
+| `make test-int` | Payload vero su un database usa e getta: permessi, caricamenti, moduli, cestino, pulsanti tradotti |
 | `make test-e2e` | Il sito nel browser: desktop, telefono Android e iPhone (motore di Safari) |
 | `make test-api` | Le API REST del CMS via HTTP |
 | `make audit` | Vulnerabilità note nelle dipendenze |
