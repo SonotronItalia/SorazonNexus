@@ -9,7 +9,13 @@ meta:
   title: Sorazon Studio and Sorazon Maxi devices
   description: 'Sorazon Studio and Sorazon Maxi: main unit with 7" colour monitor, radio frequency and sonic waves generators, transducer with ionisation chamber and ozone.'
 hero:
+  type: lowImpact
   richText: "# Sorazon devices"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: barraProdotto
     nome: Sorazon

@@ -7,8 +7,14 @@ meta:
   title: Distribution of the Sorazon devices
   description: "Sorazon Studio and Maxi are made and distributed by Sonotron Italia in Fano, Italy: purchase, quotes, support and information on becoming a reference centre."
 hero:
+  type: lowImpact
   occhiello: Sonotron Italia
   richText: "# Distribution"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: content
   - blockType: cta

@@ -8,11 +8,17 @@ meta:
   title: Therapeutic indications of the Sorazon therapy
   description: "Where the Sorazon therapy is used: from the spine to the shoulder, from the hip to the knee and foot, for arthrosis, joint inflammations and traumas."
 hero:
+  type: lowImpact
   occhiello: Indications
   richText: |-
     # Therapeutic indications
 
     Arthrosis · Joint inflammations · Traumas
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     titolo: Area by area.

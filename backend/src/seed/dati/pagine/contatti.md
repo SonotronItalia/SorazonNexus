@@ -8,8 +8,14 @@ meta:
   image: media:logo.png
   description: Sede a Fano (PU), telefoni, email e modulo di contatto per informazioni sulla terapia Sorazon e sui dispositivi prodotti da Sonotron Italia.
 hero:
+  type: lowImpact
   occhiello: Sorazon e Sonotron Italia
   richText: "# Contatti"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     colonne: "2"

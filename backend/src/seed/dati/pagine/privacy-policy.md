@@ -8,7 +8,13 @@ meta:
   title: Informativa sulla privacy
   description: "Come Sonotron Italia tratta i dati di chi visita il sito Sorazon o lo contatta: finalità, basi giuridiche, tempi di conservazione e diritti previsti dal GDPR."
 hero:
+  type: lowImpact
   richText: "# Informativa sulla privacy"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: content
 ---

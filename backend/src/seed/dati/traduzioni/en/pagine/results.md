@@ -8,8 +8,10 @@ meta:
   title: Sorazon clinical results in Italy since 1992
   description: "Clinical results of the Sorazon therapy: calcification, coxarthrosis, C-spine and L-spine, knee arthrosis, foot arthrosis and tennis elbow."
 hero:
+  type: lowImpact
   richText: "# Results in Italy since 1992"
   media: media:Screenshot 2026-10-22 alle 02.48.16.png
+  bordoImmagine: true
   sfondoMedia: video
   video:
     sorgente: youtube

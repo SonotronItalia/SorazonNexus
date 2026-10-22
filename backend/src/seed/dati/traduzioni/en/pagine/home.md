@@ -2,7 +2,7 @@
 # Traduzione della Home italiana. Frasi sulla terapia prese dalla vecchia pagina inglese Therapy
 # dove esistono. Rivista e pubblicata dall'azienda (21/10/2026).
 pagina: home
-title: Home
+title: Homehttp://localhost:3001/admin/collections/pages
 slug: home
 meta:
   title: "Sorazon: non-invasive anti inflammatory therapy"
@@ -23,6 +23,10 @@ hero:
         appearance: outline
   media: media:sorazon-maxi.webp
   bordoImmagine: false
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
   effetti:
     - effetto: effetto:Pulsazione
     - effetto: effetto:Scarica di Tesla

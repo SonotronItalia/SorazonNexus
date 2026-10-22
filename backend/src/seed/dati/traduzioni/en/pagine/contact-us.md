@@ -9,8 +9,14 @@ meta:
   title: "Contact us: Sorazon and Sonotron Italia, Fano"
   description: "Office in Fano (PU), Italy: phone numbers, email and contact form for information on the Sorazon therapy and the devices made by Sonotron Italia."
 hero:
+  type: lowImpact
   occhiello: Sorazon and Sonotron Italia
   richText: "# Contact us"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     colonne: "2"

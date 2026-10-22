@@ -9,9 +9,14 @@ meta:
   title: Dispositivi Sorazon Studio e Sorazon Maxi
   description: 'Sorazon Studio e Sorazon Maxi: unità base con monitor 7" a colori, generatori di radiofrequenza e onde soniche, manipolo con camera di ionizzazione e ozono.'
 hero:
+  type: lowImpact
   richText: "# Dispositivi Sorazon"
   media: media:sorazon-maxi.webp
   bordoImmagine: false
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
   effetti:
     - effetto: effetto:Scarica di Tesla
 layout:

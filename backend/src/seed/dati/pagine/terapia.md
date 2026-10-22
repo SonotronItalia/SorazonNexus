@@ -10,6 +10,7 @@ meta:
   title: "Terapia Sorazon: come funziona"
   description: "Terapia antinfiammatoria non invasiva, non a contatto e non dolorosa, a tripla azione: onde soniche pressorie, radiofrequenza ionizzante ed energia di ozono."
 hero:
+  type: lowImpact
   occhiello: Terapia
   richText: |-
     # Terapia intensiva antinfiammatoria
@@ -17,6 +18,11 @@ hero:
     Mirata > infiltrante > profonda. 
 
     Non invasiva, non a contatto, non dolorosa.
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     occhiello: Meccanismo d'azione

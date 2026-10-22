@@ -12,6 +12,7 @@ hero:
   type: highImpact
   richText: "# Risultati clinici in Italia dal 1992"
   media: media:Screenshot 2026-10-22 alle 02.48.16.png
+  bordoImmagine: true
   sfondoMedia: video
   posizioneTitolo: centro-centro
   proporzione: 3-1

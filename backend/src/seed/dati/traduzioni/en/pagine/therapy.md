@@ -8,8 +8,14 @@ meta:
   title: "Sorazon therapy: how it works"
   description: "Non-invasive, no contact anti inflammatory therapy: sonic pressure waves, radio frequency with ionising electromagnetic field and ozone's oxygenation energy."
 hero:
+  type: lowImpact
   occhiello: Therapy
   richText: "# Therapy"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     occhiello: How it works

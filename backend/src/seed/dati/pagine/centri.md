@@ -10,6 +10,7 @@ hero:
   occhiello: La rete Sorazon
   richText: "# Centri di riferimento"
   media: media:Screenshot 2026-10-22 alle 02.48.16.png
+  bordoImmagine: true
   sfondoMedia: video
   video:
     sorgente: youtube

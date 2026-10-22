@@ -24,6 +24,10 @@ hero:
         appearance: outline
   media: media:sorazon-maxi.webp
   bordoImmagine: false
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
   effetti:
     - effetto: effetto:Pulsazione
     - effetto: effetto:Scarica di Tesla

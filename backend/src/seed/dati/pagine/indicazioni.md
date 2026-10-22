@@ -9,11 +9,17 @@ meta:
   title: Indicazioni terapeutiche della terapia Sorazon
   description: "Dove si applica la terapia Sorazon: dalla colonna vertebrale alla spalla, dall'anca al ginocchio e al piede, per artrosi, infiammazioni e traumi."
 hero:
+  type: lowImpact
   occhiello: Indicazioni
   richText: |-
     # Indicazioni terapeutiche
 
     Artrosi · Infiammazioni articolari · Traumi
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: schede
     titolo: Distretto per distretto.

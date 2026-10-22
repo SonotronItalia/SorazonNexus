@@ -8,7 +8,13 @@ meta:
   title: Privacy policy
   description: "How Sonotron Italia processes the data of people who visit or contact the Sorazon website: purposes, legal bases, retention periods and GDPR rights."
 hero:
+  type: lowImpact
   richText: "# Privacy policy"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: content
 ---

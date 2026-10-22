@@ -8,7 +8,13 @@ meta:
   title: Cookie policy
   description: Cookie e strumenti usati dal sito Sorazon (tecnici, Google Analytics, Google Ads, YouTube, Google Maps) e come scegliere o cambiare le preferenze.
 hero:
+  type: lowImpact
   richText: "# Cookie policy"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: content
     columns:

@@ -7,13 +7,16 @@ meta:
   title: Sorazon centres in Italy, by region
   description: List of the practices qualified to provide the Sorazon therapy in Italy, by region, with addresses and phone numbers. Operators are trained in Fano (PU).
 hero:
+  type: lowImpact
   occhiello: The Sorazon network
   richText: "# Reference centres"
   media: media:Screenshot 2026-10-22 alle 02.48.16.png
+  bordoImmagine: true
   sfondoMedia: video
   video:
     sorgente: youtube
     url: https://www.youtube.com/watch?v=W5Dm2WCk8jg
+  overlay: nessuna
 layout:
   - blockType: numeriEvidenza
     voci:

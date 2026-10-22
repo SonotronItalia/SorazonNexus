@@ -7,7 +7,8 @@
  * Scrive dati/pagine/<slug>.md e dati/traduzioni/<lingua>/pagine/<slug>.md nel formato di
  * pagine.ts: gli id diventano "media:file", "pagina:slug", "colore:Nome", "effetto:Nome",
  * "modulo:Titolo"; il rich text diventa Markdown quando ci sta senza perdere nulla, altrimenti
- * resta nel formato di Payload (es. "Stile testo"). Le immagini usate e non ancora nel seed si
+ * resta nel formato di Payload (es. "Stile testo"). Nelle righe di array e nei blocchi i valori
+ * uguali al predefinito si omettono. Le immagini usate e non ancora nel seed si
  * scaricano in media/ e si aggiungono a media.csv, come i colori mancanti in colori.csv.
  * Le righe di commento in cima ai file esistenti restano. Le pagine solo in bozza non si
  * toccano (l'API anonima vede solo il pubblicato).
@@ -131,15 +132,17 @@ function testo(valore: unknown): unknown {
 
 const blocchi = new Map((config.blocks ?? []).map((b) => [b.slug, b]))
 
-function campi(valore: unknown, schema: FlattenedField[]): Oggetto | undefined {
+// inRiga: dentro una riga di array o un blocco, che il seed ricrea sempre da capo
+function campi(valore: unknown, schema: FlattenedField[], inRiga = false): Oggetto | undefined {
   if (!valore || typeof valore !== 'object') return undefined
   const fuori: Oggetto = {}
   for (const f of schema) {
     if (f.name === 'id' || f.name === 'blockName') continue
     const v = (valore as Oggetto)[f.name]
-    const r = campo(v, f)
-    // Valori uguali al predefinito del campo: li rimette Payload, nel file sarebbero solo rumore
-    const predefinito = 'defaultValue' in f && typeof f.defaultValue !== 'function' ? f.defaultValue : undefined
+    const r = campo(v, f, inRiga)
+    // Valori uguali al predefinito in una riga nuova: li rimette Payload, nel file sarebbero solo
+    // rumore. Fuori dalle righe no: aggiornando una pagina resterebbe il valore che c'era prima
+    const predefinito = inRiga && 'defaultValue' in f && typeof f.defaultValue !== 'function' ? f.defaultValue : undefined
     if (predefinito !== undefined && JSON.stringify(r) === JSON.stringify(predefinito)) continue
     const vuoto = r == null || r === '' || (Array.isArray(r) && !r.length) ||
       (typeof r === 'object' && !Array.isArray(r) && !Object.keys(r as Oggetto).length)
@@ -148,7 +151,7 @@ function campi(valore: unknown, schema: FlattenedField[]): Oggetto | undefined {
   return fuori
 }
 
-function campo(v: unknown, f: FlattenedField): unknown {
+function campo(v: unknown, f: FlattenedField, inRiga: boolean): unknown {
   if (v == null) return undefined
   switch (f.type) {
     case 'richText':
@@ -170,9 +173,9 @@ function campo(v: unknown, f: FlattenedField): unknown {
     }
     case 'group':
     case 'tab':
-      return campi(v, f.flattenedFields)
+      return campi(v, f.flattenedFields, inRiga)
     case 'array':
-      return Array.isArray(v) ? v.map((riga) => campi(riga, f.flattenedFields)) : undefined
+      return Array.isArray(v) ? v.map((riga) => campi(riga, f.flattenedFields, true)) : undefined
     case 'blocks':
       return Array.isArray(v)
         ? v.map((b: Oggetto) => {
@@ -180,7 +183,7 @@ function campo(v: unknown, f: FlattenedField): unknown {
               blocchi.get(b.blockType as string) ??
               f.blocks.find((x) => x.slug === b.blockType)
             if (!def) throw new Error(`blocco "${b.blockType}" sconosciuto`)
-            return { blockType: b.blockType, ...campi(b, def.flattenedFields) }
+            return { blockType: b.blockType, ...campi(b, def.flattenedFields, true) }
           })
         : undefined
     default:

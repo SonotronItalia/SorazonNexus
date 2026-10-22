@@ -6,8 +6,14 @@ meta:
   title: Distribuzione dei dispositivi Sorazon
   description: "Sorazon Studio e Maxi sono prodotti e distribuiti da Sonotron Italia di Fano: acquisto, preventivi, assistenza e informazioni per diventare centro di riferimento."
 hero:
+  type: lowImpact
   occhiello: Sonotron Italia
   richText: "# Distribuzione"
+  bordoImmagine: true
+  sfondoMedia: immagine
+  video:
+    sorgente: file
+  overlay: nessuna
 layout:
   - blockType: content
   - blockType: cta
