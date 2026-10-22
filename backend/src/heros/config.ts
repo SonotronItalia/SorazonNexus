@@ -78,7 +78,9 @@ export const hero: Field = {
       }),
       label: false,
     },
+    // Solo pagine: vedi soloPagine in fields/link.ts (per una notizia, indirizzo personalizzato)
     linkGroup({
+      soloPagine: true,
       overrides: {
         maxRows: 2,
       },

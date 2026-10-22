@@ -19,9 +19,18 @@ type LinkType = (options?: {
   appearances?: LinkAppearances[] | false
   disableLabel?: boolean
   overrides?: Partial<GroupField>
+  // Solo pagine: il collegamento si salva nella riga del pulsante e non nella tabella delle
+  // relazioni miste (pagine o notizie). Serve dentro un gruppo tradotto come l'hero, dove Payload
+  // 3.91 a ogni salvataggio in una lingua cancella o scambia quelle relazioni nell'altra
+  soloPagine?: boolean
 }) => Field
 
-export const link: LinkType = ({ appearances, disableLabel = false, overrides = {} } = {}) => {
+export const link: LinkType = ({
+  appearances,
+  disableLabel = false,
+  overrides = {},
+  soloPagine = false,
+} = {}) => {
   const linkResult: GroupField = {
     name: 'link',
     type: 'group',
@@ -75,8 +84,19 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
         condition: (_, siblingData) => siblingData?.type === 'reference',
       },
       label: 'Document to link to',
-      relationTo: ['pages', 'posts'],
       required: true,
+      ...(soloPagine
+        ? {
+            relationTo: 'pages' as const,
+            // Accetta anche la forma { relationTo, value } dei collegamenti misti (seed, dati vecchi)
+            hooks: {
+              beforeValidate: [
+                ({ value }) =>
+                  value && typeof value === 'object' && 'relationTo' in value ? value.value : value,
+              ],
+            },
+          }
+        : { relationTo: ['pages' as const, 'posts' as const] }),
     },
     {
       name: 'url',

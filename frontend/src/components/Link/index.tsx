@@ -15,10 +15,15 @@ type CMSLinkType = {
   className?: string
   label?: string | null
   newTab?: boolean | null
-  reference?: {
-    relationTo: 'pages' | 'posts'
-    value: Page | Post | string | number
-  } | null
+  // Pagina o notizia ({ relationTo, value }); solo pagina nei pulsanti dell'hero (fields/link.ts)
+  reference?:
+    | {
+        relationTo: 'pages' | 'posts'
+        value: Page | Post | string | number
+      }
+    | Page
+    | number
+    | null
   size?: ButtonProps['size'] | null
   type?: 'custom' | 'reference' | null
   url?: string | null
@@ -38,11 +43,17 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   } = props
 
   const { lingua } = useLingua()
+  const destinazione =
+    reference && typeof reference === 'object' && 'relationTo' in reference
+      ? reference
+      : reference
+        ? { relationTo: 'pages' as const, value: reference }
+        : null
   // Pagine e notizie: indirizzo nella lingua della pagina (/en/therapy). Indirizzi scritti a mano
   // che iniziano con "/": prefisso della lingua, tranne file e indirizzi già con una lingua
   const href =
-    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? percorsoDoc(lingua, reference.value.slug, reference.relationTo)
+    type === 'reference' && typeof destinazione?.value === 'object' && destinazione.value.slug
+      ? percorsoDoc(lingua, destinazione.value.slug, destinazione.relationTo)
       : url
         ? urlNellaLingua(lingua, url)
         : url

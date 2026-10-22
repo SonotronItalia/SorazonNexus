@@ -31,6 +31,7 @@ import * as migration_20261021_154652_tema_pannello from './20261021_154652_tema
 import * as migration_20261021_164822_cestino from './20261021_164822_cestino';
 import * as migration_20261021_234744_cestino_marchio from './20261021_234744_cestino_marchio';
 import * as migration_20261022_070643_scheda_persona from './20261022_070643_scheda_persona';
+import * as migration_20261022_073855_link_hero_solo_pagine from './20261022_073855_link_hero_solo_pagine';
 
 export const migrations = [
   {
@@ -196,6 +197,11 @@ export const migrations = [
   {
     up: migration_20261022_070643_scheda_persona.up,
     down: migration_20261022_070643_scheda_persona.down,
-    name: '20261022_070643_scheda_persona'
+    name: '20261022_070643_scheda_persona',
+  },
+  {
+    up: migration_20261022_073855_link_hero_solo_pagine.up,
+    down: migration_20261022_073855_link_hero_solo_pagine.down,
+    name: '20261022_073855_link_hero_solo_pagine'
   },
 ];

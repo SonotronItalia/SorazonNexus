@@ -8,9 +8,10 @@ import { link } from './link'
 type LinkGroupType = (options?: {
   appearances?: LinkAppearances[] | false
   overrides?: Partial<ArrayField>
+  soloPagine?: boolean
 }) => Field
 
-export const linkGroup: LinkGroupType = ({ appearances, overrides = {} } = {}) => {
+export const linkGroup: LinkGroupType = ({ appearances, overrides = {}, soloPagine } = {}) => {
   const generatedLinkGroup: Field = {
     name: 'links',
     label: 'Pulsanti',
@@ -19,6 +20,7 @@ export const linkGroup: LinkGroupType = ({ appearances, overrides = {} } = {}) =
     fields: [
       link({
         appearances,
+        soloPagine,
       }),
     ],
     admin: {

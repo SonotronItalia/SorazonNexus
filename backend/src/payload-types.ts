@@ -278,15 +278,7 @@ export interface Page {
           link: {
             type?: ('reference' | 'custom') | null;
             newTab?: boolean | null;
-            reference?:
-              | ({
-                  relationTo: 'pages';
-                  value: number | Page;
-                } | null)
-              | ({
-                  relationTo: 'posts';
-                  value: number | Post;
-                } | null);
+            reference?: (number | null) | Page;
             url?: string | null;
             label: string;
             /**
@@ -382,61 +374,6 @@ export interface Page {
   publishedAt?: string | null;
   /**
    * Solo per le traduzioni: la pagina non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.
-   */
-  nascosta?: boolean | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt?: string | null;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
- */
-export interface Post {
-  id: number;
-  title: string;
-  heroImage?: (number | null) | Media;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  relatedPosts?: (number | Post)[] | null;
-  categories?: (number | Category)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
-  authors?: (number | User)[] | null;
-  populatedAuthors?:
-    | {
-        id?: string | null;
-        name?: string | null;
-      }[]
-    | null;
-  /**
-   * Solo per le traduzioni: la notizia non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.
    */
   nascosta?: boolean | null;
   /**
@@ -568,6 +505,201 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo ("Stile testo" nell'editor).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colori".
+ */
+export interface Colori {
+  id: number;
+  /**
+   * Es. Celeste Sorazon
+   */
+  nome: string;
+  /**
+   * Codice esadecimale a 6 cifre, es. #0095AC
+   */
+  codice: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Effetti animati per hero e contenitori. Spegnendo "Attivo" l'effetto sparisce da tutte le pagine che lo usano.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "effetti".
+ */
+export interface Effetti {
+  id: number;
+  /**
+   * Es. Scarica celeste
+   */
+  nome: string;
+  /**
+   * Spento: l'effetto non si vede in nessuna pagina
+   */
+  attivo?: boolean | null;
+  tipo: 'pulsazione' | 'scarica' | 'particelle' | 'onde' | 'bagliore' | 'personalizzato';
+  /**
+   * Il codice dell'animazione, scritto nella sezione "Tipi di effetto".
+   */
+  tipoPersonalizzato?: (number | null) | TipiEffetto;
+  /**
+   * Dalla tavolozza. Vuoto: il colore tipico dell'effetto.
+   */
+  colore?: (number | null) | Colori;
+  intensita?: ('bassa' | 'media' | 'alta') | null;
+  velocita?: ('lenta' | 'normale' | 'veloce') | null;
+  posizione?:
+    | (
+        | 'alto-sinistra'
+        | 'alto-centro'
+        | 'alto-destra'
+        | 'centro-sinistra'
+        | 'centro-centro'
+        | 'centro-destra'
+        | 'basso-sinistra'
+        | 'basso-centro'
+        | 'basso-destra'
+      )
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Nuovi tipi di animazione scritti in CSS e JavaScript. Si usano dalla sezione "Effetti" scegliendo il tipo "Personalizzato".
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipi-effetto".
+ */
+export interface TipiEffetto {
+  id: number;
+  /**
+   * Es. Stelle
+   */
+  nome: string;
+  descrizione?: string | null;
+  /**
+   * Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX, puntoY (punto di partenza, da 0 a 1). Niente rete, niente accesso alla pagina: il codice gira isolato.
+   */
+  javascript?: string | null;
+  /**
+   * Facoltativo: stili e animazioni dentro il riquadro dell'effetto (es. @keyframes). Lo sfondo resta trasparente.
+   */
+  css?: string | null;
+  /**
+   * Obbligatorio: i lampeggi possono provocare crisi in persone fotosensibili. Il sito non può controllarlo da solo.
+   */
+  verificato: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  columns?:
+    | {
+        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        enableLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null);
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  heroImage?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedPosts?: (number | Post)[] | null;
+  categories?: (number | Category)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (number | User)[] | null;
+  populatedAuthors?:
+    | {
+        id?: string | null;
+        name?: string | null;
+      }[]
+    | null;
+  /**
+   * Solo per le traduzioni: la notizia non compare in questa lingua finché la spunta è attiva. In italiano non ha effetto.
+   */
+  nascosta?: boolean | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -767,146 +899,6 @@ export interface Ruoli {
   };
   updatedAt: string;
   createdAt: string;
-}
-/**
- * Colori per gli sfondi dei blocchi, la sovrapposizione degli hero e il testo ("Stile testo" nell'editor).
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "colori".
- */
-export interface Colori {
-  id: number;
-  /**
-   * Es. Celeste Sorazon
-   */
-  nome: string;
-  /**
-   * Codice esadecimale a 6 cifre, es. #0095AC
-   */
-  codice: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Effetti animati per hero e contenitori. Spegnendo "Attivo" l'effetto sparisce da tutte le pagine che lo usano.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "effetti".
- */
-export interface Effetti {
-  id: number;
-  /**
-   * Es. Scarica celeste
-   */
-  nome: string;
-  /**
-   * Spento: l'effetto non si vede in nessuna pagina
-   */
-  attivo?: boolean | null;
-  tipo: 'pulsazione' | 'scarica' | 'particelle' | 'onde' | 'bagliore' | 'personalizzato';
-  /**
-   * Il codice dell'animazione, scritto nella sezione "Tipi di effetto".
-   */
-  tipoPersonalizzato?: (number | null) | TipiEffetto;
-  /**
-   * Dalla tavolozza. Vuoto: il colore tipico dell'effetto.
-   */
-  colore?: (number | null) | Colori;
-  intensita?: ('bassa' | 'media' | 'alta') | null;
-  velocita?: ('lenta' | 'normale' | 'veloce') | null;
-  posizione?:
-    | (
-        | 'alto-sinistra'
-        | 'alto-centro'
-        | 'alto-destra'
-        | 'centro-sinistra'
-        | 'centro-centro'
-        | 'centro-destra'
-        | 'basso-sinistra'
-        | 'basso-centro'
-        | 'basso-destra'
-      )
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Nuovi tipi di animazione scritti in CSS e JavaScript. Si usano dalla sezione "Effetti" scegliendo il tipo "Personalizzato".
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tipi-effetto".
- */
-export interface TipiEffetto {
-  id: number;
-  /**
-   * Es. Stelle
-   */
-  nome: string;
-  descrizione?: string | null;
-  /**
-   * Disegna su <canvas id="effetto"> (occupa tutto il riquadro). Parametri in window.EFFETTO: colore, intensita, velocita, puntoX, puntoY (punto di partenza, da 0 a 1). Niente rete, niente accesso alla pagina: il codice gira isolato.
-   */
-  javascript?: string | null;
-  /**
-   * Facoltativo: stili e animazioni dentro il riquadro dell'effetto (es. @keyframes). Lo sfondo resta trasparente.
-   */
-  css?: string | null;
-  /**
-   * Obbligatorio: i lampeggi possono provocare crisi in persone fotosensibili. Il sito non può controllarlo da solo.
-   */
-  verificato: boolean;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentBlock".
- */
-export interface ContentBlock {
-  columns?:
-    | {
-        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
-        richText?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        enableLink?: boolean | null;
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: number | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: number | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-          /**
-           * Choose how the link should be rendered.
-           */
-          appearance?: ('default' | 'outline') | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'content';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
